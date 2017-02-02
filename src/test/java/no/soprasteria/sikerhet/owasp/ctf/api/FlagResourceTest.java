@@ -25,11 +25,10 @@ public class FlagResourceTest {
     private Application application;
     private FlagService flagService;
     private TeamService teamService;
-    private String newTeamKey;
     private ContainerRequest request;
 
     @Before
-    public void oppsett() {
+    public void oppsett() throws Exception {
         resource = new FlagResource();
         application = new CtFApplication();
         flagService = ApplicationContext.get(application, FlagService.class);

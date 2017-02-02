@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class CtFApplication extends Application {
 
     private static Logger logger = LoggerFactory.getLogger(CtFApplication.class);
 
-    public CtFApplication() {
+    public CtFApplication() throws Exception {
         logger.info("Starting up.");
         setupServices();
         logger.info("Application started.");
@@ -49,7 +50,7 @@ public class CtFApplication extends Application {
         return properties;
     }
 
-    private void setupServices() {
+    private void setupServices() throws Exception {
         TeamRepository teamRepository = new TeamRepository();
         ScoreRepository scoreRepository = new ScoreRepository();
         ScoreService scoreService = new ScoreService(teamRepository, scoreRepository);

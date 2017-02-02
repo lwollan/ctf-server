@@ -12,7 +12,7 @@ public class TeamServiceTest {
     private TeamService service;
 
     @Before
-    public void oppsett() {
+    public void oppsett() throws Exception {
         TeamRepository repo = new TeamRepository();
         service = new TeamService(repo);
     }
@@ -35,5 +35,20 @@ public class TeamServiceTest {
 
         assertThat(service.getTeamList()).contains("nytt-team");
 
+    }
+
+    @Test
+    public void skal_lage_ulike_teamkey_for_to_team() {
+        assertThat(TeamService.newTeamKey("teama", 0l)).isNotEqualTo(TeamService.newTeamKey("teamb", 0L));
+    }
+
+    @Test
+    public void skal_lage_samme_teamkey_for_samme_team_og_samme_salt() {
+        assertThat(TeamService.newTeamKey("teama", 0l)).isEqualTo(TeamService.newTeamKey("teama", 0L));
+    }
+
+    @Test
+    public void skal_lage_samme_forskjellig_teamkey_for_samme_team_og_ulike_salt() {
+        assertThat(TeamService.newTeamKey("teama", 0l)).isNotEqualTo(TeamService.newTeamKey("teama", 1L));
     }
 }

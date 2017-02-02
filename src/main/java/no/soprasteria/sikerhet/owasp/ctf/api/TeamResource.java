@@ -3,7 +3,12 @@ package no.soprasteria.sikerhet.owasp.ctf.api;
 import no.soprasteria.sikerhet.owasp.ctf.filter.Beskyttet;
 import no.soprasteria.sikerhet.owasp.ctf.service.TeamService;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
