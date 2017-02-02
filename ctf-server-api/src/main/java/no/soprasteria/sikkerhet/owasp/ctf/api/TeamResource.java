@@ -1,6 +1,7 @@
 package no.soprasteria.sikkerhet.owasp.ctf.api;
 
 import no.soprasteria.sikkerhet.owasp.ctf.filter.Beskyttet;
+import no.soprasteria.sikkerhet.owasp.ctf.filter.TeamKeyFilter;
 import no.soprasteria.sikkerhet.owasp.ctf.service.TeamService;
 import no.soprasteria.sikkerhet.owasp.ctf.ApplicationContext;
 
@@ -32,7 +33,7 @@ public class TeamResource {
 
         if (teamKey.isPresent()) {
             Map<String, String> response = new HashMap<>();
-            response.put("team-key", teamKey.get());
+            response.put(TeamKeyFilter.X_TEAM_KEY, teamKey.get());
             return Response.ok(response).build();
         } else {
             return Response.status(Response.Status.CONFLICT).build();

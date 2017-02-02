@@ -23,6 +23,9 @@ import java.util.stream.Collectors;
 
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static no.soprasteria.sikkerhet.owasp.ctf.filter.TeamKeyFilter.X_TEAM_KEY;
+import static no.soprasteria.sikkerhet.owasp.ctf.service.FlagService.Keys.flagId;
+import static no.soprasteria.sikkerhet.owasp.ctf.service.FlagService.Keys.flagName;
+import static no.soprasteria.sikkerhet.owasp.ctf.service.FlagService.Keys.tips;
 
 @Path("flag")
 public class FlagResource {
@@ -30,7 +33,7 @@ public class FlagResource {
     private static Logger logger = LoggerFactory.getLogger(FlagResource.class);
 
     enum Answer {
-        flagId, answer
+        flagId, flag
     }
 
     @TeamKey
@@ -41,7 +44,7 @@ public class FlagResource {
             String teamKey = request.getHeaderString(X_TEAM_KEY);
 
             String flagId = body.getOrDefault(Answer.flagId.toString(), null);
-            String answer = body.getOrDefault(Answer.answer.toString(), null);
+            String answer = body.getOrDefault(Answer.flag.toString(), null);
 
             if (flagId != null && answer != null) {
                 return handleAnswerAndGetResponse(application, teamKey, flagId, answer);
@@ -63,8 +66,8 @@ public class FlagResource {
 
         return flags.stream().map(m -> {
             Map<String, String> filteredMap = new HashMap<>();
-            filteredMap.put("flag-id", m.get("flag-id"));
-            filteredMap.put("flag-name", m.get("flag-name"));
+            filteredMap.put(flagId.toString(), m.get(flagId.toString()));
+            filteredMap.put(flagName.toString(), m.get(flagName.toString()));
             return filteredMap;
         }).collect(Collectors.toList());
 
@@ -81,7 +84,7 @@ public class FlagResource {
 
         if (tip != null) {
             Map<String, String> reponse = new HashMap<>();
-            reponse.put("tip", tip);
+            reponse.put(tips.toString(), tip);
             return reponse;
         } else {
             return new HashMap<>();

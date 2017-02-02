@@ -90,7 +90,7 @@ public class FlagResourceTest {
     private static Map<String, String> nyttFlagSvar(String value, String value2) {
         Map<String, String> answer = new HashMap<>();
         answer.put(FlagResource.Answer.flagId.toString(), value);
-        answer.put(FlagResource.Answer.answer.toString(), value2);
+        answer.put(FlagResource.Answer.flag.toString(), value2);
         return answer;
     }
 
