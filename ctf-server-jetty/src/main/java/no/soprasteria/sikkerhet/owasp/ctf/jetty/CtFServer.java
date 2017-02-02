@@ -12,7 +12,7 @@ public class CtFServer {
         context.setContextPath("/");
 
         ServletHolder jerseyServlet = context.addServlet(ServletContainer.class, "/api/*");
-        jerseyServlet.setInitParameter("javax.ws.rs.Application", "CtFApplication");
+        jerseyServlet.setInitParameter("javax.ws.rs.Application", "no.soprasteria.sikkerhet.owasp.ctf.CtFApplication");
 
         Server server = new Server(9090);
         server.setHandler(context);

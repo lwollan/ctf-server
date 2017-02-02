@@ -24,9 +24,7 @@ public class TeamKeyFilter implements ContainerRequestFilter {
         if (teamKeyIsInvalid(teamKey)) {
             logger.info("Ugyldig team key.");
             logger.info(" -- headere: {}.", containerRequestContext.getHeaders());
-            containerRequestContext.abortWith(Response.status(Response.Status.BAD_REQUEST).build());
-        } else {
-            // sikkert lurt å legge noe på request ..
+            containerRequestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).header("WWW-Authenticate", X_TEAM_KEY).build());
         }
     }
 
