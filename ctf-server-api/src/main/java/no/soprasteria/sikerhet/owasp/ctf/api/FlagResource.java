@@ -6,11 +6,11 @@ import no.soprasteria.sikerhet.owasp.ctf.filter.TeamKey;
 import no.soprasteria.sikerhet.owasp.ctf.service.FlagService;
 import no.soprasteria.sikerhet.owasp.ctf.service.ScoreService;
 import no.soprasteria.sikerhet.owasp.ctf.service.TeamService;
-import org.glassfish.jersey.server.ContainerRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
+import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -36,7 +36,7 @@ public class FlagResource {
     @TeamKey
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response answer(@Context Application application, @Context ContainerRequest request, Map<String, String> body) {
+    public Response answer(@Context Application application, @Context ContainerRequestContext request, Map<String, String> body) {
         if (body != null && request.getHeaderString(X_TEAM_KEY) != null) {
             String teamKey = request.getHeaderString(X_TEAM_KEY);
 

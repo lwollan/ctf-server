@@ -1,4 +1,4 @@
-package no.soprasteria.sikerhet.owasp.ctf;
+package no.soprasteria.sikerhet.owasp.ctf.jetty;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;

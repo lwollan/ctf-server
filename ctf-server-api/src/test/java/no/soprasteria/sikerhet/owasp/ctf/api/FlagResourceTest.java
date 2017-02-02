@@ -5,10 +5,10 @@ import no.soprasteria.sikerhet.owasp.ctf.CtFApplication;
 import no.soprasteria.sikerhet.owasp.ctf.filter.TeamKeyFilter;
 import no.soprasteria.sikerhet.owasp.ctf.service.FlagService;
 import no.soprasteria.sikerhet.owasp.ctf.service.TeamService;
-import org.glassfish.jersey.server.ContainerRequest;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
@@ -25,7 +25,7 @@ public class FlagResourceTest {
     private Application application;
     private FlagService flagService;
     private TeamService teamService;
-    private ContainerRequest request;
+    private ContainerRequestContext request;
     private String flag1Id;
     private String flag2Id;
 
@@ -47,7 +47,7 @@ public class FlagResourceTest {
         svarMedFeilFlag = nyttFlagSvar(flag1Id, "svar 2");
         svarMedUkjentFlagId = nyttFlagSvar("flag-ukjent", "riktig svar");
 
-        request = mock(ContainerRequest.class);
+        request = mock(ContainerRequestContext.class);
         when(request.getHeaderString(TeamKeyFilter.X_TEAM_KEY)).thenReturn(newTeamKey);
     }
 
