@@ -52,6 +52,42 @@ public class FlagResource {
         return Response.status(BAD_REQUEST).build();
     }
 
+    @TeamKey
+    @GET
+    @Path("list")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Map<String, String>> list(@Context Application application) {
+        FlagService flagService = ApplicationContext.get(application, FlagService.class);
+
+        List<Map<String, String>> flags = flagService.listFlag();
+
+        return flags.stream().map(m -> {
+            Map<String, String> filteredMap = new HashMap<>();
+            filteredMap.put("flag-id", m.get("flag-id"));
+            filteredMap.put("flag-name", m.get("flag-name"));
+            return filteredMap;
+        }).collect(Collectors.toList());
+
+    }
+
+    @TeamKey
+    @GET
+    @Path("tip/{flagId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Map<String, String> tip(@Context Application application, @PathParam("flagId") String flagId) {
+        FlagService flagService = ApplicationContext.get(application, FlagService.class);
+
+        String tip = flagService.getTip(flagId);
+
+        if (tip != null) {
+            Map<String, String> reponse = new HashMap<>();
+            reponse.put("tip", tip);
+            return reponse;
+        } else {
+            return new HashMap<>();
+        }
+    }
+
     private static Response handleAnswerAndGetResponse(@Context Application application, String teamKey, String flagId, String answer) {
         FlagService flagService = ApplicationContext.get(application, FlagService.class);
         if (flagService.isFlagUnanswered(teamKey, flagId) && flagService.isCorrect(flagId, answer)) {
@@ -75,24 +111,5 @@ public class FlagResource {
         ScoreService scoreService = ApplicationContext.get(application, ScoreService.class);
         scoreService.addPointsToTeam(teamKey, points);
     }
-
-    @TeamKey
-    @GET
-    @Path("list")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<Map<String, String>> list(@Context Application application) {
-        FlagService flagService = ApplicationContext.get(application, FlagService.class);
-
-        List<Map<String, String>> flags = flagService.listFlag();
-
-        return flags.stream().map(m -> {
-            Map<String, String> filteredMap = new HashMap<>();
-            filteredMap.put("flag-id", m.get("flag-id"));
-            filteredMap.put("flag-name", m.get("flag-name"));
-            return filteredMap;
-        }).collect(Collectors.toList());
-
-    }
-
 
 }

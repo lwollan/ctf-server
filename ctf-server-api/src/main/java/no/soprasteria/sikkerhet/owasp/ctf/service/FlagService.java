@@ -39,6 +39,15 @@ public class FlagService {
         }
     }
 
+    public String getTip(String flagId) {
+        if (flags.containsKey(flagId)) {
+            Map<String, String> map = this.flags.get(flagId);
+            return  map.get("tip");
+        } else {
+            return null;
+        }
+    }
+
     public List<Map<String, String>> listFlag() {
         return new ArrayList<>(flags.values());
     }

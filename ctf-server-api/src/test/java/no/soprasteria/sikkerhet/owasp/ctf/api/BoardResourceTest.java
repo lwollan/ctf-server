@@ -1,5 +1,6 @@
 package no.soprasteria.sikkerhet.owasp.ctf.api;
 
+import no.soprasteria.sikkerhet.owasp.ctf.CtFApplication;
 import no.soprasteria.sikkerhet.owasp.ctf.service.BoardService;
 import org.junit.Test;
 
@@ -14,28 +15,18 @@ import static org.mockito.Mockito.when;
 public class BoardResourceTest {
 
     @Test
-    public void skal_returnere_et_eller_annet_map() {
+    public void skal_returnere_et_eller_annet_map() throws Exception {
         Map<String, Object> expected = new HashMap<>();
         expected.put("score", new HashMap<>());
         expected.put("title", "Sopra Steria CtF 2017");
 
         BoardResource resource = new BoardResource();
 
-        Application application = lagApplicationContext();
+        Application application = new CtFApplication();
 
         Map<String, Object> map = resource.get(application);
 
         assertThat(map).isEqualTo(expected);
     }
 
-    private static Application lagApplicationContext() {
-        Application application = mock(Application.class);
-        HashMap<String, Object> applicationProperties = new HashMap<>();
-        BoardService boardService = mock(BoardService.class);
-        applicationProperties.put("BoardService", boardService);
-        when(application.getProperties()).thenReturn(applicationProperties);
-        HashMap<String, Long> score = new HashMap<>();
-        when(boardService.getScore()).thenReturn(score);
-        return application;
-    }
 }
