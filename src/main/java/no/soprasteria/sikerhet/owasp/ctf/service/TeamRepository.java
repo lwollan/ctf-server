@@ -11,13 +11,8 @@ public class TeamRepository {
         map = new HashMap<>();
     }
 
-    public boolean add(String teamname, String teamSecret) {
-        if (map.containsKey(teamname)) {
-            return false;
-        } else {
-            map.put(teamname, teamSecret);
-            return true;
-        }
+    public void add(String teamKey, String teamname) {
+        map.put(teamKey, teamname);
     }
 
     public Map<String, String> list() {
@@ -26,9 +21,9 @@ public class TeamRepository {
         return map;
     }
 
-    public String get(String teamname) {
-        if (map.containsKey(teamname)) {
-            return teamname;
+    public String get(String teamKey) {
+        if (map.containsKey(teamKey)) {
+            return map.get(teamKey);
         } else {
             return null;
         }

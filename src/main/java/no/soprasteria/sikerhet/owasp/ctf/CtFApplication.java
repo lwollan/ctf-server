@@ -1,15 +1,21 @@
 package no.soprasteria.sikerhet.owasp.ctf;
 
-import no.soprasteria.sikerhet.owasp.ctf.api.*;
-import no.soprasteria.sikerhet.owasp.ctf.service.ScoreRepository;
-import no.soprasteria.sikerhet.owasp.ctf.service.ScoreService;
-import no.soprasteria.sikerhet.owasp.ctf.service.TeamRepository;
+import no.soprasteria.sikerhet.owasp.ctf.api.BoardResource;
+import no.soprasteria.sikerhet.owasp.ctf.api.FlagResource;
+import no.soprasteria.sikerhet.owasp.ctf.api.ScoreResource;
+import no.soprasteria.sikerhet.owasp.ctf.api.TeamResource;
+import no.soprasteria.sikerhet.owasp.ctf.filter.BeskyttetFilter;
+import no.soprasteria.sikerhet.owasp.ctf.filter.TeamKeyFilter;
+import no.soprasteria.sikerhet.owasp.ctf.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @ApplicationPath("api")
 public class CtFApplication extends Application {
@@ -21,7 +27,7 @@ public class CtFApplication extends Application {
     public CtFApplication() {
         logger.info("Starting up.");
         setupServices();
-        logger.info("done.");
+        logger.info("Application started.");
     }
 
     @Override
@@ -29,6 +35,12 @@ public class CtFApplication extends Application {
         Set<Class<?>> resources = new HashSet<>();
         resources.add(TeamResource.class);
         resources.add(ScoreResource.class);
+        resources.add(BoardResource.class);
+        resources.add(FlagResource.class);
+
+        resources.add(BeskyttetFilter.class);
+        resources.add(TeamKeyFilter.class);
+
         return resources;
     }
 
@@ -41,23 +53,16 @@ public class CtFApplication extends Application {
         TeamRepository teamRepository = new TeamRepository();
         ScoreRepository scoreRepository = new ScoreRepository();
         ScoreService scoreService = new ScoreService(teamRepository, scoreRepository);
+        TeamService teamService = new TeamService(teamRepository);
+        BoardService boardService = new BoardService(teamRepository, scoreRepository);
+        FlagService flagService = new FlagService();
 
-        put(this, scoreService);
-        put(this, teamRepository);
-        put(this, scoreRepository);
+        ApplicationContext.put(this, teamRepository);
+        ApplicationContext.put(this, scoreRepository);
+        ApplicationContext.put(this, scoreService);
+        ApplicationContext.put(this, teamService);
+        ApplicationContext.put(this, boardService);
+        ApplicationContext.put(this, flagService);
     }
-
-    public static <T> T get(Application application, Class<T> klasse) {
-        return (T)application.getProperties().get(key(klasse));
-    }
-
-    static <T> T put(Application application, Object klasse) {
-        return (T)application.getProperties().get(key(klasse.getClass()));
-    }
-
-    static String key(Class<?> klasse) {
-        return klasse.getName();
-    }
-
 
 }

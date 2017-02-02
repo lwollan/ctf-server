@@ -11,15 +11,12 @@ public class ScoreRepository {
         map = new HashMap<>();
     }
 
-    public long add(String teamname, long points) {
-        Long currentScore = map.getOrDefault(teamname, 0l);
-        long newScore = currentScore + points;
-        map.put(teamname, newScore);
-        return newScore;
+    public void put(String teamKey, long score) {
+        map.put(teamKey, score);
     }
 
-    public void reset(String teamname) {
-        map.put(teamname, 0l);
+    public Long get(String teamKey) {
+        return map.getOrDefault(teamKey, 0l);
     }
 
     public Map<String, Long> list() {
@@ -27,4 +24,5 @@ public class ScoreRepository {
         map.putAll(this.map);
         return map;
     }
+
 }
