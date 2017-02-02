@@ -26,6 +26,10 @@ public class FlagResourceTest {
     private FlagService flagService;
     private TeamService teamService;
     private ContainerRequest request;
+    private String flag1Id;
+    private String flag2Id;
+
+    private Map<String, String> svarMedRiktigFlag, svarMedFeilFlag, svarMedUkjentFlagId;
 
     @Before
     public void oppsett() throws Exception {
@@ -34,10 +38,14 @@ public class FlagResourceTest {
         flagService = ApplicationContext.get(application, FlagService.class);
         teamService = ApplicationContext.get(application, TeamService.class);
 
-        flagService.addFlag("flag-01", "flag 1" ,"svar 1", 10l);
-        flagService.addFlag("flag-02", "flag 2" ,"svar 2", 10l);
+        flag1Id = flagService.addFlag("flag 1", "svar 1", 10l, "tips");
+        flag2Id = flagService.addFlag("flag 2", "svar 2", 10l, "tips");
 
         String newTeamKey = teamService.addNewTeam("team-a").get();
+
+        svarMedRiktigFlag = nyttFlagSvar(flag1Id, "svar 1");
+        svarMedFeilFlag = nyttFlagSvar(flag1Id, "svar 2");
+        svarMedUkjentFlagId = nyttFlagSvar("flag-ukjent", "riktig svar");
 
         request = mock(ContainerRequest.class);
         when(request.getHeaderString(TeamKeyFilter.X_TEAM_KEY)).thenReturn(newTeamKey);
@@ -47,34 +55,36 @@ public class FlagResourceTest {
     public void skal_returnere_alle_registrerte_flagg() {
         List<Map<String, String>> list = resource.list(application);
 
-        assertThat(list).hasSize(2);
+        assertThat(list).isNotEmpty();
     }
 
     @Test
     public void skal_gi_riktig_response___hvis_svar_er_riktig() {
-        Map<String, String> svar = nyttFlagSvar("flag-01", "svar 1");
-
-        Response response = resource.answer(application, request, svar);
+        Response response = resource.answer(application, request, svarMedRiktigFlag);
 
         assertThat(response.getStatus()).isEqualTo(202);
     }
 
     @Test
     public void skal_gi_bad_request___hvis_svar_er_feil() {
-        Map<String, String> answer = nyttFlagSvar("flag-01", "svar 2");
-
-        Response response = resource.answer(application, request, answer);
+        Response response = resource.answer(application, request, svarMedFeilFlag);
 
         assertThat(response.getStatus()).isEqualTo(400);
     }
 
     @Test
     public void skal_gi_bad_request___hvis_flag_id_er_ukjent() {
-        Map<String, String> answer = nyttFlagSvar("flag-ukjent", "riktig svar");
-
-        Response response = resource.answer(application, request, answer);
+        Response response = resource.answer(application, request, svarMedUkjentFlagId);
 
         assertThat(response.getStatus()).isEqualTo(400);
+    }
+
+    @Test
+    public void skal_ikke_tillate_to_riktige_svar_paa_samme_flag_fra_samme_lag() {
+        Response response1 = resource.answer(application, request, svarMedRiktigFlag);
+        assertThat(response1.getStatus()).isEqualTo(202);
+        Response response2 = resource.answer(application, request, svarMedRiktigFlag);
+        assertThat(response2.getStatus()).isNotEqualTo(202);
     }
 
     private static Map<String, String> nyttFlagSvar(String value, String value2) {

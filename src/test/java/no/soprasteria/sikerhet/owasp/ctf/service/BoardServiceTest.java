@@ -37,9 +37,9 @@ public class BoardServiceTest {
         teamRepository.add("team 2 key", "team 2");
         teamRepository.add("team 3 key", "team 3");
 
-        scoreRepository.put("team 1", 42l);
-        scoreRepository.put("team 2", 1l);
-        scoreRepository.put("team 3", 33);
+        scoreRepository.put("team 1 key", 42l);
+        scoreRepository.put("team 2 key", 1l);
+        scoreRepository.put("team 3 key", 33);
 
         Map.Entry<String, Long> team1 = new AbstractMap.SimpleEntry<>("team 1", 42l);
         Map.Entry<String, Long> team2 = new AbstractMap.SimpleEntry<>("team 2", 1l);

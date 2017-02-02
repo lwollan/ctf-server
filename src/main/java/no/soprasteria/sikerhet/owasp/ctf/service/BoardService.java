@@ -17,9 +17,9 @@ public class BoardService {
     public Map<String, Long> getScore() {
         Map<String, String> teams = teamRepository.list();
 
-        return teams.values().stream().map(s -> {
-            Long score = scoreRepository.get(s);
-            return new AbstractMap.SimpleEntry<>(s, score);
+        return teams.entrySet().stream().map(e -> {
+            Long score = scoreRepository.get(e.getKey());
+            return new AbstractMap.SimpleEntry<>(e.getValue(), score);
         }).collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
 
     }

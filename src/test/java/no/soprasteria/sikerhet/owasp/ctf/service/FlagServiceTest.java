@@ -17,14 +17,14 @@ public class FlagServiceTest {
 
     @Test
     public void skal_kunne_legge_til_et_flag() {
-        service.addFlag("flag-id", "flag-name", "svar", 10l);
+        assertThat(service.addFlag("flag-name", "svar", 10l, "tips")).isNotNull();
     }
 
     @Test
     public void skal_finne_poeng_for_et_flag_som_er_lagt_til() {
-        service.addFlag("flag-id", "flag-name", "svar", 10l);
+        String flagId = service.addFlag("flag-name", "svar", 10l, "tips");
 
-        assertThat(service.getPoints("flag-id")).isEqualTo(10l);
+        assertThat(service.getPoints(flagId)).isEqualTo(10l);
     }
 
     @Test
@@ -34,8 +34,8 @@ public class FlagServiceTest {
 
     @Test
     public void skal_vise_alle_flag_som_er_lagt_til() {
-        service.addFlag("flag-id-01", "01 Flag 1", "svar-a", 10l);
-        service.addFlag("flag-id-02", "02 Flag 2", "svar-b", 10l);
+        service.addFlag("01 Flag 1", "svar-a", 10l, "tips");
+        service.addFlag("02 Flag 2", "svar-b", 10l, "tips");
 
         assertThat(service.listFlag()).hasSize(2);
     }

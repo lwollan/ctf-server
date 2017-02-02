@@ -2,17 +2,16 @@ package no.soprasteria.sikerhet.owasp.ctf;
 
 import no.soprasteria.sikerhet.owasp.ctf.api.BoardResource;
 import no.soprasteria.sikerhet.owasp.ctf.api.FlagResource;
-import no.soprasteria.sikerhet.owasp.ctf.api.ScoreResource;
 import no.soprasteria.sikerhet.owasp.ctf.api.TeamResource;
 import no.soprasteria.sikerhet.owasp.ctf.filter.BeskyttetFilter;
 import no.soprasteria.sikerhet.owasp.ctf.filter.TeamKeyFilter;
+import no.soprasteria.sikerhet.owasp.ctf.games.MrRobotGame;
 import no.soprasteria.sikerhet.owasp.ctf.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -35,7 +34,7 @@ public class CtFApplication extends Application {
     public Set<Class<?>> getClasses() {
         Set<Class<?>> resources = new HashSet<>();
         resources.add(TeamResource.class);
-        resources.add(ScoreResource.class);
+        // resources.add(ScoreResource.class);
         resources.add(BoardResource.class);
         resources.add(FlagResource.class);
 
@@ -64,6 +63,8 @@ public class CtFApplication extends Application {
         ApplicationContext.put(this, teamService);
         ApplicationContext.put(this, boardService);
         ApplicationContext.put(this, flagService);
+
+        MrRobotGame.setupGame(flagService);
     }
 
 }
