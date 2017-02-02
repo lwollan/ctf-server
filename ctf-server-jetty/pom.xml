@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>no.steria.websikkerhet</groupId>
-    <artifactId>ctf-server-api</artifactId>
+    <artifactId>ctf-server-jetty</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
