@@ -3,9 +3,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>no.steria.websikkerhet</groupId>
-    <artifactId>ctf-server</artifactId>
+    <artifactId>ctf-server-api</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -13,11 +13,7 @@
         <jetty.version>9.4.0.v20161208</jetty.version>
     </properties>
 
-
-<modules>
-  <module>ctf-server-api</module>
-</modules>    
-<dependencies>
+    <dependencies>
 
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
