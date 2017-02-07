@@ -21,6 +21,12 @@
         </dependency>
 
         <dependency>
+            <groupId>no.steria.websikkerhet</groupId>
+            <artifactId>ctf-server-frontend</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
         </dependency>
