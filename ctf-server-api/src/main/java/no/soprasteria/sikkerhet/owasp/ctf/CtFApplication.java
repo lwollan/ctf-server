@@ -4,6 +4,7 @@ import no.soprasteria.sikkerhet.owasp.ctf.api.BoardResource;
 import no.soprasteria.sikkerhet.owasp.ctf.api.FlagResource;
 import no.soprasteria.sikkerhet.owasp.ctf.api.TeamResource;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.BeskyttetFilter;
+import no.soprasteria.sikkerhet.owasp.ctf.filter.CORSFilter;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.TeamKeyFilter;
 import no.soprasteria.sikkerhet.owasp.ctf.games.MrRobotGame;
 import no.soprasteria.sikkerhet.owasp.ctf.service.*;
@@ -40,6 +41,7 @@ public class CtFApplication extends Application {
 
         resources.add(BeskyttetFilter.class);
         resources.add(TeamKeyFilter.class);
+        resources.add(CORSFilter.class);
 
         return resources;
     }

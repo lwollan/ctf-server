@@ -3,6 +3,8 @@ package no.soprasteria.sikkerhet.owasp.ctf.service;
 import org.junit.Test;
 
 import java.util.AbstractMap;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,7 +26,9 @@ public class BoardServiceTest {
         teamRepository.add("team 3 key", "team 3");
         BoardService boardService = new BoardService(teamRepository, new ScoreRepository());
 
-        assertThat(boardService.getScore()).containsOnlyKeys("team 1" , "team 2", "team 3");
+        assertThat(boardService.getScore().get(0)).containsOnlyKeys("team" , "score");
+        assertThat(boardService.getScore().get(1)).containsOnlyKeys("team" , "score");
+        assertThat(boardService.getScore().get(2)).containsOnlyKeys("team" , "score");
     }
 
     @Test
@@ -41,10 +45,20 @@ public class BoardServiceTest {
         scoreRepository.put("team 2 key", 1l);
         scoreRepository.put("team 3 key", 33);
 
-        Map.Entry<String, Long> team1 = new AbstractMap.SimpleEntry<>("team 1", 42l);
-        Map.Entry<String, Long> team2 = new AbstractMap.SimpleEntry<>("team 2", 1l);
-        Map.Entry<String, Long> team3 = new AbstractMap.SimpleEntry<>("team 3", 33l);
+        Map<String, String> team1score = lagScore("team 1", "42");
+        Map<String, String> team2score = lagScore("team 2", "1");
+        Map<String, String> team3score = lagScore("team 3", "33");
 
-        assertThat(boardService.getScore()).contains(team1, team2, team3);
+        List<Map<String, String>> score = boardService.getScore();
+        assertThat(score).contains(team1score);
+        assertThat(score).contains(team1score);
+        assertThat(score).contains(team1score);
+    }
+
+    private static Map<String, String> lagScore(String team, String score) {
+        Map<String, String> team1score = new HashMap<>();
+        team1score.put("team", team);
+        team1score.put("score", score);
+        return team1score;
     }
 }

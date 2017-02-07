@@ -5,6 +5,7 @@ import no.soprasteria.sikkerhet.owasp.ctf.service.BoardService;
 import org.junit.Test;
 
 import javax.ws.rs.core.Application;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +18,7 @@ public class BoardResourceTest {
     @Test
     public void skal_returnere_et_eller_annet_map() throws Exception {
         Map<String, Object> expected = new HashMap<>();
-        expected.put("score", new HashMap<>());
+        expected.put("score", Arrays.asList());
         expected.put("title", "Sopra Steria CtF 2017");
 
         BoardResource resource = new BoardResource();

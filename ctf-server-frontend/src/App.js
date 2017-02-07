@@ -1,21 +1,21 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import FoodSearch from './FoodSearch';
 
-class App extends Component {
-  render() {
+const App = React.createClass({
+  getInitialState: function () {
+    return {
+      selectedFoods: [],
+    };
+  },
+  render: function () {
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+      <div className='App'>
+        <div>
+          <FoodSearch/>
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
       </div>
     );
-  }
-}
+  },
+});
 
 export default App;
