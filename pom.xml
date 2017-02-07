@@ -16,6 +16,7 @@
     <modules>
         <module>ctf-server-api</module>
         <module>ctf-server-jetty</module>
+        <module>ctf-server-frontend</module>
         <module>ctf-server-war</module>
     </modules>
 
