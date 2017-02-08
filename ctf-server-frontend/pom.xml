@@ -35,7 +35,7 @@
                     </execution>
                     <execution>
                         <id>npm run build</id>
-                        <phase>package</phase>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
