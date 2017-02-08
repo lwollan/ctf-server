@@ -2,7 +2,7 @@
 import React from 'react';
 import Client from './Client';
 
-const FoodSearch = React.createClass({
+const ScoreBoard = React.createClass({
   getInitialState: function () {
     return {
       scores: [],
@@ -22,22 +22,15 @@ const FoodSearch = React.createClass({
         title: 'Venter på poengsummer'
       });
     } else {
-      this.setState({
-      });
+        this.setState({});
 
-      Client.search((response) => {
-        this.setState({
-          scores: response.score.slice(0),
-          title: response.title
+        Client.search(response => {
+            this.setState({
+                scores: response.score.slice(0),
+                title: response.title
+            });
         });
-      });
     }
-  },
-  handleSearchCancel: function () {
-    this.setState({
-      scores: [],
-      title: 'Venter på poengsummer'
-    });
   },
   render: function () {
     return (
@@ -69,4 +62,4 @@ const FoodSearch = React.createClass({
   },
 });
 
-export default FoodSearch;
+export default ScoreBoard;

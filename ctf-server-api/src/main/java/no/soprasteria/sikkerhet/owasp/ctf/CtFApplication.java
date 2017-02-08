@@ -7,7 +7,12 @@ import no.soprasteria.sikkerhet.owasp.ctf.filter.BeskyttetFilter;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.CORSFilter;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.TeamKeyFilter;
 import no.soprasteria.sikkerhet.owasp.ctf.games.MrRobotGame;
-import no.soprasteria.sikkerhet.owasp.ctf.service.*;
+import no.soprasteria.sikkerhet.owasp.ctf.service.BoardService;
+import no.soprasteria.sikkerhet.owasp.ctf.service.FlagService;
+import no.soprasteria.sikkerhet.owasp.ctf.service.ScoreService;
+import no.soprasteria.sikkerhet.owasp.ctf.service.TeamService;
+import no.soprasteria.sikkerhet.owasp.ctf.storage.ScoreRepository;
+import no.soprasteria.sikkerhet.owasp.ctf.storage.TeamRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

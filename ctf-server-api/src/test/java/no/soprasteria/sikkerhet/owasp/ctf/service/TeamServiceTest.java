@@ -1,5 +1,6 @@
 package no.soprasteria.sikkerhet.owasp.ctf.service;
 
+import no.soprasteria.sikkerhet.owasp.ctf.storage.TeamRepository;
 import org.junit.Before;
 import org.junit.Test;
 

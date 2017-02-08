@@ -1,11 +1,11 @@
 package no.soprasteria.sikkerhet.owasp.ctf.service;
 
+import no.soprasteria.sikkerhet.owasp.ctf.storage.ScoreRepository;
+import no.soprasteria.sikkerhet.owasp.ctf.storage.TeamRepository;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class ScoreServiceTest {
 
@@ -15,13 +15,11 @@ public class ScoreServiceTest {
 
     @Before
     public void oppsett() {
-        teamRepository = mock(TeamRepository.class);
+        teamRepository = new TeamRepository();
         scoreRepository = new ScoreRepository();
         service = new ScoreService(teamRepository, scoreRepository);
 
-        when(teamRepository.get("finnes_ikke")).thenReturn(null);
-        when(teamRepository.get("finnes")).thenReturn("finnes");
-
+        teamRepository.put("finnes", "finnes");
     }
 
     @Test

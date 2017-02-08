@@ -1,5 +1,7 @@
 package no.soprasteria.sikkerhet.owasp.ctf.service;
 
+import no.soprasteria.sikkerhet.owasp.ctf.storage.ScoreRepository;
+import no.soprasteria.sikkerhet.owasp.ctf.storage.TeamRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,8 +19,8 @@ public class ScoreService {
 
     public void addPointsToTeam(String teamKey, Long points) {
         if(teamExists(teamKey)) {
-            String teamName = teamRepository.get(teamKey);
-            Long currentScore = scoreRepository.get(teamKey);
+            String teamName = teamRepository.get(teamKey).get();
+            Long currentScore = scoreRepository.get(teamKey).orElse(0l);
             Long newScore = currentScore + points;
             scoreRepository.put(teamKey, newScore);
             logger.info("Team {} scored points. Score was {}, now {}", teamName, currentScore, newScore);
@@ -29,7 +31,7 @@ public class ScoreService {
 
     public Long getTeamScore(String teamKey) {
         if (teamExists(teamKey)) {
-            return scoreRepository.get(teamKey);
+            return scoreRepository.get(teamKey).orElse(0l);
         } else {
             return null;
         }
@@ -37,14 +39,14 @@ public class ScoreService {
 
     public void resetTeamScore(String teamKey) {
         if (teamExists(teamKey)) {
-            scoreRepository.put(teamKey, 0);
+            scoreRepository.put(teamKey, 0L);
             logger.info("Team {} score was reset.", teamKey);
         }
     }
 
     public void delPointsFromTeam(String teamKey, Long points) {
         if(teamExists(teamKey)) {
-            Long currentScore = scoreRepository.get(teamKey);
+            Long currentScore = scoreRepository.get(teamKey).orElse(0l);
             Long newScore = currentScore + points;
             scoreRepository.put(teamKey, newScore);
             logger.info("Team {} lost points. Score was {}, now {}", teamKey, currentScore, newScore);
@@ -52,6 +54,6 @@ public class ScoreService {
     }
 
     private boolean teamExists(String teamname) {
-        return teamRepository.get(teamname) != null;
+        return teamRepository.get(teamname).isPresent();
     }
 }

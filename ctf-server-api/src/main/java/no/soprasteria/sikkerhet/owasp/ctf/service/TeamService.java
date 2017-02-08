@@ -1,5 +1,6 @@
 package no.soprasteria.sikkerhet.owasp.ctf.service;
 
+import no.soprasteria.sikkerhet.owasp.ctf.storage.TeamRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,9 +28,9 @@ public class TeamService {
 
     public Optional<String> addNewTeam(String teamname) {
         String teamKey = newTeamKey(teamname, salt);
-        if (teamRepository.get(teamKey) == null) {
+        if (!teamRepository.get(teamKey).isPresent()) {
             logger.info("Added new team {} with key {}", teamname, teamKey);
-            teamRepository.add(teamKey, teamname);
+            teamRepository.put(teamKey, teamname);
             return Optional.ofNullable(teamKey);
         } else {
             logger.info("Team {} exisits.", teamname);
@@ -51,7 +52,6 @@ public class TeamService {
     }
 
     public Optional<String> getTeamName(String teamKey) {
-        String teamName = teamRepository.get(teamKey);
-        return Optional.ofNullable(teamName);
+        return teamRepository.get(teamKey);
     }
 }

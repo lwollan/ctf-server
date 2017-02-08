@@ -1,5 +1,6 @@
 package no.soprasteria.sikkerhet.owasp.ctf.service;
 
+import no.soprasteria.sikkerhet.owasp.ctf.storage.ScoreRepository;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,6 +24,7 @@ public class ScoreRepositoryTest {
     public void skal_kunne_hente_poeng_for_et_team() {
         repository.put("key", 10l);
 
-        assertThat(repository.get("key")).isEqualTo(10l);
+        assertThat(repository.get("key")).isPresent();
+        assertThat(repository.get("key").get()).isEqualTo(10l);
     }
 }
