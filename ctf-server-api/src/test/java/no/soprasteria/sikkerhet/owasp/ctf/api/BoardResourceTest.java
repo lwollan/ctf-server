@@ -20,6 +20,7 @@ public class BoardResourceTest {
         Map<String, Object> expected = new HashMap<>();
         expected.put("score", Arrays.asList());
         expected.put("title", "Sopra Steria CtF 2017");
+        expected.put("gameOn", false);
 
         BoardResource resource = new BoardResource();
 

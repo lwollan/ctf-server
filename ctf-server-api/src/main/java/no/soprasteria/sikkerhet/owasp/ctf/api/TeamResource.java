@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Path("team")
 public class TeamResource {
@@ -43,8 +44,14 @@ public class TeamResource {
     @Beskyttet
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<String> list(@Context Application application) {
+    public List<Map<String, String>> list(@Context Application application) {
         TeamService teamService = ApplicationContext.get(application, TeamService.class);
-        return teamService.getTeamList();
+        List<String> teamList = teamService.getTeamList();
+        return teamList.stream().map(teamName -> {
+            Map<String, String> map = new HashMap<>();
+            map.put(teamName, teamService.findTeamKeyByTameName(teamName).orElse("FEIL"));
+            return map;
+        }).collect(Collectors.toList());
     }
+
 }

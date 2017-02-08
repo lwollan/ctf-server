@@ -44,10 +44,10 @@ public class FlagResource {
             String teamKey = request.getHeaderString(X_TEAM_KEY);
 
             String flagId = body.getOrDefault(Answer.flagId.toString(), null);
-            String answer = body.getOrDefault(Answer.flag.toString(), null);
+            String flag = body.getOrDefault(Answer.flag.toString(), null);
 
-            if (flagId != null && answer != null) {
-                return handleAnswerAndGetResponse(application, teamKey, flagId, answer);
+            if (flagId != null && flag != null) {
+                return handleAnswerAndGetResponse(application, teamKey, flagId, flag);
             }
         }
 

@@ -6,10 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TeamService {
@@ -53,5 +50,11 @@ public class TeamService {
 
     public Optional<String> getTeamName(String teamKey) {
         return teamRepository.get(teamKey);
+    }
+
+    public Optional<String> findTeamKeyByTameName(String teamName) {
+        return teamRepository.list().entrySet().stream()
+                .filter(e -> e.getValue().equals(teamName))
+                .map(Map.Entry::getKey).findFirst();
     }
 }

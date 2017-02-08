@@ -19,18 +19,25 @@ public class RedisRepository implements Repository {
     }
 
     public void put(String key, String value) {
+        jedis.connect();
         jedis.set(makeKey(key), value);
+        jedis.disconnect();
 
     }
 
     public Optional<String> get(String key) {
-        return Optional.ofNullable(jedis.get(makeKey(key)));
+        jedis.connect();
+        Optional<String> value = Optional.ofNullable(jedis.get(makeKey(key)));
+        jedis.disconnect();
+        return value;
     }
 
     public Map<String, String> list() {
+        jedis.connect();
         Set<String> list = jedis.keys(makeKey("*"));
         Map<String, String> result = list.stream().
                 collect(toMap(key -> key.substring(prefix.length()), key -> jedis.get(key)));
+        jedis.disconnect();
         return result;
     }
 
