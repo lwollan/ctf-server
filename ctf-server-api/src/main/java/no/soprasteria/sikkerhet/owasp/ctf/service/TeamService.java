@@ -1,6 +1,6 @@
 package no.soprasteria.sikkerhet.owasp.ctf.service;
 
-import no.soprasteria.sikkerhet.owasp.ctf.storage.TeamRepository;
+import no.soprasteria.sikkerhet.owasp.ctf.storage.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,11 +16,11 @@ public class TeamService {
 
     private static Logger logger = LoggerFactory.getLogger(TeamService.class);
 
-    private TeamRepository teamRepository;
+    private Repository teamRepository;
     private final long salt;
 
 
-    public TeamService(TeamRepository teamRepository) throws NoSuchAlgorithmException {
+    public TeamService(Repository teamRepository) throws NoSuchAlgorithmException {
         this.teamRepository = teamRepository;
         MessageDigest.getInstance("SHA-256");
         salt = new Random().nextLong();

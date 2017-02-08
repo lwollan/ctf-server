@@ -4,27 +4,27 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-class HashMapRepository<V> implements Repository<V> {
+public class HashMapRepository implements Repository {
 
-    protected Map<String, V> map;
+    protected Map<String, String> map;
 
     public HashMapRepository() {
         map = new HashMap<>();
     }
 
     @Override
-    public void put(String key, V value) {
+    public void put(String key, String value) {
         map.put(key, value);
     }
 
     @Override
-    public Optional<V> get(String key) {
+    public Optional<String> get(String key) {
         return Optional.ofNullable(map.get(key));
     }
 
     @Override
-    public Map<String, V> list() {
-        HashMap<String, V> map = new HashMap<>();
+    public Map<String, String> list() {
+        HashMap<String, String> map = new HashMap<>();
         map.putAll(this.map);
         return map;
     }

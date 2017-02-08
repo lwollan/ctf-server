@@ -1,6 +1,7 @@
 package no.soprasteria.sikkerhet.owasp.ctf.service;
 
-import no.soprasteria.sikkerhet.owasp.ctf.storage.TeamRepository;
+import no.soprasteria.sikkerhet.owasp.ctf.storage.HashMapRepository;
+import no.soprasteria.sikkerhet.owasp.ctf.storage.Repository;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,7 +15,7 @@ public class TeamServiceTest {
 
     @Before
     public void oppsett() throws Exception {
-        TeamRepository repo = new TeamRepository();
+        Repository repo = new HashMapRepository();
         service = new TeamService(repo);
     }
 

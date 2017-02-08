@@ -11,13 +11,16 @@ import no.soprasteria.sikkerhet.owasp.ctf.service.BoardService;
 import no.soprasteria.sikkerhet.owasp.ctf.service.FlagService;
 import no.soprasteria.sikkerhet.owasp.ctf.service.ScoreService;
 import no.soprasteria.sikkerhet.owasp.ctf.service.TeamService;
-import no.soprasteria.sikkerhet.owasp.ctf.storage.ScoreRepository;
-import no.soprasteria.sikkerhet.owasp.ctf.storage.TeamRepository;
+import no.soprasteria.sikkerhet.owasp.ctf.storage.HashMapRepository;
+import no.soprasteria.sikkerhet.owasp.ctf.storage.RedisRepository;
+import no.soprasteria.sikkerhet.owasp.ctf.storage.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import redis.clients.jedis.Jedis;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -34,6 +37,17 @@ public class CtFApplication extends Application {
         logger.info("Starting up.");
         setupServices();
         logger.info("Application started.");
+
+    }
+
+    private static Jedis getConnection() {
+        try {
+            URI redisURI = new URI(System.getenv("REDIS_URL"));
+            Jedis jedis = new Jedis(redisURI);
+            return jedis;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
@@ -57,8 +71,21 @@ public class CtFApplication extends Application {
     }
 
     private void setupServices() throws Exception {
-        TeamRepository teamRepository = new TeamRepository();
-        ScoreRepository scoreRepository = new ScoreRepository();
+        Jedis jedis = getConnection();
+
+        Repository teamRepository;
+        Repository scoreRepository;
+
+        if (jedis != null) {
+            logger.info("Found jedis: {}.", jedis.getClient().getHost());
+            teamRepository = new RedisRepository("team", jedis);
+            scoreRepository = new RedisRepository("score", jedis);
+        } else {
+            logger.info("No jedis found, all in memory.");
+            teamRepository = new HashMapRepository();
+            scoreRepository = new HashMapRepository();
+        }
+
         ScoreService scoreService = new ScoreService(teamRepository, scoreRepository);
         TeamService teamService = new TeamService(teamRepository);
         BoardService boardService = new BoardService(teamRepository, scoreRepository);

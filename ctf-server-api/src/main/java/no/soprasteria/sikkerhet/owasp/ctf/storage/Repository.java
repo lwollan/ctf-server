@@ -3,11 +3,11 @@ package no.soprasteria.sikkerhet.owasp.ctf.storage;
 import java.util.Map;
 import java.util.Optional;
 
-public interface Repository<V> {
+public interface Repository {
 
-    void put(String key, V value);
+    void put(String key, String value);
 
-    Optional<V> get(String key);
+    Optional<String> get(String key);
 
-    Map<String, V> list();
+    Map<String, String> list();
 }

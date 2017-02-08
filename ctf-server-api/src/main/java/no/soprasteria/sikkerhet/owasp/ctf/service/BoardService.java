@@ -1,7 +1,6 @@
 package no.soprasteria.sikkerhet.owasp.ctf.service;
 
-import no.soprasteria.sikkerhet.owasp.ctf.storage.ScoreRepository;
-import no.soprasteria.sikkerhet.owasp.ctf.storage.TeamRepository;
+import no.soprasteria.sikkerhet.owasp.ctf.storage.Repository;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,10 +9,10 @@ import java.util.stream.Collectors;
 
 public class BoardService {
 
-    private TeamRepository teamRepository;
-    private ScoreRepository scoreRepository;
+    private Repository teamRepository;
+    private Repository scoreRepository;
 
-    public BoardService(TeamRepository teamRepository, ScoreRepository scoreRepository) {
+    public BoardService(Repository teamRepository, Repository scoreRepository) {
         this.teamRepository = teamRepository;
         this.scoreRepository = scoreRepository;
     }
@@ -22,10 +21,10 @@ public class BoardService {
         Map<String, String> teams = teamRepository.list();
 
         return teams.entrySet().stream().map(e -> {
-            Long score = scoreRepository.get(e.getKey()).orElse(0l);
+            String score = scoreRepository.get(e.getKey()).orElse("0");
             Map<String, String> teamScore = new HashMap<>();
             teamScore.put("team", e.getValue());
-            teamScore.put("score", Long.toString(score));
+            teamScore.put("score", score);
             return teamScore;
         }).collect(Collectors.toList());
     }

@@ -1,7 +1,7 @@
 package no.soprasteria.sikkerhet.owasp.ctf.service;
 
-import no.soprasteria.sikkerhet.owasp.ctf.storage.ScoreRepository;
-import no.soprasteria.sikkerhet.owasp.ctf.storage.TeamRepository;
+import no.soprasteria.sikkerhet.owasp.ctf.storage.HashMapRepository;
+import no.soprasteria.sikkerhet.owasp.ctf.storage.Repository;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,14 +9,14 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 public class ScoreServiceTest {
 
-    private TeamRepository teamRepository;
-    private ScoreRepository scoreRepository;
+    private Repository teamRepository;
+    private Repository scoreRepository;
     private ScoreService service;
 
     @Before
     public void oppsett() {
-        teamRepository = new TeamRepository();
-        scoreRepository = new ScoreRepository();
+        teamRepository = new HashMapRepository();
+        scoreRepository = new HashMapRepository();
         service = new ScoreService(teamRepository, scoreRepository);
 
         teamRepository.put("finnes", "finnes");

@@ -21,20 +21,6 @@
                 <version>1.4.0</version>
                 <executions>
                     <execution>
-                        <id>npm clean</id>
-                        <phase>clean</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>npm</executable>
-                            <arguments>
-                                <argument>run</argument>
-                                <argument>clean</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>npm install</id>
                         <phase>generate-sources</phase>
                         <goals>
@@ -61,6 +47,7 @@
                             </arguments>
                         </configuration>
                     </execution>
+                    <!--
                     <execution>
                         <id>test javascript</id>
                         <phase>test</phase>
@@ -75,6 +62,7 @@
                             </arguments>
                         </configuration>
                     </execution>
+                    -->
                 </executions>
             </plugin>
         </plugins>

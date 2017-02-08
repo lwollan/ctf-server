@@ -1,31 +1,32 @@
 package no.soprasteria.sikkerhet.owasp.ctf.service;
 
-import no.soprasteria.sikkerhet.owasp.ctf.storage.ScoreRepository;
-import no.soprasteria.sikkerhet.owasp.ctf.storage.TeamRepository;
+import no.soprasteria.sikkerhet.owasp.ctf.storage.HashMapRepository;
+import no.soprasteria.sikkerhet.owasp.ctf.storage.Repository;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.String.valueOf;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class BoardServiceTest {
 
     @Test
     public void skal_vise_tom_board_ved_oppstart() {
-        BoardService boardService = new BoardService(new TeamRepository(), new ScoreRepository());
+        BoardService boardService = new BoardService(new HashMapRepository(), new HashMapRepository());
         assertThat(boardService.getScore()).isEmpty();
     }
 
     @Test
     public void skal_vise_alle_lag() {
-        TeamRepository teamRepository = new TeamRepository();
+        Repository teamRepository = new HashMapRepository();
 
         teamRepository.put("team 1 key", "team 1");
         teamRepository.put("team 2 key", "team 2");
         teamRepository.put("team 3 key", "team 3");
-        BoardService boardService = new BoardService(teamRepository, new ScoreRepository());
+        BoardService boardService = new BoardService(teamRepository, new HashMapRepository());
 
         assertThat(boardService.getScore().get(0)).containsOnlyKeys("team" , "score");
         assertThat(boardService.getScore().get(1)).containsOnlyKeys("team" , "score");
@@ -34,17 +35,17 @@ public class BoardServiceTest {
 
     @Test
     public void skal_vise_poeng_for_lag() {
-        TeamRepository teamRepository = new TeamRepository();
-        ScoreRepository scoreRepository = new ScoreRepository();
+        Repository teamRepository = new HashMapRepository();
+        Repository scoreRepository = new HashMapRepository();
         BoardService boardService = new BoardService(teamRepository, scoreRepository);
 
         teamRepository.put("team 1 key", "team 1");
         teamRepository.put("team 2 key", "team 2");
         teamRepository.put("team 3 key", "team 3");
 
-        scoreRepository.put("team 1 key", 42L);
-        scoreRepository.put("team 2 key", 1L);
-        scoreRepository.put("team 3 key", 33L);
+        scoreRepository.put("team 1 key", valueOf(42L));
+        scoreRepository.put("team 2 key", valueOf(1L));
+        scoreRepository.put("team 3 key", valueOf(33L));
 
         Map<String, String> team1score = lagScore("team 1", "42");
         Map<String, String> team2score = lagScore("team 2", "1");
