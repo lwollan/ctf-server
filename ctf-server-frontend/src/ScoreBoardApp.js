@@ -1,17 +1,20 @@
-import React from 'react';
+import React, { Component } from 'react';
 import ScoreBoard from './ScoreBoard';
+import Datas from './Datas';
+import Game from './Game';
 
-const ScoreBoardApp = React.createClass({
-  getInitialState: function () {
-    return {};
-  },
-  render: function () {
-    return (
-      <div className='ScoreBoardApp'>
-          <ScoreBoardApp/>
-      </div>
-    );
-  },
-});
+export default class ScoreBoardApp extends Component {
+    componentDidMount() {
+        Datas.pollBoard();
+    }
 
-export default ScoreBoard;
+    render() {
+        return (
+            <div className='ScoreBoardApp'>
+                <Game />
+                <hr />
+                <ScoreBoard/>
+            </div>
+        );
+    }
+}
