@@ -4,6 +4,7 @@ import no.soprasteria.sikkerhet.owasp.ctf.CtFApplication;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
 
@@ -42,4 +43,13 @@ public class TeamResourceTest {
 
         assertThat(teamListe).hasSize(1);
     }
+
+    @Test
+    public void skal_slette_baade_team_og_poengsummer() {
+        resource.add(application, "0xDEADBEEF");
+        Response response = resource.del(application, "0xDEADBEEF");
+        assertThat(response.getStatus()).isEqualTo(200);
+
+    }
+
 }

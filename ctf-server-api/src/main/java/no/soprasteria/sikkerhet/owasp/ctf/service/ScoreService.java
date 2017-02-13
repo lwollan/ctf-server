@@ -43,7 +43,13 @@ public class ScoreService {
         }
     }
 
-    private boolean teamExists(String teamname) {
-        return teamRepository.get(teamname).isPresent();
+    public void deleteTeamScore(String teamKey) {
+        if (teamExists(teamKey)) {
+            scoreRepository.remove(teamKey);
+        }
+    }
+
+    private boolean teamExists(String teamKey) {
+        return teamRepository.get(teamKey).isPresent();
     }
 }

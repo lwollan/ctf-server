@@ -10,4 +10,6 @@ public interface Repository {
     Optional<String> get(String key);
 
     Map<String, String> list();
+
+    void remove(String key);
 }

@@ -22,7 +22,6 @@ public class RedisRepository implements Repository {
         jedis.connect();
         jedis.set(makeKey(key), value);
         jedis.disconnect();
-
     }
 
     public Optional<String> get(String key) {
@@ -39,6 +38,11 @@ public class RedisRepository implements Repository {
                 collect(toMap(key -> key.substring(prefix.length()), key -> jedis.get(key)));
         jedis.disconnect();
         return result;
+    }
+
+    @Override
+    public void remove(String key) {
+        jedis.del(makeKey(key));
     }
 
     private String makeKey(String key) {

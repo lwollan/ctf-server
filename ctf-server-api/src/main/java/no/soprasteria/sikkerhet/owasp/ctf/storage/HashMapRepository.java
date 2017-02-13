@@ -28,4 +28,11 @@ public class HashMapRepository implements Repository {
         map.putAll(this.map);
         return map;
     }
+
+    @Override
+    public void remove(String key) {
+        if (map.containsKey(key)) {
+            map.remove(key);
+        }
+    }
 }

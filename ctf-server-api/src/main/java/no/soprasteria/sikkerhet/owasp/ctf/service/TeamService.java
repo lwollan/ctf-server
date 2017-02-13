@@ -14,7 +14,7 @@ public class TeamService {
     private static Logger logger = LoggerFactory.getLogger(TeamService.class);
 
     private Repository teamRepository;
-    private final long salt;
+    final long salt;
 
 
     public TeamService(Repository teamRepository) throws NoSuchAlgorithmException {
@@ -35,6 +35,15 @@ public class TeamService {
         }
     }
 
+    public boolean deleteTeam(String teamKey) {
+        if (teamRepository.get(teamKey).isPresent()) {
+            teamRepository.remove(teamKey);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     static String newTeamKey(String teamname, Long salt) {
         try {
             byte[] digest = MessageDigest.getInstance("SHA-256").digest((teamname + salt).getBytes());
@@ -52,7 +61,7 @@ public class TeamService {
         return teamRepository.get(teamKey);
     }
 
-    public Optional<String> findTeamKeyByTameName(String teamName) {
+    public Optional<String> findTeamKeyByTeameName(String teamName) {
         return teamRepository.list().entrySet().stream()
                 .filter(e -> e.getValue().equals(teamName))
                 .map(Map.Entry::getKey).findFirst();

@@ -2,15 +2,13 @@ package no.soprasteria.sikkerhet.owasp.ctf.api;
 
 import no.soprasteria.sikkerhet.owasp.ctf.filter.Beskyttet;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.TeamKeyFilter;
+import no.soprasteria.sikkerhet.owasp.ctf.service.ScoreService;
 import no.soprasteria.sikkerhet.owasp.ctf.service.TeamService;
 import no.soprasteria.sikkerhet.owasp.ctf.ApplicationContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -23,6 +21,8 @@ import java.util.stream.Collectors;
 
 @Path("team")
 public class TeamResource {
+
+    private static Logger logger = LoggerFactory.getLogger(ScoreService.class);
 
     @Path("add/{teamname}")
     @POST
@@ -42,6 +42,32 @@ public class TeamResource {
     }
 
     @Beskyttet
+    @Path("{teamname}")
+    @DELETE
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response del(@Context Application application, @PathParam("teamname") String teamname) {
+        TeamService teamService = ApplicationContext.get(application, TeamService.class);
+        ScoreService scoreService = ApplicationContext.get(application, ScoreService.class);
+
+        Optional<String> teamKeyByTameName = teamService.findTeamKeyByTeameName(teamname);
+        if (teamKeyByTameName.isPresent()) {
+            boolean deletedTeam = teamService.deleteTeam(teamKeyByTameName.get());
+            scoreService.deleteTeamScore(teamKeyByTameName.get());
+
+            if (deletedTeam) {
+                logger.info("Team key {} with score deleted.", teamname);
+                return Response.ok().build();
+            } else {
+                logger.warn("Feil ved sletting av team. deletedTeam={} deletedTeamScore={}.");
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+        } else {
+            logger.info("Team {} ikke funnet.", teamname);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @Beskyttet
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Map<String, String>> list(@Context Application application) {
@@ -49,9 +75,30 @@ public class TeamResource {
         List<String> teamList = teamService.getTeamList();
         return teamList.stream().map(teamName -> {
             Map<String, String> map = new HashMap<>();
-            map.put(teamName, teamService.findTeamKeyByTameName(teamName).orElse("FEIL"));
+            map.put("teamName", teamName);
+            map.put("teamKey", teamService.findTeamKeyByTeameName(teamName).orElse("FEIL"));
             return map;
         }).collect(Collectors.toList());
     }
 
+    @Beskyttet
+    @Path("/{teamName}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response get(@Context Application application, @PathParam("teamName") String teamName) {
+        TeamService teamService = ApplicationContext.get(application, TeamService.class);
+        Optional<String> teamKey = teamService.findTeamKeyByTeameName(teamName);
+
+        ScoreService scoreService = ApplicationContext.get(application, ScoreService.class);
+
+        Long teamScore = scoreService.getTeamScore(teamKey.get());
+
+        Map<String, String> response = new HashMap<>();
+
+        response.put("teamName", teamName);
+        response.put("teamKey", teamKey.get());
+        response.put("score", String.valueOf(teamScore));
+
+        return Response.ok(response).build();
+    }
 }
