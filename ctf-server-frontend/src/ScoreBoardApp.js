@@ -24,8 +24,7 @@ export default class ScoreBoardApp extends Component {
                 <div className="block">
                     <h1>{ board && board.get('title') }</h1>
                 </div>
-                <Game />
-                <ScoreBoard/>
+                { location.href.indexOf('show-board') === -1 ? <Game /> : <ScoreBoard/> }
             </main>
         );
     }
