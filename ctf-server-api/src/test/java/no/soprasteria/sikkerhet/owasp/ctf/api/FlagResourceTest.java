@@ -17,6 +17,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 public class FlagResourceTest {
@@ -28,6 +29,7 @@ public class FlagResourceTest {
     private ContainerRequestContext request;
     private String flag1Id;
     private String flag2Id;
+    private String newTeamKey;
 
     private Map<String, String> svarMedRiktigFlag, svarMedFeilFlag, svarMedUkjentFlagId;
 
@@ -41,7 +43,7 @@ public class FlagResourceTest {
         flag1Id = flagService.addFlag("flag 1", "svar 1", 10l, "tips");
         flag2Id = flagService.addFlag("flag 2", "svar 2", 10l, "tips");
 
-        String newTeamKey = teamService.addNewTeam("team-a").get();
+        newTeamKey = teamService.addNewTeam("team-a").get();
 
         svarMedRiktigFlag = nyttFlagSvar(flag1Id, "svar 1");
         svarMedFeilFlag = nyttFlagSvar(flag1Id, "svar 2");
@@ -53,8 +55,7 @@ public class FlagResourceTest {
 
     @Test
     public void skal_returnere_alle_registrerte_flagg() {
-        List<Map<String, String>> list = resource.list(application);
-
+        List<Map<String, String>> list = resource.list(application, newTeamKey);
         assertThat(list).isNotEmpty();
     }
 
@@ -85,6 +86,14 @@ public class FlagResourceTest {
         assertThat(response1.getStatus()).isEqualTo(202);
         Response response2 = resource.answer(application, request, svarMedRiktigFlag);
         assertThat(response2.getStatus()).isNotEqualTo(202);
+    }
+
+    @Test
+    public void skal_si_om_et_flag_er_besvart_eller_ikke() {
+        resource.answer(application, request, svarMedRiktigFlag);
+        List<Map<String, String>> list = resource.list(application, newTeamKey);
+
+        assertThat(list.stream().filter(m -> m.get("flagId").equals(svarMedRiktigFlag.get("flagId")))).isNotEmpty();
     }
 
     private static Map<String, String> nyttFlagSvar(String value, String value2) {

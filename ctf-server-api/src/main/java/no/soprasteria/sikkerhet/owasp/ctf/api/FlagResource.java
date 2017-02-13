@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
+import static no.soprasteria.sikkerhet.owasp.ctf.api.FlagResource.Answer.flagAnswered;
 import static no.soprasteria.sikkerhet.owasp.ctf.filter.TeamKeyFilter.X_TEAM_KEY;
 import static no.soprasteria.sikkerhet.owasp.ctf.service.FlagService.Keys.flagId;
 import static no.soprasteria.sikkerhet.owasp.ctf.service.FlagService.Keys.flagName;
@@ -33,7 +34,7 @@ public class FlagResource {
     private static Logger logger = LoggerFactory.getLogger(FlagResource.class);
 
     enum Answer {
-        flagId, flag
+        flagId, flag, flagAnswered
     }
 
     @TeamKey
@@ -59,7 +60,7 @@ public class FlagResource {
     @GET
     @Path("list")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Map<String, String>> list(@Context Application application) {
+    public List<Map<String, String>> list(@Context Application application, @HeaderParam("X-TEAM-KEY") String teamKey) {
         FlagService flagService = ApplicationContext.get(application, FlagService.class);
 
         List<Map<String, String>> flags = flagService.listFlag();
@@ -68,6 +69,7 @@ public class FlagResource {
             Map<String, String> filteredMap = new HashMap<>();
             filteredMap.put(flagId.toString(), m.get(flagId.toString()));
             filteredMap.put(flagName.toString(), m.get(flagName.toString()));
+            filteredMap.put(flagAnswered.toString(), String.valueOf(!flagService.isFlagUnanswered(teamKey, m.get(flagId.toString()))));
             return filteredMap;
         }).collect(Collectors.toList());
 
