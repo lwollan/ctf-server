@@ -24,7 +24,6 @@ export default class ScoreBoard extends Component {
 
         return (
             <div className="block">
-                { board.get('title') }
                 <table className="scoreboard" width="100%">
                     <thead>
                     <tr>

@@ -7,7 +7,7 @@ export default class Flags extends Component {
     componentWillMount() {
         Datas.subscribe(this.unsub = state => this.setState({ flags: state.get('flags') }));
 
-        Datas.pollFlags();
+        Datas.getFlags();
     }
 
     componentWillUnmount() {
