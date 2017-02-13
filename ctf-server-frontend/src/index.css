@@ -23,6 +23,12 @@ body {
   padding: 1rem;
 }
 
+.team {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .flag {
   background: #eee;
   -webkit-border-radius: 3px;
@@ -36,6 +42,11 @@ body {
 
 .flag.incorrect {
   background: red;
+}
+
+.flag.answered {
+  background: green;
+  color: #fff;
 }
 
 .flag-header {

@@ -23,7 +23,9 @@ export default class Flags extends Component {
 
         return (
             <div className="block flags">
-                { flags.sort().map(flag => <Flag key={ flag.get('flagId') } flag={ flag } />) }
+                { flags
+                    .sort((a, b) => a.get('flagName').localeCompare(b.get('flagName'), 'no', { numeric: true }))
+                    .map(flag => <Flag key={ flag.get('flagId') } flag={ flag } />) }
             </div>
         );
     }

@@ -25,8 +25,10 @@ export default class Game extends Component {
         return (
             <div>
                 <div className="block">
-                    <div>game on lol { team.get('name') }</div>
-                    <button type="button" onClick={ Datas.logout }>logout</button>
+                    <div className="team">
+                        { team.get('name') } ({ team.get('X-TEAM-KEY') })
+                        <button type="button" onClick={ Datas.logout }>logout</button>
+                    </div>
                 </div>
                 <Flags />
             </div>

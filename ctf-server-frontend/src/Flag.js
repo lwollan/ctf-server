@@ -19,19 +19,33 @@ export default class Flag extends Component {
             .catch(() => this.setState({ incorrect: true }));
     };
 
+    getStatusClass() {
+        const { flag } = this.props;
+
+        if (flag.get('flagAnswered') === 'true') {
+            return ('answered');
+        }
+
+        if (this.state.incorrect) {
+            return 'incorrect';
+        }
+
+        return '';
+    }
+
     render() {
         const { flag } = this.props;
-        const { incorrect } = this.state;
+        const answered = flag.get('flagAnswered') === 'true';
 
         return (
-            <form className={ `flag ${incorrect ? 'incorrect' : ''}` } onSubmit={ this.postFlag }>
+            <form className={ `flag ${this.getStatusClass()}` } onSubmit={ this.postFlag }>
                 <header>{ flag.get('flagName') }</header>
-                <div className="flag-content">
-                    <input type="text" className="flag-answer" ref={ node => this.inputNode = node }/>
+                { !answered && <div className="flag-content">
+                    <input type="text" className="flag-answer" disabled={ answered } ref={ node => this.inputNode = node }/>
                     <div className="flag-actions">
                         <button className="flag-action" type="submit">Submit</button>
                     </div>
-                </div>
+                </div> }
             </form>
         );
     }
