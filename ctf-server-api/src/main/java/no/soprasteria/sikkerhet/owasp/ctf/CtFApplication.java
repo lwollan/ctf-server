@@ -14,7 +14,8 @@ import no.soprasteria.sikkerhet.owasp.ctf.storage.RedisRepository;
 import no.soprasteria.sikkerhet.owasp.ctf.storage.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -38,10 +39,11 @@ public class CtFApplication extends Application {
 
     }
 
-    private static Jedis getConnection() {
+    private static JedisPool getConnection() {
         try {
             URI redisURI = new URI(System.getenv("REDIS_URL"));
-            return new Jedis(redisURI);
+            logger.info("REDIS_URL: {}", redisURI.toASCIIString());
+            return new JedisPool(new JedisPoolConfig(), redisURI);
         } catch (Exception e) {
             return null;
         }
@@ -69,15 +71,14 @@ public class CtFApplication extends Application {
     }
 
     private void setupServices() throws Exception {
-        Jedis jedis = getConnection();
+        JedisPool connection = getConnection();
 
         Repository teamRepository;
         Repository scoreRepository;
 
-        if (jedis != null) {
-            logger.info("Found jedis: {}.", jedis.getClient().getHost());
-            teamRepository = new RedisRepository("team", jedis);
-            scoreRepository = new RedisRepository("score", jedis);
+        if (connection != null) {
+            teamRepository = new RedisRepository("team", connection);
+            scoreRepository = new RedisRepository("score", connection);
         } else {
             logger.info("No jedis found, all in memory.");
             teamRepository = new HashMapRepository();
