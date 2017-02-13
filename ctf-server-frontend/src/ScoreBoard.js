@@ -6,7 +6,11 @@ export default class ScoreBoard extends Component {
     state = {};
 
     componentDidMount() {
-        Datas.subscribe(state => this.setState({ board: state.get('board') }));
+        Datas.subscribe(this.unsub = state => this.setState({ board: state.get('board') }));
+    }
+
+    componentWillUnmount() {
+        Datas.unsubscribe(this.unsub);
     }
 
     render() {
@@ -19,9 +23,9 @@ export default class ScoreBoard extends Component {
         }
 
         return (
-            <div>
+            <div className="block">
                 { board.get('title') }
-                <table>
+                <table className="scoreboard" width="100%">
                     <thead>
                     <tr>
                         <th>Team</th>

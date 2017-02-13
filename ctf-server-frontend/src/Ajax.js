@@ -57,21 +57,15 @@ function parse(options, response) {
     });
 }
 
-function getHeaders(headers) {
-    return {
-        ...headers
-    };
-}
-
 function getUrl(url) {
     return (urlPrefix || '') + url;
 }
 
-function get(url, config) {
+function get(url, config = {}) {
     const options = {
         ...config,
         url,
-        headers: getHeaders(),
+        headers: config.headers,
         credentials: 'same-origin'
     };
 
@@ -80,14 +74,15 @@ function get(url, config) {
         .then(response => parse(options, response));
 }
 
-function post(url, data = {}) {
+function post(url, data = {}, config = {}) {
     const options = {
         url,
         method: 'POST',
         body: JSON.stringify(data),
-        headers: getHeaders({
-                                'Content-Type': 'application/json'
-                            }),
+        headers: {
+            'Content-Type': 'application/json',
+            ...config.headers
+        },
         credentials: 'same-origin'
     };
 
@@ -96,14 +91,15 @@ function post(url, data = {}) {
         .then(response => parse(options, response));
 }
 
-function put(url, data = {}) {
+function put(url, data = {}, config = {}) {
     const options = {
         url,
         method: 'PUT',
         body: JSON.stringify(data),
-        headers: getHeaders({
-                                'Content-Type': 'application/json'
-                            }),
+        headers: {
+            'Content-Type': 'application/json',
+            ...config.headers
+        },
         credentials: 'same-origin'
     };
 
