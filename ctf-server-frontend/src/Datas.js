@@ -3,8 +3,8 @@ import Immutable from 'immutable';
 
 const delayPromise = timeout => new Promise(resolve => setTimeout(resolve, timeout));
 
-Ajax.setUrlPrefix('http://localhost:9090/');
-//Ajax.setUrlPrefix('https://ss-ctf-server.herokuapp.com/');
+//Ajax.setUrlPrefix('http://localhost:9090/');
+Ajax.setUrlPrefix('https://ss-ctf-server.herokuapp.com/');
 
 function getTeamFromLocalStorage() {
     try {
