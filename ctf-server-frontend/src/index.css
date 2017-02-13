@@ -1,5 +1,93 @@
 body {
+  background: #eee;
+  font-family: Helvetica, sans-serif;
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 1rem;
+}
+
+.block {
+  background: #fff;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: 0 2px 2px 0 #ccc;
+  -moz-box-shadow: 0 2px 2px 0 #ccc;
+  box-shadow: 0 2px 2px 0 #ccc;
+  margin: 1rem 0;
+  padding: 1rem;
+}
+
+.flag {
+  background: #eee;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: 0 2px 2px 0 #ccc;
+  -moz-box-shadow: 0 2px 2px 0 #ccc;
+  box-shadow: 0 2px 2px 0 #ccc;
+  padding: 0.5em 1em;
+}
+
+.flag.incorrect {
+  background: red;
+}
+
+.flag-header {
+  cursor: pointer;
+}
+
+.flag-answer {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  display: block;
+  line-height: 1.2em;
+  padding: 0.5em 1em;
+  width: 100%;
+}
+
+.flag-actions {
+  margin: 0.5em 0 0;
+  text-align: right;
+}
+
+.flag-action {
+  border: none;
+  background: #4078c0;
+  color: #fff;
+  padding: 0.2em 1em;
+}
+
+.flag+.flag {
+  margin-top: 1em;
+}
+
+.scoreboard {
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.scoreboard th, td {
+  overflow: hidden;
+  padding: 0.5em;
+  text-align: left;
+  max-width: 50%;
+}
+
+.scoreboard thead {
+  border-bottom: 2px solid #eee;
+}
+
+.scoreboard tr+tr {
+  border-top: 1px solid #eee;
+}
+
+.scoreboard td+td, .scoreboard th+th {
+  border-left: 1px solid #eee;
 }

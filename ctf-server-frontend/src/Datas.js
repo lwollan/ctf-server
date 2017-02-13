@@ -3,7 +3,8 @@ import Immutable from 'immutable';
 
 const delayPromise = timeout => new Promise(resolve => setTimeout(resolve, timeout));
 
-Ajax.setUrlPrefix('https://ss-ctf-server.herokuapp.com/');
+Ajax.setUrlPrefix('http://localhost:9090/');
+//Ajax.setUrlPrefix('https://ss-ctf-server.herokuapp.com/');
 
 function getTeamFromLocalStorage() {
     try {
@@ -20,7 +21,7 @@ class Datas {
 
     pollBoard() {
         this.getBoard()
-            .then(() => delayPromise(1000))
+            .then(() => delayPromise(5000))
             .then(() => this.pollBoard());
     }
 
@@ -30,17 +31,39 @@ class Datas {
             .then(() => this.notify());
     }
 
-    registerTeam(name) {
-        this.state.isRegisteringTeam = true;
+    pollFlags() {
+        if (!this.state.get('team')) {
+            return;
+        }
 
+        this.getFlags()
+            .then(() => delayPromise(5000))
+            .then(() => this.pollFlags());
+    }
+
+    getTeamKeyHeader() {
+        return { headers: { 'X-TEAM-KEY': this.state.getIn(['team', 'X-TEAM-KEY']) } };
+    }
+
+    getFlags() {
+        return Ajax.get('api/flag/list/', this.getTeamKeyHeader())
+            .then(res => this.state = this.state.set('flags', Immutable.fromJS(res)))
+            .then(() => this.notify());
+    }
+
+    postFlag(flagId, flag) {
+        return Ajax.post('api/flag', { flagId, flag }, this.getTeamKeyHeader())
+            .then(() => this.getFlags());
+    }
+
+    registerTeam(name) {
         return Ajax.post(`api/team/add/${name}`)
             .then(res => {
                 const team = { name, ...res };
 
-                localStorage.setItem('team', JSON.stringify(res));
+                localStorage.setItem('team', JSON.stringify(team));
 
                 this.state = this.state
-                    .set('isRegisteringTeam')
                     .set('team', Immutable.fromJS(team));
             })
             .then(() => this.notify());
@@ -52,6 +75,7 @@ class Datas {
 
     logout = () => {
         this.state = this.state.set('team', null);
+        localStorage.removeItem('team');
         this.notify();
     };
 
@@ -64,7 +88,7 @@ class Datas {
     unsubscribe(subFn) {
         const index = this.subscribers.indexOf(subFn);
 
-        this.subscribers = this.subscribers.splice(index, 0);
+        this.subscribers.splice(index, 1);
     }
 }
 

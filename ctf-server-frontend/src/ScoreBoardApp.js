@@ -10,11 +10,10 @@ export default class ScoreBoardApp extends Component {
 
     render() {
         return (
-            <div className='ScoreBoardApp'>
+            <main className="container">
                 <Game />
-                <hr />
                 <ScoreBoard/>
-            </div>
+            </main>
         );
     }
 }
