@@ -45,6 +45,11 @@ public class RedisRepository implements Repository {
         jedis.del(makeKey(key));
     }
 
+    @Override
+    public void deleteAll() {
+        jedis.flushDB();
+    }
+
     private String makeKey(String key) {
         return prefix + key;
     }

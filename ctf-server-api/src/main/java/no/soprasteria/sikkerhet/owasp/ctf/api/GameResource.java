@@ -5,6 +5,7 @@ import no.soprasteria.sikkerhet.owasp.ctf.filter.Beskyttet;
 import no.soprasteria.sikkerhet.owasp.ctf.service.BoardService;
 import no.soprasteria.sikkerhet.owasp.ctf.service.FlagService;
 import no.soprasteria.sikkerhet.owasp.ctf.service.GameService;
+import no.soprasteria.sikkerhet.owasp.ctf.service.TeamService;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -51,6 +52,14 @@ public class GameResource {
     public void stopGame(@Context Application application) {
         GameService gameService = ApplicationContext.get(application, GameService.class);
         gameService.pauseGame();
+    }
+
+    @Beskyttet
+    @POST
+    @Path("sys64764")
+    public void reset(@Context Application application) {
+        TeamService teamService = ApplicationContext.get(application, TeamService.class);
+        teamService.reset();
     }
 
 }

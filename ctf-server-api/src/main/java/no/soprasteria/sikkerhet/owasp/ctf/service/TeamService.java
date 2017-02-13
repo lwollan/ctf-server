@@ -66,4 +66,8 @@ public class TeamService {
                 .filter(e -> e.getValue().equals(teamName))
                 .map(Map.Entry::getKey).findFirst();
     }
+
+    public void reset() {
+        teamRepository.deleteAll();
+    }
 }

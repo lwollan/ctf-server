@@ -35,4 +35,9 @@ public class HashMapRepository implements Repository {
             map.remove(key);
         }
     }
+
+    @Override
+    public void deleteAll() {
+        map.clear();
+    }
 }

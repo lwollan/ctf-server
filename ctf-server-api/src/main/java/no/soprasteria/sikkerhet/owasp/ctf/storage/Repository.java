@@ -12,4 +12,6 @@ public interface Repository {
     Map<String, String> list();
 
     void remove(String key);
+
+    void deleteAll();
 }
