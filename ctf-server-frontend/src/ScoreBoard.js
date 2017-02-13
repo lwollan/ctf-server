@@ -34,7 +34,7 @@ export default class ScoreBoard extends Component {
                     </thead>
                     <tbody>
                     {
-                        board && board.get('score').map(score => (
+                        board && board.get('score').sort().reverse().map(score => (
                             <tr key={ score.get('team') }>
                                 <td>{ score.get('team') }</td>
                                 <td>{ score.get('score') }</td>

@@ -23,7 +23,7 @@ export default class Flags extends Component {
 
         return (
             <div className="block flags">
-                { flags.map(flag => <Flag key={ flag.get('flagId') } flag={ flag } />) }
+                { flags.sort().map(flag => <Flag key={ flag.get('flagId') } flag={ flag } />) }
             </div>
         );
     }
