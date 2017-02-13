@@ -56,16 +56,16 @@ class Datas {
             .then(() => this.getFlags());
     }
 
+    loginTeam(team) {
+        localStorage.setItem('team', JSON.stringify(team));
+
+        this.state = this.state
+            .set('team', Immutable.fromJS(team));
+    }
+
     registerTeam(name) {
         return Ajax.post(`api/team/add/${name}`)
-            .then(res => {
-                const team = { name, ...res };
-
-                localStorage.setItem('team', JSON.stringify(team));
-
-                this.state = this.state
-                    .set('team', Immutable.fromJS(team));
-            })
+            .then(res => this.loginTeam({ name, ...res }))
             .then(() => this.notify());
     }
 

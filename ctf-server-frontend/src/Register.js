@@ -8,10 +8,17 @@ export default class Register extends Component {
     onSubmit = e => {
         e.preventDefault();
 
-        const { teamName } = this.state;
+        const { teamName, teamKey } = this.state;
 
         if (!teamName || !teamName.trim()) {
             return;
+        }
+
+        if (teamKey && teamKey.trim()) {
+            Datas.loginTeam({
+                team: teamName,
+                'X-TEAM-KEY': teamKey
+            });
         }
 
         this.setState({ saving: true });
@@ -20,14 +27,22 @@ export default class Register extends Component {
             .catch(() => this.setState({ saving: false, teamName: '' }));
     };
 
-    onInputChange = e => this.setState({ teamName: e.target.value });
+    onInputChange = e => this.setState({ [e.target.name]: e.target.value });
 
     render() {
         return (
             <form className="block" onSubmit={ this.onSubmit }>
-                <label htmlFor="team-name-input">Team name</label>
-                <input id="team-name-input" onChange={ this.onInputChange } disabled={ this.state.saving }/>
-                <button type="submit" disabled={ this.state.saving }>Submit</button>
+                <div className="input-group">
+                    <label htmlFor="team-name-input" className="input-label">Team name</label>
+                    <input id="team-name-input" name="teamName" className="input-text" onChange={ this.onInputChange } disabled={ this.state.saving }/>
+                </div>
+                <div className="input-group">
+                    <label htmlFor="team-name-input" className="input-label">Team key (only for existing teams)</label>
+                    <input id="team-key-input" name="teamKey" className="input-text" onChange={ this.onInputChange } disabled={ this.state.saving }/>
+                </div>
+                <div className="actions">
+                    <button type="submit" disabled={ this.state.saving } className="action">Submit</button>
+                </div>
             </form>
         )
     }

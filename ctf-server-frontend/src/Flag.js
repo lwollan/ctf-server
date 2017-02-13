@@ -41,9 +41,9 @@ export default class Flag extends Component {
             <form className={ `flag ${this.getStatusClass()}` } onSubmit={ this.postFlag }>
                 <header>{ flag.get('flagName') }</header>
                 { !answered && <div className="flag-content">
-                    <input type="text" className="flag-answer" disabled={ answered } ref={ node => this.inputNode = node }/>
-                    <div className="flag-actions">
-                        <button className="flag-action" type="submit">Submit</button>
+                    <input type="text" className="input-text" disabled={ answered } ref={ node => this.inputNode = node }/>
+                    <div className="actions">
+                        <button className="action" type="submit">Submit</button>
                     </div>
                 </div> }
             </form>

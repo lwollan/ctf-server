@@ -5,6 +5,10 @@ body {
   padding: 0;
 }
 
+h1 {
+  margin: 0;
+}
+
 .container {
   margin: 0 auto;
   max-width: 800px;
@@ -53,7 +57,7 @@ body {
   cursor: pointer;
 }
 
-.flag-answer {
+.input-text {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -63,12 +67,12 @@ body {
   width: 100%;
 }
 
-.flag-actions {
+.actions {
   margin: 0.5em 0 0;
   text-align: right;
 }
 
-.flag-action {
+.action {
   border: none;
   background: #4078c0;
   color: #fff;
@@ -101,4 +105,12 @@ body {
 
 .scoreboard td+td, .scoreboard th+th {
   border-left: 1px solid #eee;
+}
+
+.input-group+.input-group {
+  margin-top: 1em;
+}
+
+.input-submit {
+  display: block;
 }
