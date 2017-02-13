@@ -6,7 +6,8 @@ export default class Flag extends Component {
 
     state = {};
 
-    postFlag = () => {
+    postFlag = e => {
+        e.preventDefault();
         const { value } = this.inputNode;
         const { flag } = this.props;
 
@@ -23,15 +24,15 @@ export default class Flag extends Component {
         const { incorrect } = this.state;
 
         return (
-            <section className={ `flag ${incorrect ? 'incorrect' : ''}` }>
+            <form className={ `flag ${incorrect ? 'incorrect' : ''}` } onSubmit={ this.postFlag }>
                 <header>{ flag.get('flagName') }</header>
                 <div className="flag-content">
-                    <textarea className="flag-answer" ref={ node => this.inputNode = node }/>
+                    <input type="text" className="flag-answer" ref={ node => this.inputNode = node }/>
                     <div className="flag-actions">
-                        <button className="flag-action" onClick={ this.postFlag }>Submit</button>
+                        <button className="flag-action" type="submit">Submit</button>
                     </div>
                 </div>
-            </section>
+            </form>
         );
     }
 }
