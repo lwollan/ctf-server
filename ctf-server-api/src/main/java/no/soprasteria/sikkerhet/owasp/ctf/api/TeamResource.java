@@ -89,16 +89,21 @@ public class TeamResource {
         TeamService teamService = ApplicationContext.get(application, TeamService.class);
         Optional<String> teamKey = teamService.findTeamKeyByTeameName(teamName);
 
-        ScoreService scoreService = ApplicationContext.get(application, ScoreService.class);
+        if (teamKey.isPresent()) {
+            ScoreService scoreService = ApplicationContext.get(application, ScoreService.class);
 
-        Long teamScore = scoreService.getTeamScore(teamKey.get());
+            Long teamScore = scoreService.getTeamScore(teamKey.get());
 
-        Map<String, String> response = new HashMap<>();
+            Map<String, String> response = new HashMap<>();
 
-        response.put("teamName", teamName);
-        response.put("teamKey", teamKey.get());
-        response.put("score", String.valueOf(teamScore));
+            response.put("teamName", teamName);
+            response.put("teamKey", teamKey.get());
+            response.put("score", String.valueOf(teamScore));
 
-        return Response.ok(response).build();
+            return Response.ok(response).build();
+        } else {
+            logger.info("Team {} not found.", teamName);
+            return Response.ok(new HashMap<String, String>()).build();
+        }
     }
 }

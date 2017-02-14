@@ -10,6 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,7 @@ public class BoardResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Map<String, Object> get(@Context Application application) {
+    public Map<String, Object> getBoard(@Context Application application) {
         BoardService boardService = ApplicationContext.get(application, BoardService.class);
         GameService gameService = ApplicationContext.get(application, GameService.class);
 
@@ -28,8 +29,10 @@ public class BoardResource {
         List<Map<String, String>> score = boardService.getScore();
 
         response.put("score", score);
-        response.put("title", "Sopra Steria CtF 2017");
+        response.put("title", "Applications Fag Dag 2017");
         response.put("gameOn", gameService.isGameOn());
+        response.put("start", LocalDateTime.now().toString());
+        response.put("end", LocalDateTime.now().plusHours(2).toString());
 
         return response;
     }

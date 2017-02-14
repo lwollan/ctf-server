@@ -100,4 +100,7 @@ public class CtFApplication extends Application {
         MrRobotGame.setupGame(flagService);
     }
 
+    public void shutdown() {
+        this.properties = null;
+    }
 }

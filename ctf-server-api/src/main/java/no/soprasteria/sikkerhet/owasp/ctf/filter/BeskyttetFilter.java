@@ -8,6 +8,7 @@ import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
+import java.util.Base64;
 
 import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 
@@ -25,7 +26,7 @@ public class BeskyttetFilter implements ContainerRequestFilter {
         if (authorization == null || authorization.isEmpty()) {
             containerRequestContext.abortWith(Response.status(UNAUTHORIZED).header("WWW-Authenticate",  "Basic realm=\"" + REALM + "\"").build());
         } else {
-            logger.info("Got some basic auth: {} password: {}.", authorization, authorization.substring("Basic ".length()));
+            logger.info("Got some basic auth: {} password: {}.", authorization, new String(Base64.getDecoder().decode(authorization.substring("Basic ".length()))));
         }
     }
 }
