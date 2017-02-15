@@ -14,7 +14,6 @@ import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -55,7 +54,7 @@ public class FlagResourceTest {
 
     @Test
     public void skal_returnere_alle_registrerte_flagg() {
-        List<Map<FlagResource.Answer, String>> list = resource.list(application, newTeamKey);
+        List<Map<FlagResource.Keys, String>> list = resource.list(application, newTeamKey);
         assertThat(list).isNotEmpty();
     }
 
@@ -91,15 +90,15 @@ public class FlagResourceTest {
     @Test
     public void skal_si_om_et_flag_er_besvart_eller_ikke() {
         resource.answer(application, request, svarMedRiktigFlag);
-        List<Map<FlagResource.Answer, String>> list = resource.list(application, newTeamKey);
+        List<Map<FlagResource.Keys, String>> list = resource.list(application, newTeamKey);
 
-        assertThat(list.stream().filter(m -> m.get(FlagResource.Answer.flagId).equals(svarMedRiktigFlag.get("flagId")))).isNotEmpty();
+        assertThat(list.stream().filter(m -> m.get(FlagResource.Keys.flagId).equals(svarMedRiktigFlag.get("flagId")))).isNotEmpty();
     }
 
     private static Map<String, String> nyttFlagSvar(String value, String value2) {
         Map<String, String> answer = new HashMap<>();
-        answer.put(FlagResource.Answer.flagId.toString(), value);
-        answer.put(FlagResource.Answer.flag.toString(), value2);
+        answer.put(FlagResource.Keys.flagId.toString(), value);
+        answer.put(FlagResource.Keys.flag.toString(), value2);
         return answer;
     }
 

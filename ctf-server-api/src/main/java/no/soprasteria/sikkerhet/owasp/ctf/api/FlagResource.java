@@ -29,8 +29,8 @@ public class FlagResource {
 
     private static Logger logger = LoggerFactory.getLogger(FlagResource.class);
 
-    enum Answer {
-        flagId, flag, flagAnswered
+    enum Keys {
+        flagId, flag, flagAnswered, flagName
     }
 
     @TeamKey
@@ -40,8 +40,8 @@ public class FlagResource {
         if (body != null && request.getHeaderString(X_TEAM_KEY) != null) {
             String teamKey = request.getHeaderString(X_TEAM_KEY);
 
-            String flagId = body.getOrDefault(Answer.flagId.toString(), null);
-            String flag = body.getOrDefault(Answer.flag.toString(), null);
+            String flagId = body.getOrDefault(Keys.flagId.toString(), null);
+            String flag = body.getOrDefault(Keys.flag.toString(), null);
 
             if (flagId != null && flag != null) {
                 return handleAnswerAndGetResponse(application, teamKey, flagId, flag);
@@ -56,7 +56,7 @@ public class FlagResource {
     @GET
     @Path("list")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Map<Answer, String>> list(@Context Application application, @HeaderParam("X-TEAM-KEY") String teamKey) {
+    public List<Map<Keys, String>> list(@Context Application application, @HeaderParam("X-TEAM-KEY") String teamKey) {
         FlagService flagService = ApplicationContext.get(application, FlagService.class);
         List<Map<String, String>> flags = flagService.listFlag();
 
@@ -84,11 +84,11 @@ public class FlagResource {
         }
     }
 
-    private static Map<Answer, String> newFlagResponseMap(String teamKey, Map<String, String> flagMap, FlagService flagService) {
-        Map<Answer, String> map = new HashMap<>();
-        map.put(Answer.flagId, flagMap.get(FlagService.Keys.flagId.toString()));
-        map.put(Answer.flag, flagMap.get(FlagService.Keys.flagName.toString()));
-        map.put(Answer.flagAnswered, String.valueOf(!flagService.isFlagUnanswered(teamKey, flagMap.get(FlagService.Keys.flagId.toString()))));
+    private static Map<Keys, String> newFlagResponseMap(String teamKey, Map<String, String> flagMap, FlagService flagService) {
+        Map<Keys, String> map = new HashMap<>();
+        map.put(Keys.flagId, flagMap.get(FlagService.Keys.flagId.toString()));
+        map.put(Keys.flagName, flagMap.get(FlagService.Keys.flagName.toString()));
+        map.put(Keys.flagAnswered, String.valueOf(!flagService.isFlagUnanswered(teamKey, flagMap.get(FlagService.Keys.flagId.toString()))));
         return map;
     }
 

@@ -75,7 +75,7 @@ public class FlagResourceIT extends JerseyTest {
 
         Map<String, String> flagSvar = new HashMap<>();
         flagSvar.put("flagId", "something");
-        flagSvar.put("flag", "noidea");
+        flagSvar.put("flagName", "noidea");
 
         assertThat(target("flag")
                 .request()
@@ -90,7 +90,7 @@ public class FlagResourceIT extends JerseyTest {
     public void riktig_svar_skal_gi_accepted_respons_og_tom_body() {
         Map<String, String> body = new HashMap();
         body.put("flagId", flagId);
-        body.put("flag", flag);
+        body.put("flagName", flag);
 
         Response response = target("flag")
                 .request()
@@ -110,7 +110,7 @@ public class FlagResourceIT extends JerseyTest {
                 .readEntity(new GenericType<List<Map<String, String>>>() {
                 });
 
-        response.stream().forEach(entry -> assertThat(entry).containsKeys("flagId" , "flag", "flagAnswered"));
+        response.stream().forEach(entry -> assertThat(entry).containsKeys("flagId" , "flagName", "flagAnswered"));
     }
 
     @Test
