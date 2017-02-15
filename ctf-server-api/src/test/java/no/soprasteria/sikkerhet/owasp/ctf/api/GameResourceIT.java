@@ -36,7 +36,7 @@ public class GameResourceIT extends JerseyTest {
 
     @Test
     public void skal_returnere_en_liste_med_spill() {
-        List<Map<String, Object>> entity = target("game").request().get().readEntity(new GenericType<List<Map<String, Object>>>() {
+        List<Map<String, Object>> entity = target("game").request().header("Authorization", encode("passord")).get().readEntity(new GenericType<List<Map<String, Object>>>() {
         });
         assertThat(entity).hasSize(1);
         assertThat(entity.get(0)).containsKeys("flags", "game", "gameOn", "score");
