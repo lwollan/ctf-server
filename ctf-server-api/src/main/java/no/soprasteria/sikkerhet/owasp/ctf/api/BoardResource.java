@@ -18,21 +18,25 @@ import java.util.Map;
 @Path("public/board")
 public class BoardResource {
 
+    enum Keys {
+        score, title, gameOn, start, end
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Map<String, Object> getBoard(@Context Application application) {
+    public Map<Keys, Object> getBoard(@Context Application application) {
         BoardService boardService = ApplicationContext.get(application, BoardService.class);
         GameService gameService = ApplicationContext.get(application, GameService.class);
 
-        Map<String, Object> response = new HashMap<>();
 
         List<Map<String, String>> score = boardService.getScore();
 
-        response.put("score", score);
-        response.put("title", "Applications Fag Dag 2017");
-        response.put("gameOn", gameService.isGameOn());
-        response.put("start", LocalDateTime.now().toString());
-        response.put("end", LocalDateTime.now().plusHours(2).toString());
+        Map<Keys, Object> response = new HashMap<>();
+        response.put(Keys.score, score);
+        response.put(Keys.title, "Applications Fag Dag 2017");
+        response.put(Keys.gameOn, gameService.isGameOn());
+        response.put(Keys.start, LocalDateTime.now().toString());
+        response.put(Keys.end, LocalDateTime.now().plusHours(2).toString());
 
         return response;
     }

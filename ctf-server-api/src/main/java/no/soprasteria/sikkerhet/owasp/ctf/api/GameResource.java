@@ -22,18 +22,22 @@ import java.util.Map;
 @Path("game")
 public class GameResource {
 
+    enum Keys {
+        game, flags, gameOn, score
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Map<String, Object>> list(@Context Application application) {
+    public List<Map<Keys, Object>> list(@Context Application application) {
         GameService gameService = ApplicationContext.get(application, GameService.class);
         FlagService flagService = ApplicationContext.get(application, FlagService.class);
         BoardService boardService = ApplicationContext.get(application, BoardService.class);
 
-        Map<String, Object> singleGame = new HashMap<>();
-        singleGame.put("game", gameService.getName());
-        singleGame.put("flags", flagService.listFlag());
-        singleGame.put("gameOn", gameService.isGameOn());
-        singleGame.put("score", boardService.getScore());
+        Map<Keys, Object> singleGame = new HashMap<>();
+        singleGame.put(Keys.game, gameService.getName());
+        singleGame.put(Keys.flags, flagService.listFlag());
+        singleGame.put(Keys.gameOn, gameService.isGameOn());
+        singleGame.put(Keys.score, boardService.getScore());
 
         return Arrays.asList(singleGame);
     }

@@ -8,7 +8,13 @@ import no.soprasteria.sikkerhet.owasp.ctf.ApplicationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -24,9 +30,12 @@ public class TeamResource {
 
     private static Logger logger = LoggerFactory.getLogger(ScoreService.class);
 
+    enum Keys {
+        teamName, teamKey, score
+    }
+
     @Path("add/{teamname}")
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response add(@Context Application application, @PathParam("teamname") String teamname) {
         TeamService teamService = ApplicationContext.get(application, TeamService.class);
@@ -70,13 +79,13 @@ public class TeamResource {
     @Beskyttet
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Map<String, String>> list(@Context Application application) {
+    public List<Map<Keys, String>> list(@Context Application application) {
         TeamService teamService = ApplicationContext.get(application, TeamService.class);
         List<String> teamList = teamService.getTeamList();
         return teamList.stream().map(teamName -> {
-            Map<String, String> map = new HashMap<>();
-            map.put("teamName", teamName);
-            map.put("teamKey", teamService.findTeamKeyByTeameName(teamName).orElse("FEIL"));
+            Map<Keys, String> map = new HashMap<>();
+            map.put(Keys.teamName, teamName);
+            map.put(Keys.teamKey, teamService.findTeamKeyByTeameName(teamName).orElse("FEIL"));
             return map;
         }).collect(Collectors.toList());
     }
@@ -85,7 +94,7 @@ public class TeamResource {
     @Path("/{teamName}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response get(@Context Application application, @PathParam("teamName") String teamName) {
+    public Map<Keys, String> get(@Context Application application, @PathParam("teamName") String teamName) {
         TeamService teamService = ApplicationContext.get(application, TeamService.class);
         Optional<String> teamKey = teamService.findTeamKeyByTeameName(teamName);
 
@@ -94,16 +103,16 @@ public class TeamResource {
 
             Long teamScore = scoreService.getTeamScore(teamKey.get());
 
-            Map<String, String> response = new HashMap<>();
+            Map<Keys, String> response = new HashMap<>();
 
-            response.put("teamName", teamName);
-            response.put("teamKey", teamKey.get());
-            response.put("score", String.valueOf(teamScore));
+            response.put(Keys.teamName, teamName);
+            response.put(Keys.teamKey, teamKey.get());
+            response.put(Keys.score, String.valueOf(teamScore));
 
-            return Response.ok(response).build();
+            return response;
         } else {
             logger.info("Team {} not found.", teamName);
-            return Response.ok(new HashMap<String, String>()).build();
+            return new HashMap<>();
         }
     }
 }
