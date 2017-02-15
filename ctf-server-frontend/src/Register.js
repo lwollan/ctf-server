@@ -55,7 +55,7 @@ export default class Register extends Component {
                     </div>
                 ) }
                 <div className="actions">
-                    <button type="submit" className="action">{ tekst }</button>
+                    <button type="submit" className="action">{ label }</button>
                 </div>
             </form>
         )
