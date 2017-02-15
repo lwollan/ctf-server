@@ -30,6 +30,17 @@ export default class Register extends Component {
     onInputChange = e => this.setState({ [e.target.name]: e.target.value });
 
     render() {
+
+        const { teamKey } = this.state;
+
+        var tekst;
+
+        if (teamKey && teamKey.trim()) {
+            tekst = 'Login';
+        } else {
+            tekst = 'Registrer';
+        }
+
         return (
             <form className="block" onSubmit={ this.onSubmit }>
                 <div className="input-group">
@@ -41,7 +52,7 @@ export default class Register extends Component {
                     <input id="team-key-input" name="teamKey" className="input-text" onChange={ this.onInputChange } disabled={ this.state.saving }/>
                 </div>
                 <div className="actions">
-                    <button type="submit" disabled={ this.state.saving } className="action">Submit</button>
+                    <button type="submit" className="action">{ tekst }</button>
                 </div>
             </form>
         )
