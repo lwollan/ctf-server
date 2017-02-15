@@ -4,7 +4,6 @@ package no.soprasteria.sikkerhet.owasp.ctf.api;
 import no.soprasteria.sikkerhet.owasp.ctf.ApplicationContext;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.TeamKey;
 import no.soprasteria.sikkerhet.owasp.ctf.service.FlagService;
-import no.soprasteria.sikkerhet.owasp.ctf.service.ScoreService;
 import no.soprasteria.sikkerhet.owasp.ctf.service.TeamService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +17,6 @@ import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
@@ -96,7 +94,6 @@ public class FlagResource {
         FlagService flagService = ApplicationContext.get(application, FlagService.class);
         if (flagService.isFlagUnanswered(teamKey, flagId) && flagService.isCorrect(flagId, answer)) {
             flagService.answerFlag(teamKey, flagId);
-            awardTeamPoints(application, teamKey, flagService.getPoints(flagId));
             return Response.accepted().build();
         } else {
             incorrectAnswer(application, teamKey, flagId, answer);
@@ -107,13 +104,6 @@ public class FlagResource {
     private static void incorrectAnswer(Application application, String teamKey, String flagId, String answer) {
         String teamName = ApplicationContext.get(application, TeamService.class).getTeamName(teamKey).get();
         logger.info("Incorrect answer '{}' for flag '{}' from team '{}'.", flagId, answer, teamName);
-    }
-
-    static void awardTeamPoints(@Context Application application, String teamKey, Long points) {
-        Optional<String> teamName = ApplicationContext.get(application, TeamService.class).getTeamName(teamKey);
-        logger.info("Correct answer from team '{}'.", teamName.get());
-        ScoreService scoreService = ApplicationContext.get(application, ScoreService.class);
-        scoreService.addPointsToTeam(teamKey, points);
     }
 
 }

@@ -2,7 +2,7 @@ package no.soprasteria.sikkerhet.owasp.ctf.api;
 
 import no.soprasteria.sikkerhet.owasp.ctf.filter.Beskyttet;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.TeamKeyFilter;
-import no.soprasteria.sikkerhet.owasp.ctf.service.ScoreService;
+import no.soprasteria.sikkerhet.owasp.ctf.service.FlagService;
 import no.soprasteria.sikkerhet.owasp.ctf.service.TeamService;
 import no.soprasteria.sikkerhet.owasp.ctf.ApplicationContext;
 import org.slf4j.Logger;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Path("team")
 public class TeamResource {
 
-    private static Logger logger = LoggerFactory.getLogger(ScoreService.class);
+    private static Logger logger = LoggerFactory.getLogger(TeamResource.class);
 
     enum Keys {
         teamName, teamKey, score
@@ -56,7 +56,7 @@ public class TeamResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response del(@Context Application application, @PathParam("teamname") String teamname) {
         TeamService teamService = ApplicationContext.get(application, TeamService.class);
-        ScoreService scoreService = ApplicationContext.get(application, ScoreService.class);
+        FlagService scoreService = ApplicationContext.get(application, FlagService.class);
 
         Optional<String> teamKeyByTameName = teamService.findTeamKeyByTeameName(teamname);
         if (teamKeyByTameName.isPresent()) {
@@ -99,7 +99,7 @@ public class TeamResource {
         Optional<String> teamKey = teamService.findTeamKeyByTeameName(teamName);
 
         if (teamKey.isPresent()) {
-            ScoreService scoreService = ApplicationContext.get(application, ScoreService.class);
+            FlagService scoreService = ApplicationContext.get(application, FlagService.class);
 
             Long teamScore = scoreService.getTeamScore(teamKey.get());
 

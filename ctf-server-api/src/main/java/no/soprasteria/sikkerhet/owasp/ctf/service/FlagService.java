@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static no.soprasteria.sikkerhet.owasp.ctf.service.FlagService.Keys.tips;
 
@@ -81,6 +82,21 @@ public class FlagService {
         svar.get(teamKey).add(flagId);
     }
 
+    public Long getTeamScore(String teamKey) {
+        if (svar.containsKey(teamKey)) {
+            return svar.get(teamKey).stream().map(this::getPoints).mapToLong(l -> l).sum();
+        } else {
+            return 0L;
+        }
+    }
+
+    public void resetTeamScore(String teamKey) {
+        svar.put(teamKey, new HashSet<>());
+    }
+
+    public void deleteTeamScore(String teamKey) {
+        svar.remove(teamKey);
+    }
 
     static Map<String, String> nyttFlagg(String id, String name, String svar, String poeng, String tips) {
         Map<String, String> flag = new HashMap<>();

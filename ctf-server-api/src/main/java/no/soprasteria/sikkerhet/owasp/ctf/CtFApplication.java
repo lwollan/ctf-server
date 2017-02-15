@@ -85,13 +85,11 @@ public class CtFApplication extends Application {
             scoreRepository = new HashMapRepository();
         }
 
-        ScoreService scoreService = new ScoreService(teamRepository, scoreRepository);
         TeamService teamService = new TeamService(teamRepository);
         BoardService boardService = new BoardService(teamRepository, scoreRepository);
         FlagService flagService = new FlagService();
         GameService gameService = new GameService();
 
-        ApplicationContext.put(this, scoreService);
         ApplicationContext.put(this, teamService);
         ApplicationContext.put(this, boardService);
         ApplicationContext.put(this, flagService);
