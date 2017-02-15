@@ -27,6 +27,10 @@ h1 {
   padding: 1rem;
 }
 
+.error {
+  color: red;
+}
+
 .team {
   display: flex;
   align-items: center;

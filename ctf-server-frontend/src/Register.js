@@ -21,25 +21,23 @@ export default class Register extends Component {
             });
         }
 
-        this.setState({ saving: true });
+        this.setState({ saving: true, error: null });
 
         Datas.registerTeam(teamName.trim())
-            .catch(() => this.setState({ saving: false, teamName: '' }));
+            .catch(err => this.setState({
+                saving: false,
+                teamName: '',
+                error: err.status === 409 ? 'Team name already registered' : 'Oops'
+            }));
     };
 
     onInputChange = e => this.setState({ [e.target.name]: e.target.value });
 
     render() {
 
-        const { teamKey } = this.state;
+        const { teamKey, error } = this.state;
 
-        var tekst;
-
-        if (teamKey && teamKey.trim()) {
-            tekst = 'Login';
-        } else {
-            tekst = 'Registrer';
-        }
+        const label = teamKey && teamKey.trim() ? 'Login' : 'Register';
 
         return (
             <form className="block" onSubmit={ this.onSubmit }>
@@ -51,6 +49,11 @@ export default class Register extends Component {
                     <label htmlFor="team-name-input" className="input-label">Team key (only for existing teams)</label>
                     <input id="team-key-input" name="teamKey" className="input-text" onChange={ this.onInputChange } disabled={ this.state.saving }/>
                 </div>
+                { error && (
+                    <div className="input-group error">
+                        { error }
+                    </div>
+                ) }
                 <div className="actions">
                     <button type="submit" className="action">{ tekst }</button>
                 </div>
