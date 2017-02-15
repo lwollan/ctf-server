@@ -16,9 +16,17 @@ export default class Register extends Component {
 
         if (teamKey && teamKey.trim()) {
             Datas.loginTeam({
-                team: teamName,
+                name: teamName,
                 'X-TEAM-KEY': teamKey
             });
+
+            Datas.getFlags()
+                .catch(err => this.setState({
+                    saving: false,
+                    teamName: '',
+                    error: err.status === 401 ? 'Feil team-key' : 'Oops'
+                }));
+            return;
         }
 
         this.setState({ saving: true, error: null });
@@ -31,7 +39,10 @@ export default class Register extends Component {
             }));
     };
 
-    onInputChange = e => this.setState({ [e.target.name]: e.target.value });
+    onInputChange = e => {
+        this.setState({ [e.target.name]: e.target.value });
+        this.setState( { error: null })
+    }
 
     render() {
 
