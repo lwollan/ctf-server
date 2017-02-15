@@ -25,19 +25,19 @@ public class BoardResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Map<Keys, Object> getBoard(@Context Application application) {
-        BoardService boardService = ApplicationContext.get(application, BoardService.class);
         GameService gameService = ApplicationContext.get(application, GameService.class);
-
+        BoardService boardService = ApplicationContext.get(application, BoardService.class);
 
         List<Map<String, String>> score = boardService.getScore();
 
         Map<Keys, Object> response = new HashMap<>();
         response.put(Keys.score, score);
-        response.put(Keys.title, "Applications Fag Dag 2017");
+        response.put(Keys.title, "Applications Fagdag 2017");
         response.put(Keys.gameOn, gameService.isGameOn());
         response.put(Keys.start, LocalDateTime.now().toString());
         response.put(Keys.end, LocalDateTime.now().plusHours(2).toString());
 
         return response;
     }
+
 }

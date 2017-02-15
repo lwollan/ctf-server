@@ -1,32 +1,31 @@
 package no.soprasteria.sikkerhet.owasp.ctf.service;
 
 import no.soprasteria.sikkerhet.owasp.ctf.storage.HashMapRepository;
-import no.soprasteria.sikkerhet.owasp.ctf.storage.Repository;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-import static java.lang.String.valueOf;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class BoardServiceTest {
 
     @Test
-    public void skal_vise_tom_board_ved_oppstart() {
-        BoardService boardService = new BoardService(new HashMapRepository(), new HashMapRepository());
+    public void skal_vise_tom_board_ved_oppstart() throws Exception {
+        BoardService boardService = new BoardService(new TeamService(new HashMapRepository()), new FlagService());
         assertThat(boardService.getScore()).isEmpty();
     }
 
     @Test
-    public void skal_vise_alle_lag() {
-        Repository teamRepository = new HashMapRepository();
+    public void skal_vise_alle_lag() throws Exception {
+        TeamService teamRepository = new TeamService(new HashMapRepository());
 
-        teamRepository.put("team 1 key", "team 1");
-        teamRepository.put("team 2 key", "team 2");
-        teamRepository.put("team 3 key", "team 3");
-        BoardService boardService = new BoardService(teamRepository, new HashMapRepository());
+        teamRepository.addNewTeam("team 1");
+        teamRepository.addNewTeam("team 2");
+        teamRepository.addNewTeam("team 3");
+        BoardService boardService = new BoardService(teamRepository, new FlagService());
 
         assertThat(boardService.getScore().get(0)).containsOnlyKeys("team" , "score");
         assertThat(boardService.getScore().get(1)).containsOnlyKeys("team" , "score");
@@ -34,18 +33,23 @@ public class BoardServiceTest {
     }
 
     @Test
-    public void skal_vise_poeng_for_lag() {
-        Repository teamRepository = new HashMapRepository();
-        Repository scoreRepository = new HashMapRepository();
-        BoardService boardService = new BoardService(teamRepository, scoreRepository);
+    public void skal_vise_poeng_for_lag() throws Exception {
+        TeamService teamRepository = new TeamService(new HashMapRepository());
+        FlagService flagService = new FlagService();
 
-        teamRepository.put("team 1 key", "team 1");
-        teamRepository.put("team 2 key", "team 2");
-        teamRepository.put("team 3 key", "team 3");
+        Optional<String> team01 = teamRepository.addNewTeam("team 1");
+        Optional<String> team02 = teamRepository.addNewTeam("team 2");
+        Optional<String> team03 = teamRepository.addNewTeam("team 3");
 
-        scoreRepository.put("team 1 key", valueOf(42L));
-        scoreRepository.put("team 2 key", valueOf(1L));
-        scoreRepository.put("team 3 key", valueOf(33L));
+        BoardService boardService = new BoardService(teamRepository, flagService);
+
+        String flag01 = flagService.addFlag("", "", 42L, "");
+        String flag02 = flagService.addFlag("", "", 1L, "");
+        String flag03 = flagService.addFlag("", "", 33L, "");
+
+        flagService.answerFlag(team01.get(), flag01);
+        flagService.answerFlag(team02.get(), flag02);
+        flagService.answerFlag(team03.get(), flag03);
 
         Map<String, String> team1score = lagScore("team 1", "42");
         Map<String, String> team2score = lagScore("team 2", "1");

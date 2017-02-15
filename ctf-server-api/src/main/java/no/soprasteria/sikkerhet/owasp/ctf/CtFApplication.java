@@ -74,20 +74,17 @@ public class CtFApplication extends Application {
         JedisPool connection = getConnection();
 
         Repository teamRepository;
-        Repository scoreRepository;
 
         if (connection != null) {
             teamRepository = new RedisRepository("team", connection);
-            scoreRepository = new RedisRepository("score", connection);
         } else {
             logger.info("No jedis found, all in memory.");
             teamRepository = new HashMapRepository();
-            scoreRepository = new HashMapRepository();
         }
 
         TeamService teamService = new TeamService(teamRepository);
-        BoardService boardService = new BoardService(teamRepository, scoreRepository);
         FlagService flagService = new FlagService();
+        BoardService boardService = new BoardService(teamService, flagService);
         GameService gameService = new GameService();
 
         ApplicationContext.put(this, teamService);

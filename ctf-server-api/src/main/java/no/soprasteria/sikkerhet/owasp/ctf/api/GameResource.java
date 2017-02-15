@@ -26,6 +26,7 @@ public class GameResource {
         game, flags, gameOn, score
     }
 
+    @Beskyttet
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Map<Keys, Object>> list(@Context Application application) {
