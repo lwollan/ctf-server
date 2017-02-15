@@ -24,9 +24,9 @@ public class TeamService {
     }
 
     public Optional<String> addNewTeam(String teamname) {
-        String teamKey = newTeamKey(teamname, salt);
-        if (!teamRepository.get(teamKey).isPresent()) {
-            logger.info("Added new team {} with key {}", teamname, teamKey);
+        if (!findTeamKeyByTeameName(teamname).isPresent()) {
+            String teamKey = newTeamKey(teamname, salt);
+            logger.info("Adding new team {} with key {}", teamname, teamKey);
             teamRepository.put(teamKey, teamname);
             return Optional.ofNullable(teamKey);
         } else {
