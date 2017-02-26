@@ -39,8 +39,8 @@ public class FlagResourceTest {
         flagService = ApplicationContext.get(application, FlagService.class);
         teamService = ApplicationContext.get(application, TeamService.class);
 
-        flag1Id = flagService.addFlag("flag 1", "svar 1", 10l, "tips");
-        flag2Id = flagService.addFlag("flag 2", "svar 2", 10l, "tips");
+        flag1Id = flagService.addFlag("flag 1", "svar 1", 10l, "tips", "beskrivelse");
+        flag2Id = flagService.addFlag("flag 2", "svar 2", 10l, "tips", "beskrivelse");
 
         newTeamKey = teamService.addNewTeam("team-a").get();
 

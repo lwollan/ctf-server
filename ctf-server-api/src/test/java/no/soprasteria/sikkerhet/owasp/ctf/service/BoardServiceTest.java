@@ -43,9 +43,9 @@ public class BoardServiceTest {
 
         BoardService boardService = new BoardService(teamRepository, flagService);
 
-        String flag01 = flagService.addFlag("", "", 42L, "");
-        String flag02 = flagService.addFlag("", "", 1L, "");
-        String flag03 = flagService.addFlag("", "", 33L, "");
+        String flag01 = flagService.addFlag("", "", 42L, "", "beskrivelse");
+        String flag02 = flagService.addFlag("", "", 1L, "", "beskrivelse");
+        String flag03 = flagService.addFlag("", "", 33L, "", "beskrivelse");
 
         flagService.answerFlag(team01.get(), flag01);
         flagService.answerFlag(team02.get(), flag02);

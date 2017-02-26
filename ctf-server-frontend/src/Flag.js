@@ -40,6 +40,7 @@ export default class Flag extends Component {
         return (
             <form className={ `flag ${this.getStatusClass()}` } onSubmit={ this.postFlag }>
                 <header>{ flag.get('flagName') }</header>
+                { flag.get('flagDescription')}
                 { !answered && <div className="flag-content">
                     <input type="text" className="input-text" disabled={ answered } ref={ node => this.inputNode = node }/>
                     <div className="actions">

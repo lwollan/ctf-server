@@ -8,6 +8,7 @@ import no.soprasteria.sikkerhet.owasp.ctf.filter.BeskyttetFilter;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.CORSFilter;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.TeamKeyFilter;
 import no.soprasteria.sikkerhet.owasp.ctf.games.MrRobotGame;
+import no.soprasteria.sikkerhet.owasp.ctf.games.OWASPGame;
 import no.soprasteria.sikkerhet.owasp.ctf.service.*;
 import no.soprasteria.sikkerhet.owasp.ctf.storage.HashMapRepository;
 import no.soprasteria.sikkerhet.owasp.ctf.storage.RedisRepository;
@@ -92,7 +93,8 @@ public class CtFApplication extends Application {
         ApplicationContext.put(this, flagService);
         ApplicationContext.put(this, gameService);
 
-        MrRobotGame.setupGame(flagService);
+        // MrRobotGame.setupGame(flagService);
+        OWASPGame.setupGame(flagService);
     }
 
     public void shutdown() {

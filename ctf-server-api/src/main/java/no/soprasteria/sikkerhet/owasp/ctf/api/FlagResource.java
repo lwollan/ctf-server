@@ -28,7 +28,7 @@ public class FlagResource {
     private static Logger logger = LoggerFactory.getLogger(FlagResource.class);
 
     enum Keys {
-        flagId, flag, flagAnswered, flagName
+        flagId, flag, flagDescription, flagAnswered, flagName
     }
 
     @TeamKey
@@ -86,6 +86,7 @@ public class FlagResource {
         Map<Keys, String> map = new HashMap<>();
         map.put(Keys.flagId, flagMap.get(FlagService.Keys.flagId.toString()));
         map.put(Keys.flagName, flagMap.get(FlagService.Keys.flagName.toString()));
+        map.put(Keys.flagDescription, flagMap.get(FlagService.Keys.beskrivelse.toString()));
         map.put(Keys.flagAnswered, String.valueOf(!flagService.isFlagUnanswered(teamKey, flagMap.get(FlagService.Keys.flagId.toString()))));
         return map;
     }

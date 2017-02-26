@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static no.soprasteria.sikkerhet.owasp.ctf.service.FlagService.Keys.tips;
 
@@ -17,12 +16,12 @@ public class FlagService {
     private Map<String, Set<String>> svar = new HashMap<>();
 
     public enum Keys {
-        flagId, flagName, flag, tips, poeng
+        flagId, flagName, beskrivelse, flag, tips, poeng
     }
 
-    public String addFlag(String name, String svar, Long poeng, String tips) {
+    public String addFlag(String name, String svar, Long poeng, String tips, String beskrivelse) {
         String id = UUID.randomUUID().toString();
-        Map<String, String> nyttFlagg = nyttFlagg(id, name, svar, poeng.toString(), tips);
+        Map<String, String> nyttFlagg = nyttFlagg(id, name, svar, poeng.toString(), tips, beskrivelse);
         flags.put(id, nyttFlagg);
         return id;
     }
@@ -98,13 +97,14 @@ public class FlagService {
         svar.remove(teamKey);
     }
 
-    static Map<String, String> nyttFlagg(String id, String name, String svar, String poeng, String tips) {
+    static Map<String, String> nyttFlagg(String id, String name, String svar, String poeng, String tips, String beskrivelse) {
         Map<String, String> flag = new HashMap<>();
         flag.put(Keys.flagId.toString(), id);
         flag.put(Keys.flagName.toString(), name);
         flag.put(Keys.tips.toString(), tips);
         flag.put(Keys.flag.toString(), svar);
         flag.put(Keys.poeng.toString(), poeng);
+        flag.put(Keys.beskrivelse.toString(), beskrivelse);
         return flag;
     }
 

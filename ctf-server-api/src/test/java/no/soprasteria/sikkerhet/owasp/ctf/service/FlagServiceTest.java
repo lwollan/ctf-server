@@ -17,12 +17,12 @@ public class FlagServiceTest {
 
     @Test
     public void skal_kunne_legge_til_et_flag() {
-        assertThat(service.addFlag("flag-name", "svar", 10l, "tips")).isNotNull();
+        assertThat(service.addFlag("flag-name", "svar", 10l, "tips", "beskrivelse")).isNotNull();
     }
 
     @Test
     public void skal_finne_poeng_for_et_flag_som_er_lagt_til() {
-        String flagId = service.addFlag("flag-name", "svar", 10l, "tips");
+        String flagId = service.addFlag("flag-name", "svar", 10l, "tips", "beskrivelse");
 
         assertThat(service.getPoints(flagId)).isEqualTo(10l);
     }
@@ -34,8 +34,8 @@ public class FlagServiceTest {
 
     @Test
     public void skal_vise_alle_flag_som_er_lagt_til() {
-        service.addFlag("01 Flag 1", "svar-a", 10l, "tips");
-        service.addFlag("02 Flag 2", "svar-b", 10l, "tips");
+        service.addFlag("01 Flag 1", "svar-a", 10l, "tips", "beskrivelse");
+        service.addFlag("02 Flag 2", "svar-b", 10l, "tips", "beskrivelse");
 
         assertThat(service.listFlag()).hasSize(2);
     }
@@ -53,8 +53,8 @@ public class FlagServiceTest {
 
     @Test
     public void skal_legge_til_poeng_hvis_team_finnes() {
-        String flagId01 = service.addFlag("01 Flag 1", "svar-a", 10l, "tips");
-        String flagId02 = service.addFlag("02 Flag 2", "svar-b", 10l, "tips");
+        String flagId01 = service.addFlag("01 Flag 1", "svar-a", 10l, "tips", "beskrivelse");
+        String flagId02 = service.addFlag("02 Flag 2", "svar-b", 10l, "tips", "beskrivelse");
 
         service.answerFlag("finnes", flagId01);
         service.answerFlag("finnes", flagId02);
