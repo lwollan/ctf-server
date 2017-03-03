@@ -1,5 +1,8 @@
 package no.soprasteria.sikkerhet.owasp.ctf.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,6 +15,8 @@ import static no.soprasteria.sikkerhet.owasp.ctf.service.FlagService.Keys.tips;
 
 public class FlagService {
 
+    private static Logger logger = LoggerFactory.getLogger(FlagService.class);
+
     private Map<String, Map<String, String>> flags = new HashMap<>();
     private Map<String, Set<String>> svar = new HashMap<>();
 
@@ -23,6 +28,8 @@ public class FlagService {
         String id = UUID.randomUUID().toString();
         Map<String, String> nyttFlagg = nyttFlagg(id, name, svar, poeng.toString(), tips, beskrivelse);
         flags.put(id, nyttFlagg);
+
+        logger.info("Flag: {} {}", id, nyttFlagg);
         return id;
     }
 
