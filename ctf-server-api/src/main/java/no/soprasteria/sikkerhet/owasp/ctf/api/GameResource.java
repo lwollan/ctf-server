@@ -2,6 +2,7 @@ package no.soprasteria.sikkerhet.owasp.ctf.api;
 
 import no.soprasteria.sikkerhet.owasp.ctf.ApplicationContext;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.Beskyttet;
+import no.soprasteria.sikkerhet.owasp.ctf.games.GameConfig;
 import no.soprasteria.sikkerhet.owasp.ctf.service.BoardService;
 import no.soprasteria.sikkerhet.owasp.ctf.service.FlagService;
 import no.soprasteria.sikkerhet.owasp.ctf.service.GameService;
