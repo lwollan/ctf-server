@@ -1,10 +1,19 @@
 package no.soprasteria.sikkerhet.owasp.ctf.service;
 
-import java.util.Base64;
+import no.soprasteria.sikkerhet.owasp.ctf.games.GameConfig;
 
 public class GameService {
 
     private boolean gameOn = false;
+    private String gameName = null;
+
+    public GameService(GameConfig gameConfig) {
+        gameName = gameConfig.getName();
+    }
+
+    public String getName() {
+        return gameName;
+    }
 
     public boolean isGameOn() {
         return gameOn;
@@ -18,11 +27,4 @@ public class GameService {
         gameOn = false;
     }
 
-    public String newGame(String gameName) {
-        return Base64.getEncoder().encodeToString(gameName.getBytes());
-    }
-
-    public String getName() {
-        return "Sopra Steria CtF 4. mars 2017";
-    }
 }

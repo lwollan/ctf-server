@@ -104,7 +104,7 @@ public class FlagResource {
 
     private static void incorrectAnswer(Application application, String teamKey, String flagId, String answer) {
         String teamName = ApplicationContext.get(application, TeamService.class).getTeamName(teamKey).get();
-        logger.info("Incorrect answer '{}' for flag '{}' from team '{}'.", flagId, answer, teamName);
+        logger.info("Incorrect answer '{}' for flag '{}' from team '{}'.", answer, flagId, teamName);
     }
 
 }
