@@ -1,4 +1,4 @@
-package no.soprasteria.sikkerhet.owasp.ctf.games;
+package no.soprasteria.sikkerhet.owasp.ctf.games.implementations;
 
 import no.soprasteria.sikkerhet.owasp.ctf.service.FlagService;
 

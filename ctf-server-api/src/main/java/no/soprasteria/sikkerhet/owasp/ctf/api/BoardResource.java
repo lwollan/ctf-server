@@ -1,6 +1,7 @@
 package no.soprasteria.sikkerhet.owasp.ctf.api;
 
 import no.soprasteria.sikkerhet.owasp.ctf.ApplicationContext;
+import no.soprasteria.sikkerhet.owasp.ctf.games.GameConfig;
 import no.soprasteria.sikkerhet.owasp.ctf.service.BoardService;
 import no.soprasteria.sikkerhet.owasp.ctf.service.GameService;
 
@@ -32,7 +33,7 @@ public class BoardResource {
 
         Map<Keys, Object> response = new HashMap<>();
         response.put(Keys.score, score);
-        response.put(Keys.title, "Applications Fagdag 2017");
+        response.put(Keys.title, gameService.getName());
         response.put(Keys.gameOn, gameService.isGameOn());
         response.put(Keys.start, LocalDateTime.now().toString());
         response.put(Keys.end, LocalDateTime.now().plusHours(2).toString());

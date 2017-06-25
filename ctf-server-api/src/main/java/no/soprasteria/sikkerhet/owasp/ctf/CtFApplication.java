@@ -7,8 +7,8 @@ import no.soprasteria.sikkerhet.owasp.ctf.api.TeamResource;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.BeskyttetFilter;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.CORSFilter;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.TeamKeyFilter;
-import no.soprasteria.sikkerhet.owasp.ctf.games.MrRobotGame;
-import no.soprasteria.sikkerhet.owasp.ctf.games.OWASPGame;
+import no.soprasteria.sikkerhet.owasp.ctf.games.GameConfig;
+import no.soprasteria.sikkerhet.owasp.ctf.games.implementations.SommerstudentGame;
 import no.soprasteria.sikkerhet.owasp.ctf.service.*;
 import no.soprasteria.sikkerhet.owasp.ctf.storage.HashMapRepository;
 import no.soprasteria.sikkerhet.owasp.ctf.storage.RedisRepository;
@@ -54,7 +54,6 @@ public class CtFApplication extends Application {
     public Set<Class<?>> getClasses() {
         Set<Class<?>> resources = new HashSet<>();
         resources.add(TeamResource.class);
-        // resources.add(ScoreResource.class);
         resources.add(BoardResource.class);
         resources.add(FlagResource.class);
         resources.add(GameResource.class);
@@ -86,15 +85,15 @@ public class CtFApplication extends Application {
         TeamService teamService = new TeamService(teamRepository);
         FlagService flagService = new FlagService();
         BoardService boardService = new BoardService(teamService, flagService);
-        GameService gameService = new GameService();
+
+        GameConfig gameConfig = new SommerstudentGame(flagService);
+        GameService gameService = new GameService(gameConfig);
 
         ApplicationContext.put(this, teamService);
         ApplicationContext.put(this, boardService);
         ApplicationContext.put(this, flagService);
         ApplicationContext.put(this, gameService);
 
-        // MrRobotGame.setupGame(flagService);
-        OWASPGame.setupGame(flagService);
     }
 
     public void shutdown() {
