@@ -8,7 +8,7 @@ import no.soprasteria.sikkerhet.owasp.ctf.filter.BeskyttetFilter;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.CORSFilter;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.TeamKeyFilter;
 import no.soprasteria.sikkerhet.owasp.ctf.games.GameConfig;
-import no.soprasteria.sikkerhet.owasp.ctf.games.implementations.SommerstudentGame;
+import no.soprasteria.sikkerhet.owasp.ctf.games.implementations.JSONGame;
 import no.soprasteria.sikkerhet.owasp.ctf.service.*;
 import no.soprasteria.sikkerhet.owasp.ctf.storage.HashMapRepository;
 import no.soprasteria.sikkerhet.owasp.ctf.storage.RedisRepository;
@@ -86,8 +86,8 @@ public class CtFApplication extends Application {
         FlagService flagService = new FlagService();
         BoardService boardService = new BoardService(teamService, flagService);
 
-        GameConfig gameConfig = new SommerstudentGame(flagService);
-        GameService gameService = new GameService(gameConfig);
+        GameConfig mrrobotGame = new JSONGame(flagService, "/games/mrrobot.json");
+        GameService gameService = new GameService(mrrobotGame);
 
         ApplicationContext.put(this, teamService);
         ApplicationContext.put(this, boardService);

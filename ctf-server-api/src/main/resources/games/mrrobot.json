@@ -1,0 +1,69 @@
+{
+  "version": "1.0",
+  "beskrivelse": "Mr Robot Game",
+  "flags": [
+    {
+      "flagName": "eps1.0_hellofriend.mov",
+      "beskrivelse": "beskrivelse",
+      "flag": "Sam Esmail",
+      "tips": "Hvem skrev",
+      "poeng": "1"
+    },
+    {
+      "flagName": "eps1.1_ones-and-zer0es.mpeg",
+      "beskrivelse": "beskrivelse",
+      "flag": "Sam Esmail",
+      "tips": "Hvem skrev",
+      "poeng": "1"
+    },
+    {
+      "flagName": "eps1.2_d3bug.mkv",
+      "beskrivelse": "",
+      "flag": "Sam Esmail",
+      "tips": "Hvem skrev",
+      "poeng": "1"
+    },
+    {
+      "flagName": "eps1.3_da3m0ns.mp4",
+      "beskrivelse": "",
+      "flag": "Adam Penn",
+      "tips": "Hvem skrev",
+      "poeng": "1"
+    },
+    {
+      "flagName": "eps1.4_3xpl0its.wmv",
+      "beskrivelse": "",
+      "flag": "David Iserson",
+      "tips": "Hvem skrev",
+      "poeng": "1"
+    },
+    {
+      "flagName": "eps1.5_br4ve-trave1er.asf",
+      "beskrivelse": "",
+      "flag": "Kyle Bradstreet",
+      "tips": "Hvem skrev",
+      "poeng": "1"
+    },
+    {
+      "flagName": "eps1.7_wh1ter0se.m4v",
+      "beskrivelse": "",
+      "flag": "Randolph Leon",
+      "tips": "Hvem skrev",
+      "poeng": "1"
+    },
+    {
+      "flagName": "eps1.8_m1rr0r1ng.qt",
+      "beskrivelse": "",
+      "flag": "Sam Esmail",
+      "tips": "Hvem skrev",
+      "poeng": "1"
+    },
+    {
+      "flagName": "eps1.9_zer0-day.avi",
+      "beskrivelse": "",
+      "flag": "Sam Esmail",
+      "tips": "Hvem skrev",
+      "poeng": "1"
+    }
+  ]
+}

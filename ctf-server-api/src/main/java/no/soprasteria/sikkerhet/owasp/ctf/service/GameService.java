@@ -8,7 +8,7 @@ public class GameService {
     private String gameName = null;
 
     public GameService(GameConfig gameConfig) {
-        gameName = gameConfig.getName();
+        gameName = "gameConfig.getName()";
     }
 
     public String getName() {
