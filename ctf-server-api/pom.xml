@@ -5,7 +5,7 @@
     <parent>
         <groupId>no.steria.websikkerhet</groupId>
         <artifactId>ctf-server</artifactId>
-        <version>1.1.0</version>
+        <version>1.1.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>ctf-server-api</artifactId>
