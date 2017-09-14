@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Upload CTF Game Configuration</title>
+</head>
+
+<body>
+    <script>
+    function uploadFile() {
+        var selectedFile = document.getElementById('gamefile').files[0];
+        var password = document.getElementById('password');
+        var request = new XMLHttpRequest();
+        request.open('POST', '/api/game/load', true);
+        request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        request.setRequestHeader('Authorization', 'Basic ' + btoa('admin:' + password));
+        request.send(selectedFile);
+    }
+    </script>
+    <form onsubmit="uploadFile()">
+        <input type="file" id="gamefile"/>
+        <input type="password" id="password"/>
+        <input type="submit"/>
+    </form>
+</body>
+
+</html>
