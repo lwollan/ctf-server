@@ -22,6 +22,8 @@ import javax.ws.rs.core.Application;
 import java.net.URI;
 import java.util.*;
 
+import static no.soprasteria.sikkerhet.owasp.ctf.ApplicationContext.put;
+
 @ApplicationPath("api")
 public class CtFApplication extends Application {
 
@@ -30,43 +32,19 @@ public class CtFApplication extends Application {
     private static Logger logger = LoggerFactory.getLogger(CtFApplication.class);
 
     public CtFApplication() throws Exception {
-        logger.info("Starting up.");
-        setupServices();
+        logger.info("Application starting up.");
+        setupServices(this);
         logger.info("Application started.");
-
-    }
-
-    private static JedisPool getConnection() {
-        try {
-            URI redisURI = new URI(System.getenv("REDIS_URL"));
-            logger.info("REDIS_URL: {}", redisURI.toASCIIString());
-            return new JedisPool(new JedisPoolConfig(), redisURI);
-        } catch (Exception e) {
-            return null;
-        }
     }
 
     @Override
     public Set<Class<?>> getClasses() {
         Set<Class<?>> resources = new HashSet<>();
-        resources.add(TeamResource.class);
-        resources.add(BoardResource.class);
-        resources.add(FlagResource.class);
-        resources.add(GameResource.class);
-
-        resources.add(BeskyttetFilter.class);
-        resources.add(TeamKeyFilter.class);
-        resources.add(CORSFilter.class);
-
+        addResources(resources);
         return resources;
     }
 
-    @Override
-    public Map<String, Object> getProperties() {
-        return properties;
-    }
-
-    private void setupServices() throws Exception {
+    private static void setupServices(Application application) throws Exception {
         JedisPool connection = getConnection();
 
         Repository teamRepository;
@@ -83,20 +61,36 @@ public class CtFApplication extends Application {
         BoardService boardService = new BoardService(teamService, flagService);
         GameService gameService = new GameService(flagService);
 
+        put(application, teamService);
+        put(application, boardService);
+        put(application, flagService);
+        put(application, gameService);
 
-        ApplicationContext.put(this, teamService);
-        ApplicationContext.put(this, boardService);
-        ApplicationContext.put(this, flagService);
-        ApplicationContext.put(this, gameService);
-
-        /**
-        GameStructure mrrobotGame = GameStructure.readJSON(this.getClass().getResourceAsStream("/games/mrrobot.json"));
-        UUID gameId = gameService.addGame(mrrobotGame);
-        ApplicationContext.put(this, gameId);
-         */
     }
 
     public void shutdown() {
         this.properties = null;
     }
+
+    private static JedisPool getConnection() {
+        try {
+            URI redisURI = new URI(System.getenv("REDIS_URL"));
+            logger.info("REDIS_URL: {}", redisURI.toASCIIString());
+            return new JedisPool(new JedisPoolConfig(), redisURI);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private static void addResources(Set<Class<?>> resources) {
+        resources.add(TeamResource.class);
+        resources.add(BoardResource.class);
+        resources.add(FlagResource.class);
+        resources.add(GameResource.class);
+
+        resources.add(BeskyttetFilter.class);
+        resources.add(TeamKeyFilter.class);
+        resources.add(CORSFilter.class);
+    }
+
 }
