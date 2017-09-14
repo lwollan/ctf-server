@@ -19,6 +19,7 @@ public class TeamResourceTest {
     public void oppsett() throws Exception {
         resource = new TeamResource();
         application = new CtFApplication();
+        TestSetup.setupTestGame(application);
     }
 
     @Test

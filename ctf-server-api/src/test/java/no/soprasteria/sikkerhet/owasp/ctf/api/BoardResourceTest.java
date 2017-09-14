@@ -8,21 +8,23 @@ import org.junit.Test;
 
 import java.util.Map;
 
+import static no.soprasteria.sikkerhet.owasp.ctf.api.TestSetup.setupTestGame;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class BoardResourceTest {
 
     private BoardResource resource;
-    private static CtFApplication application;
+    private static CtFApplication testApplication;
 
     @BeforeClass
     public static void foerst() throws Exception {
-        application = new CtFApplication();
+        testApplication = new CtFApplication();
+        setupTestGame(testApplication);
     }
 
     @AfterClass
     public static void sist() throws Exception {
-        application.shutdown();
+        testApplication.shutdown();
     }
 
     @Before
@@ -32,31 +34,31 @@ public class BoardResourceTest {
 
     @Test
     public void score_board_skal_inneholde_resultater() throws Exception {
-        Map<BoardResource.BoardResponseKeys, Object> respons = resource.getBoard(application);
+        Map<BoardResource.BoardResponseKeys, Object> respons = resource.getBoard(testApplication);
         assertThat(respons).containsKey(BoardResource.BoardResponseKeys.score);
     }
 
     @Test
     public void score_board_skal_inneholde_spillnavn() throws Exception {
-        Map<BoardResource.BoardResponseKeys, Object> respons = resource.getBoard(application);
+        Map<BoardResource.BoardResponseKeys, Object> respons = resource.getBoard(testApplication);
         assertThat(respons).containsKey(BoardResource.BoardResponseKeys.title);
     }
 
     @Test
     public void score_board_skal_inneholde_spillstatus() throws Exception {
-        Map<BoardResource.BoardResponseKeys, Object> respons = resource.getBoard(application);
+        Map<BoardResource.BoardResponseKeys, Object> respons = resource.getBoard(testApplication);
         assertThat(respons).containsKey(BoardResource.BoardResponseKeys.gameOn);
     }
 
     @Test
     public void score_board_skal_inneholde_start_tid() throws Exception {
-        Map<BoardResource.BoardResponseKeys, Object> respons = resource.getBoard(application);
+        Map<BoardResource.BoardResponseKeys, Object> respons = resource.getBoard(testApplication);
         assertThat(respons).containsKey(BoardResource.BoardResponseKeys.start);
     }
 
     @Test
     public void score_board_skal_inneholde_slutt_tid() throws Exception {
-        Map<BoardResource.BoardResponseKeys, Object> respons = resource.getBoard(application);
+        Map<BoardResource.BoardResponseKeys, Object> respons = resource.getBoard(testApplication);
         assertThat(respons).containsKey(BoardResource.BoardResponseKeys.end);
     }
 }

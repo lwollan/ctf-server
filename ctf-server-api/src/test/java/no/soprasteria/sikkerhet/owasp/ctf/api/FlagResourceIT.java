@@ -37,6 +37,7 @@ public class FlagResourceIT extends JerseyTest {
     protected Application configure() {
         try {
             CtFApplication application = new CtFApplication();
+            TestSetup.setupTestGame(application);
             TeamService teamService = ApplicationContext.get(application, TeamService.class);
             FlagService flagService = ApplicationContext.get(application, FlagService.class);
 

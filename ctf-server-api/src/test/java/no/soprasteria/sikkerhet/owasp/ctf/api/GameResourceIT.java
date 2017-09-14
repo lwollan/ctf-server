@@ -28,6 +28,7 @@ public class GameResourceIT extends JerseyTest {
     protected Application configure() {
         try {
             CtFApplication application = new CtFApplication();
+            TestSetup.setupTestGame(application);
             return application;
         } catch (Exception e) {
             throw new RuntimeException(e);

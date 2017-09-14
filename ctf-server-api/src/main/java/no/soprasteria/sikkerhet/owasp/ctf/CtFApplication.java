@@ -89,9 +89,11 @@ public class CtFApplication extends Application {
         ApplicationContext.put(this, flagService);
         ApplicationContext.put(this, gameService);
 
+        /**
         GameStructure mrrobotGame = GameStructure.readJSON(this.getClass().getResourceAsStream("/games/mrrobot.json"));
         UUID gameId = gameService.addGame(mrrobotGame);
         ApplicationContext.put(this, gameId);
+         */
     }
 
     public void shutdown() {
