@@ -2,6 +2,7 @@ package no.soprasteria.sikkerhet.owasp.ctf.api;
 
 import no.soprasteria.sikkerhet.owasp.ctf.ApplicationContext;
 import no.soprasteria.sikkerhet.owasp.ctf.CtFApplication;
+import no.soprasteria.sikkerhet.owasp.ctf.core.service.GameService;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.TeamKeyFilter;
 import no.soprasteria.sikkerhet.owasp.ctf.core.service.FlagService;
 import no.soprasteria.sikkerhet.owasp.ctf.core.service.TeamService;
@@ -19,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class    FlagResourceTest {
+public class FlagResourceTest {
 
     private FlagResource resource;
     private Application application;
@@ -36,11 +37,15 @@ public class    FlagResourceTest {
     public void oppsett() throws Exception {
         resource = new FlagResource();
         application = new CtFApplication();
+
+        TestSetup.setupTestGame(application);
+
         flagService = ApplicationContext.get(application, FlagService.class);
         teamService = ApplicationContext.get(application, TeamService.class);
 
-        flag1Id = flagService.addFlag("flag 1", "svar 1", 10l, "tips", "beskrivelse");
-        flag2Id = flagService.addFlag("flag 2", "svar 2", 10l, "tips", "beskrivelse");
+
+        flag1Id = flagService.addFlag("flag 1", "svar 1", 10L, "tips", "beskrivelse");
+        flag2Id = flagService.addFlag("flag 2", "svar 2", 10L, "tips", "beskrivelse");
 
         newTeamKey = teamService.addNewTeam("team-a").get();
 
@@ -50,6 +55,10 @@ public class    FlagResourceTest {
 
         request = mock(ContainerRequestContext.class);
         when(request.getHeaderString(TeamKeyFilter.X_TEAM_KEY)).thenReturn(newTeamKey);
+
+        GameService gameService = ApplicationContext.get(application, GameService.class);
+        gameService.startGame();
+
     }
 
     @Test

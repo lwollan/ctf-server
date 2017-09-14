@@ -1,6 +1,7 @@
 package no.soprasteria.sikkerhet.owasp.ctf.core.games.structure;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -17,7 +18,13 @@ public class GameStructure {
     public List<FlagStructure> flags = new ArrayList<>();
 
     public static GameStructure readJSON(InputStream inputStream) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(inputStream, new TypeReference<GameStructure>() {});
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(inputStream, new TypeReference<GameStructure>() {});
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

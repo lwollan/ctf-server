@@ -2,6 +2,7 @@ package no.soprasteria.sikkerhet.owasp.ctf.api;
 
 
 import no.soprasteria.sikkerhet.owasp.ctf.ApplicationContext;
+import no.soprasteria.sikkerhet.owasp.ctf.core.service.GameService;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.TeamKey;
 import no.soprasteria.sikkerhet.owasp.ctf.core.service.FlagService;
 import no.soprasteria.sikkerhet.owasp.ctf.core.service.TeamService;
@@ -40,16 +41,17 @@ public class FlagResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response answer(@Context Application application, @Context ContainerRequestContext request, Map<String, String> body) {
         if (body != null && request.getHeaderString(X_TEAM_KEY) != null) {
-            String teamKey = request.getHeaderString(X_TEAM_KEY);
+            if (ApplicationContext.get(application, GameService.class).isGameOn()) {
+                String teamKey = request.getHeaderString(X_TEAM_KEY);
 
-            String flagId = body.getOrDefault(FlagResourceRequestKeys.flagId.toString(), null);
-            String flag = body.getOrDefault(FlagResourceRequestKeys.flag.toString(), null);
+                String flagId = body.getOrDefault(FlagResourceRequestKeys.flagId.toString(), null);
+                String flag = body.getOrDefault(FlagResourceRequestKeys.flag.toString(), null);
 
-            if (flagId != null && flag != null) {
-                return handleAnswerAndGetResponse(application, teamKey, flagId, flag);
+                if (flagId != null && flag != null) {
+                    return handleAnswerAndGetResponse(application, teamKey, flagId, flag);
+                }
             }
         }
-
         logger.info("Bad flag request.");
         return Response.status(BAD_REQUEST).build();
     }

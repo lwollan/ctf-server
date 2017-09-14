@@ -70,7 +70,6 @@ public class CtFApplication extends Application {
         put(application, boardService);
         put(application, flagService);
         put(application, gameService);
-
     }
 
     public void shutdown() {

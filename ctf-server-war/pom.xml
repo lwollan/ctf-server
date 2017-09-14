@@ -34,6 +34,11 @@
             <scope>runtime</scope>
         </dependency>
 
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -41,6 +46,7 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
+                <!--
                 <dependencies>
                     <dependency>
                         <groupId>ch.qos.logback</groupId>
@@ -48,6 +54,7 @@
                         <version>1.1.10</version>
                     </dependency>
                 </dependencies>
+                -->
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
