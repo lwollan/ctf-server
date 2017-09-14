@@ -3,8 +3,8 @@ package no.soprasteria.sikkerhet.owasp.ctf.api;
 
 import no.soprasteria.sikkerhet.owasp.ctf.ApplicationContext;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.TeamKey;
-import no.soprasteria.sikkerhet.owasp.ctf.service.FlagService;
-import no.soprasteria.sikkerhet.owasp.ctf.service.TeamService;
+import no.soprasteria.sikkerhet.owasp.ctf.core.service.FlagService;
+import no.soprasteria.sikkerhet.owasp.ctf.core.service.TeamService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,8 +27,12 @@ public class FlagResource {
 
     private static Logger logger = LoggerFactory.getLogger(FlagResource.class);
 
-    enum Keys {
-        flagId, flag, flagDescription, flagAnswered, flagName
+    enum FlagResourceResponseKeys {
+        flagId, flag, flagDescription, flagAnswered, flagName, tips
+    }
+
+    enum FlagResourceRequestKeys {
+        flagId, flag
     }
 
     @TeamKey
@@ -38,8 +42,8 @@ public class FlagResource {
         if (body != null && request.getHeaderString(X_TEAM_KEY) != null) {
             String teamKey = request.getHeaderString(X_TEAM_KEY);
 
-            String flagId = body.getOrDefault(Keys.flagId.toString(), null);
-            String flag = body.getOrDefault(Keys.flag.toString(), null);
+            String flagId = body.getOrDefault(FlagResourceRequestKeys.flagId.toString(), null);
+            String flag = body.getOrDefault(FlagResourceRequestKeys.flag.toString(), null);
 
             if (flagId != null && flag != null) {
                 return handleAnswerAndGetResponse(application, teamKey, flagId, flag);
@@ -54,7 +58,7 @@ public class FlagResource {
     @GET
     @Path("list")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Map<Keys, String>> list(@Context Application application, @HeaderParam("X-TEAM-KEY") String teamKey) {
+    public List<Map<FlagResourceResponseKeys, String>> list(@Context Application application, @HeaderParam("X-TEAM-KEY") String teamKey) {
         FlagService flagService = ApplicationContext.get(application, FlagService.class);
         List<Map<String, String>> flags = flagService.listFlag();
 
@@ -75,20 +79,20 @@ public class FlagResource {
 
         if (tip != null) {
             Map<String, String> reponse = new HashMap<>();
-            reponse.put(FlagService.Keys.tips.toString(), tip);
+            reponse.put(FlagResourceResponseKeys.tips.toString(), tip);
             return reponse;
         } else {
             return new HashMap<>();
         }
     }
 
-    private static Map<Keys, String> newFlagResponseMap(String teamKey, Map<String, String> flagMap, FlagService flagService) {
-        Map<Keys, String> map = new HashMap<>();
-        map.put(Keys.flagId, flagMap.get(FlagService.Keys.flagId.toString()));
-        map.put(Keys.flagName, flagMap.get(FlagService.Keys.flagName.toString()));
-        map.put(Keys.flagDescription, flagMap.get(FlagService.Keys.beskrivelse.toString()));
-        map.put(Keys.flagAnswered, String.valueOf(!flagService.isFlagUnanswered(teamKey, flagMap.get(FlagService.Keys.flagId.toString()))));
-        return map;
+    private static Map<FlagResourceResponseKeys, String> newFlagResponseMap(String teamKey, Map<String, String> flagMap, FlagService flagService) {
+        Map<FlagResourceResponseKeys, String> response = new HashMap<>();
+        response.put(FlagResourceResponseKeys.flagId, flagMap.get(FlagService.Keys.flagId.toString()));
+        response.put(FlagResourceResponseKeys.flagName, flagMap.get(FlagService.Keys.flagName.toString()));
+        response.put(FlagResourceResponseKeys.flagDescription, flagMap.get(FlagService.Keys.beskrivelse.toString()));
+        response.put(FlagResourceResponseKeys.flagAnswered, String.valueOf(!flagService.isFlagUnanswered(teamKey, flagMap.get(FlagService.Keys.flagId.toString()))));
+        return response;
     }
 
     private static Response handleAnswerAndGetResponse(@Context Application application, String teamKey, String flagId, String answer) {

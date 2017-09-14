@@ -3,8 +3,8 @@ package no.soprasteria.sikkerhet.owasp.ctf.api;
 import no.soprasteria.sikkerhet.owasp.ctf.ApplicationContext;
 import no.soprasteria.sikkerhet.owasp.ctf.CtFApplication;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.TeamKeyFilter;
-import no.soprasteria.sikkerhet.owasp.ctf.service.FlagService;
-import no.soprasteria.sikkerhet.owasp.ctf.service.TeamService;
+import no.soprasteria.sikkerhet.owasp.ctf.core.service.FlagService;
+import no.soprasteria.sikkerhet.owasp.ctf.core.service.TeamService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -54,7 +54,7 @@ public class FlagResourceTest {
 
     @Test
     public void skal_returnere_alle_registrerte_flagg() {
-        List<Map<FlagResource.Keys, String>> list = resource.list(application, newTeamKey);
+        List<Map<FlagResource.FlagResourceResponseKeys, String>> list = resource.list(application, newTeamKey);
         assertThat(list).isNotEmpty();
     }
 
@@ -90,15 +90,15 @@ public class FlagResourceTest {
     @Test
     public void skal_si_om_et_flag_er_besvart_eller_ikke() {
         resource.answer(application, request, svarMedRiktigFlag);
-        List<Map<FlagResource.Keys, String>> list = resource.list(application, newTeamKey);
+        List<Map<FlagResource.FlagResourceResponseKeys, String>> list = resource.list(application, newTeamKey);
 
-        assertThat(list.stream().filter(m -> m.get(FlagResource.Keys.flagId).equals(svarMedRiktigFlag.get("flagId")))).isNotEmpty();
+        assertThat(list.stream().filter(m -> m.get(FlagResource.FlagResourceResponseKeys.flagId).equals(svarMedRiktigFlag.get("flagId")))).isNotEmpty();
     }
 
     private static Map<String, String> nyttFlagSvar(String value, String value2) {
         Map<String, String> answer = new HashMap<>();
-        answer.put(FlagResource.Keys.flagId.toString(), value);
-        answer.put(FlagResource.Keys.flag.toString(), value2);
+        answer.put(FlagResource.FlagResourceResponseKeys.flagId.toString(), value);
+        answer.put(FlagResource.FlagResourceResponseKeys.flag.toString(), value2);
         return answer;
     }
 

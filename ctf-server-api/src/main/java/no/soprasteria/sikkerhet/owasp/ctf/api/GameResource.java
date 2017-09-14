@@ -2,11 +2,10 @@ package no.soprasteria.sikkerhet.owasp.ctf.api;
 
 import no.soprasteria.sikkerhet.owasp.ctf.ApplicationContext;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.Beskyttet;
-import no.soprasteria.sikkerhet.owasp.ctf.games.GameConfig;
-import no.soprasteria.sikkerhet.owasp.ctf.service.BoardService;
-import no.soprasteria.sikkerhet.owasp.ctf.service.FlagService;
-import no.soprasteria.sikkerhet.owasp.ctf.service.GameService;
-import no.soprasteria.sikkerhet.owasp.ctf.service.TeamService;
+import no.soprasteria.sikkerhet.owasp.ctf.core.service.BoardService;
+import no.soprasteria.sikkerhet.owasp.ctf.core.service.FlagService;
+import no.soprasteria.sikkerhet.owasp.ctf.core.service.GameService;
+import no.soprasteria.sikkerhet.owasp.ctf.core.service.TeamService;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -23,23 +22,23 @@ import java.util.Map;
 @Path("game")
 public class GameResource {
 
-    enum Keys {
+    enum GameResourceResponseKeys {
         game, flags, gameOn, score
     }
 
     @Beskyttet
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Map<Keys, Object>> list(@Context Application application) {
+    public List<Map<GameResourceResponseKeys, Object>> list(@Context Application application) {
         GameService gameService = ApplicationContext.get(application, GameService.class);
         FlagService flagService = ApplicationContext.get(application, FlagService.class);
         BoardService boardService = ApplicationContext.get(application, BoardService.class);
 
-        Map<Keys, Object> singleGame = new HashMap<>();
-        singleGame.put(Keys.game, gameService.getName());
-        singleGame.put(Keys.flags, flagService.listFlag());
-        singleGame.put(Keys.gameOn, gameService.isGameOn());
-        singleGame.put(Keys.score, boardService.getScore());
+        Map<GameResourceResponseKeys, Object> singleGame = new HashMap<>();
+        singleGame.put(GameResourceResponseKeys.game, gameService.getName());
+        singleGame.put(GameResourceResponseKeys.flags, flagService.listFlag());
+        singleGame.put(GameResourceResponseKeys.gameOn, gameService.isGameOn());
+        singleGame.put(GameResourceResponseKeys.score, boardService.getScore());
 
         return Arrays.asList(singleGame);
     }

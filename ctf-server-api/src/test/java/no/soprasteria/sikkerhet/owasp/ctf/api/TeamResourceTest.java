@@ -23,7 +23,7 @@ public class TeamResourceTest {
 
     @Test
     public void team_listen_skal_vare_tom_ved_oppstart() {
-        List<Map<TeamResource.Keys, String>> teamListe = resource.list(application);
+        List<Map<TeamResource.TeamResourceResponseKeys, String>> teamListe = resource.list(application);
         assertThat(teamListe).isEmpty();
     }
 
@@ -31,7 +31,7 @@ public class TeamResourceTest {
     public void skal_vise_alle_registrerte_team() {
         resource.add(application, "0xDEADBEEF");
         resource.add(application, "SYS64764");
-        List<Map<TeamResource.Keys, String>> teamListe = resource.list(application);
+        List<Map<TeamResource.TeamResourceResponseKeys, String>> teamListe = resource.list(application);
 
         assertThat(teamListe).hasSize(2);
     }
@@ -39,7 +39,7 @@ public class TeamResourceTest {
     @Test
     public void det_skal_ikke_vaere_mulig_aa_legge_til_to_like_team() throws Exception {
         resource.add(application, "0xDEADBEEF");
-        List<Map<TeamResource.Keys, String>> teamListe = resource.list(application);
+        List<Map<TeamResource.TeamResourceResponseKeys, String>> teamListe = resource.list(application);
 
         assertThat(teamListe).hasSize(1);
     }

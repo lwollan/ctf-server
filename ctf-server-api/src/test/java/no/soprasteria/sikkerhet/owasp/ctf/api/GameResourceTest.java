@@ -19,10 +19,10 @@ public class GameResourceTest {
         GameResource gameResource = new GameResource();
         CtFApplication application = new CtFApplication();
 
-        assertThat(gameResource.list(application).get(0).get(GameResource.Keys.gameOn)).isEqualTo(Boolean.FALSE);
+        assertThat(gameResource.list(application).get(0).get(GameResource.GameResourceResponseKeys.gameOn)).isEqualTo(Boolean.FALSE);
         gameResource.startGame(application);
 
-        assertThat(gameResource.list(application).get(0).get(GameResource.Keys.gameOn)).isEqualTo(Boolean.TRUE);
+        assertThat(gameResource.list(application).get(0).get(GameResource.GameResourceResponseKeys.gameOn)).isEqualTo(Boolean.TRUE);
     }
 
 }

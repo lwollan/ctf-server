@@ -32,31 +32,31 @@ public class BoardResourceTest {
 
     @Test
     public void score_board_skal_inneholde_resultater() throws Exception {
-        Map<BoardResource.Keys, Object> respons = resource.getBoard(application);
-        assertThat(respons).containsKey(BoardResource.Keys.score);
+        Map<BoardResource.BoardResponseKeys, Object> respons = resource.getBoard(application);
+        assertThat(respons).containsKey(BoardResource.BoardResponseKeys.score);
     }
 
     @Test
     public void score_board_skal_inneholde_spillnavn() throws Exception {
-        Map<BoardResource.Keys, Object> respons = resource.getBoard(application);
-        assertThat(respons).containsKey(BoardResource.Keys.title);
+        Map<BoardResource.BoardResponseKeys, Object> respons = resource.getBoard(application);
+        assertThat(respons).containsKey(BoardResource.BoardResponseKeys.title);
     }
 
     @Test
     public void score_board_skal_inneholde_spillstatus() throws Exception {
-        Map<BoardResource.Keys, Object> respons = resource.getBoard(application);
-        assertThat(respons).containsKey(BoardResource.Keys.gameOn);
+        Map<BoardResource.BoardResponseKeys, Object> respons = resource.getBoard(application);
+        assertThat(respons).containsKey(BoardResource.BoardResponseKeys.gameOn);
     }
 
     @Test
     public void score_board_skal_inneholde_start_tid() throws Exception {
-        Map<BoardResource.Keys, Object> respons = resource.getBoard(application);
-        assertThat(respons).containsKey(BoardResource.Keys.start);
+        Map<BoardResource.BoardResponseKeys, Object> respons = resource.getBoard(application);
+        assertThat(respons).containsKey(BoardResource.BoardResponseKeys.start);
     }
 
     @Test
     public void score_board_skal_inneholde_slutt_tid() throws Exception {
-        Map<BoardResource.Keys, Object> respons = resource.getBoard(application);
-        assertThat(respons).containsKey(BoardResource.Keys.end);
+        Map<BoardResource.BoardResponseKeys, Object> respons = resource.getBoard(application);
+        assertThat(respons).containsKey(BoardResource.BoardResponseKeys.end);
     }
 }
