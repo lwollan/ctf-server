@@ -44,6 +44,11 @@ public class CtFApplication extends Application {
         return resources;
     }
 
+    @Override
+    public Map<String, Object> getProperties() {
+        return properties;
+    }
+
     private static void setupServices(Application application) throws Exception {
         JedisPool connection = getConnection();
 
