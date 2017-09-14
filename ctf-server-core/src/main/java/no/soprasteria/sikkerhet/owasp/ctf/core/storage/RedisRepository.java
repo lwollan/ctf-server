@@ -1,5 +1,6 @@
 package no.soprasteria.sikkerhet.owasp.ctf.core.storage;
 
+import com.oracle.jrockit.jfr.ValueDefinition;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -19,18 +20,21 @@ public class RedisRepository implements Repository {
         this.jedisPool = jedisPool;
     }
 
+    @Override
     public void put(String key, String value) {
         try (Jedis jedis = jedisPool.getResource()) {
             jedis.set(makeKey(key), value);
         }
     }
 
+    @Override
     public Optional<String> get(String key) {
         try (Jedis jedis = jedisPool.getResource()) {
             return Optional.ofNullable(jedis.get(makeKey(key)));
         }
     }
 
+    @Override
     public Map<String, String> list() {
         try (Jedis jedis = jedisPool.getResource()) {
             Set<String> list = jedis.keys(makeKey("*"));

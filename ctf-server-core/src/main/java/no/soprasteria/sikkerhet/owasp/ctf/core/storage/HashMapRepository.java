@@ -14,30 +14,40 @@ public class HashMapRepository implements Repository {
 
     @Override
     public void put(String key, String value) {
-        map.put(key, value);
+        synchronized (map) {
+            map.put(key, value);
+        }
     }
 
     @Override
     public Optional<String> get(String key) {
-        return Optional.ofNullable(map.get(key));
+        synchronized (map) {
+            return Optional.ofNullable(map.get(key));
+        }
     }
 
     @Override
     public Map<String, String> list() {
-        HashMap<String, String> map = new HashMap<>();
-        map.putAll(this.map);
-        return map;
+        synchronized (map) {
+            HashMap<String, String> map = new HashMap<>();
+            map.putAll(this.map);
+            return map;
+        }
     }
 
     @Override
     public void remove(String key) {
-        if (map.containsKey(key)) {
-            map.remove(key);
+        synchronized (map) {
+            if (map.containsKey(key)) {
+                map.remove(key);
+            }
         }
     }
 
     @Override
     public void deleteAll() {
-        map.clear();
+        synchronized (map) {
+            map.clear();
+        }
     }
 }
