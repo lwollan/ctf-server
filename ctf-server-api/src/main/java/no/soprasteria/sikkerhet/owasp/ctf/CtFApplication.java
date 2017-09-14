@@ -4,11 +4,10 @@ import no.soprasteria.sikkerhet.owasp.ctf.api.BoardResource;
 import no.soprasteria.sikkerhet.owasp.ctf.api.FlagResource;
 import no.soprasteria.sikkerhet.owasp.ctf.api.GameResource;
 import no.soprasteria.sikkerhet.owasp.ctf.api.TeamResource;
+import no.soprasteria.sikkerhet.owasp.ctf.core.games.structure.GameStructure;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.BeskyttetFilter;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.CORSFilter;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.TeamKeyFilter;
-import no.soprasteria.sikkerhet.owasp.ctf.core.games.GameConfig;
-import no.soprasteria.sikkerhet.owasp.ctf.core.games.implementations.JSONGame;
 import no.soprasteria.sikkerhet.owasp.ctf.core.service.*;
 import no.soprasteria.sikkerhet.owasp.ctf.core.storage.HashMapRepository;
 import no.soprasteria.sikkerhet.owasp.ctf.core.storage.RedisRepository;
@@ -21,10 +20,7 @@ import redis.clients.jedis.JedisPoolConfig;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @ApplicationPath("api")
 public class CtFApplication extends Application {
@@ -85,15 +81,17 @@ public class CtFApplication extends Application {
         TeamService teamService = new TeamService(teamRepository);
         FlagService flagService = new FlagService();
         BoardService boardService = new BoardService(teamService, flagService);
+        GameService gameService = new GameService(flagService);
 
-        GameConfig mrrobotGame = new JSONGame(flagService, "/games/mrrobot.json");
-        GameService gameService = new GameService(mrrobotGame);
 
         ApplicationContext.put(this, teamService);
         ApplicationContext.put(this, boardService);
         ApplicationContext.put(this, flagService);
         ApplicationContext.put(this, gameService);
 
+        GameStructure mrrobotGame = GameStructure.readJSON(this.getClass().getResourceAsStream("/games/mrrobot.json"));
+        UUID gameId = gameService.addGame(mrrobotGame);
+        ApplicationContext.put(this, gameId);
     }
 
     public void shutdown() {

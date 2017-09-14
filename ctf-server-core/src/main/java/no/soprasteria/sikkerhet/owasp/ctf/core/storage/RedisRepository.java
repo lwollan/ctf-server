@@ -1,6 +1,5 @@
 package no.soprasteria.sikkerhet.owasp.ctf.core.storage;
 
-import com.oracle.jrockit.jfr.ValueDefinition;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 

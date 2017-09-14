@@ -14,10 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Path("game")
 public class GameResource {
@@ -33,11 +30,13 @@ public class GameResource {
         GameService gameService = ApplicationContext.get(application, GameService.class);
         FlagService flagService = ApplicationContext.get(application, FlagService.class);
         BoardService boardService = ApplicationContext.get(application, BoardService.class);
+        UUID defaultGame = ApplicationContext.get(application, UUID.class);
+
 
         Map<GameResourceResponseKeys, Object> singleGame = new HashMap<>();
-        singleGame.put(GameResourceResponseKeys.game, gameService.getName());
+        singleGame.put(GameResourceResponseKeys.game, gameService.getName(defaultGame));
         singleGame.put(GameResourceResponseKeys.flags, flagService.listFlag());
-        singleGame.put(GameResourceResponseKeys.gameOn, gameService.isGameOn());
+        singleGame.put(GameResourceResponseKeys.gameOn, gameService.isGameOn(defaultGame));
         singleGame.put(GameResourceResponseKeys.score, boardService.getScore());
 
         return Arrays.asList(singleGame);
@@ -48,7 +47,8 @@ public class GameResource {
     @Path("start")
     public void startGame(@Context Application application) {
         GameService gameService = ApplicationContext.get(application, GameService.class);
-        gameService.startGame();
+        UUID defaultGame = ApplicationContext.get(application, UUID.class);
+        gameService.startGame(defaultGame);
     }
 
     @Beskyttet
@@ -56,7 +56,8 @@ public class GameResource {
     @Path("stop")
     public void stopGame(@Context Application application) {
         GameService gameService = ApplicationContext.get(application, GameService.class);
-        gameService.pauseGame();
+        UUID defaultGame = ApplicationContext.get(application, UUID.class);
+        gameService.pauseGame(defaultGame);
     }
 
     @Beskyttet

@@ -37,8 +37,11 @@ public class FlagResourceIT extends JerseyTest {
     protected Application configure() {
         try {
             CtFApplication application = new CtFApplication();
-            validTeamKey = ApplicationContext.get(application, TeamService.class).addNewTeam("integration-test").orElse("");
-            Map<String, String> firstFlag = ApplicationContext.get(application, FlagService.class).listFlag().get(0);
+            TeamService teamService = ApplicationContext.get(application, TeamService.class);
+            FlagService flagService = ApplicationContext.get(application, FlagService.class);
+
+            validTeamKey = teamService.addNewTeam("integration-test").orElse("");
+            Map<String, String> firstFlag = flagService.listFlag().get(0);
             flag = firstFlag.get("flag");
             flagId = firstFlag.get("flagId");
 

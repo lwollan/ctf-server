@@ -1,6 +1,7 @@
 {
   "version": "1.0",
-  "beskrivelse": "Mr Robot Game",
+  "name": "Mr. Robot Game",
+  "beskrivelse": "Her skal du finne ut diverse om første sesong av Mr. Robot.",
   "flags": [
     {
       "flagName": "eps1.0_hellofriend.mov",

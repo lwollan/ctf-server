@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Path("public/board")
 public class BoardResource {
@@ -27,13 +28,14 @@ public class BoardResource {
     public Map<BoardResponseKeys, Object> getBoard(@Context Application application) {
         GameService gameService = ApplicationContext.get(application, GameService.class);
         BoardService boardService = ApplicationContext.get(application, BoardService.class);
+        UUID defaultGame = ApplicationContext.get(application, UUID.class);
 
         List<Map<String, String>> score = boardService.getScore();
 
         Map<BoardResponseKeys, Object> response = new HashMap<>();
         response.put(BoardResponseKeys.score, score);
-        response.put(BoardResponseKeys.title, gameService.getName());
-        response.put(BoardResponseKeys.gameOn, gameService.isGameOn());
+        response.put(BoardResponseKeys.title, gameService.getName(defaultGame));
+        response.put(BoardResponseKeys.gameOn, gameService.isGameOn(defaultGame));
         response.put(BoardResponseKeys.start, LocalDateTime.now().toString());
         response.put(BoardResponseKeys.end, LocalDateTime.now().plusHours(2).toString());
 
