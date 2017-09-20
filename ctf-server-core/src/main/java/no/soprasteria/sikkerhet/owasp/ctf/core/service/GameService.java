@@ -18,6 +18,7 @@ public class GameService {
     public void setGame(GameStructure gameStructure) {
         game = new GameConfig();
         game.name = gameStructure.name;
+        game.description = gameStructure.beskrivelse;
 
         List<FlagStructure> flags = gameStructure.flags;
         flags.forEach(f -> flagService.addFlag(f.flagName, f.flag, 1L, f.tips, f.beskrivelse));
@@ -44,4 +45,7 @@ public class GameService {
         game.gameOn = false;
     }
 
+    public Object getGameDescription() {
+        return this.game.description;
+    }
 }

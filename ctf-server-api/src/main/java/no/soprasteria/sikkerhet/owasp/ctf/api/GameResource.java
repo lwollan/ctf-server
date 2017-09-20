@@ -29,6 +29,7 @@ public class GameResource {
         game, flags, gameOn, score
     }
 
+    /**
     @Beskyttet
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -50,6 +51,7 @@ public class GameResource {
             return Collections.emptyList();
         }
     }
+     */
 
     @Beskyttet
     @POST

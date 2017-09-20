@@ -18,6 +18,8 @@ public class GameResourceTest {
         TestSetup.setupTestGame(application);
 
     }
+
+    /**
     @Test
     public void skal_liste_tilgjengelige_spill() throws Exception {
         GameResource gameResource = new GameResource();
@@ -33,5 +35,6 @@ public class GameResourceTest {
 
         assertThat(gameResource.list(application).get(0).get(GameResource.GameResourceResponseKeys.gameOn)).isEqualTo(Boolean.TRUE);
     }
+    */
 
 }

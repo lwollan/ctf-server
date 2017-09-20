@@ -27,7 +27,7 @@ public class BoardResource {
     private static Logger logger = LoggerFactory.getLogger(BoardResource.class);
 
     public enum BoardResponseKeys {
-        score, title, gameOn, start, end
+        score, title, gameOn, start, end, beskrivelse
     }
 
     @GET
@@ -44,6 +44,8 @@ public class BoardResource {
             response.put(BoardResponseKeys.gameOn, gameService.isGameOn());
             response.put(BoardResponseKeys.start, LocalDateTime.now().toString());
             response.put(BoardResponseKeys.end, LocalDateTime.now().plusHours(2).toString());
+            response.put(BoardResponseKeys.beskrivelse, gameService.getGameDescription());
+
 
             return ok(response).build();
         } else {

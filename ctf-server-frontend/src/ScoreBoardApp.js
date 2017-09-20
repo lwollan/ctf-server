@@ -24,7 +24,8 @@ export default class ScoreBoardApp extends Component {
         return (
             <main className="container">
                 <div className="block">
-                    <h1>{ board && board.get('title') }</h1>
+                    <h1>{ board && board.get('title') } </h1>
+                    <p> { board && board.get('beskrivelse') } </p>
                 </div>
                 { showBoard ? <ScoreBoard/> : <Game /> }
             </main>
