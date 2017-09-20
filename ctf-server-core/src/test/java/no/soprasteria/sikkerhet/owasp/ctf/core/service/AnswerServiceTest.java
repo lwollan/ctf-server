@@ -31,13 +31,13 @@ public class AnswerServiceTest {
 
     @Test
     public void skal_legge_til_poeng_hvis_team_finnes() {
-        String flagId01 = flagService.addFlag("01 Flag 1", "svar-a", 10l, "tips", "beskrivelse");
-        String flagId02 = flagService.addFlag("02 Flag 2", "svar-b", 10l, "tips", "beskrivelse");
+        String flagId01 = lagNyttFlagForTest();
+        String flagId02 = lagNyttFlagForTest();
 
-        service.giveAnswer("finnes", flagId01, "svar-a");
-        service.giveAnswer("finnes", flagId02, "svar-b");
+        service.giveAnswer("finnes", flagId01, "riktig");
+        service.giveAnswer("finnes", flagId02, "riktig");
 
-        assertThat(service.getTeamScore("finnes")).isEqualTo(20l);
+        assertThat(service.getTeamScore("finnes")).isEqualTo(Long.valueOf(20));
     }
 
     @Test
@@ -48,12 +48,12 @@ public class AnswerServiceTest {
 
         service.resetTeamScore("finnes");
 
-        assertThat(service.getTeamScore("finnes")).isEqualTo(0l);
+        assertThat(service.getTeamScore("finnes")).isEqualTo(Long.valueOf(0));
     }
 
     @Test
     public void skal_vise_svar_for_ett_lag() throws Exception {
-        String flagId01 = flagService.addFlag("Flagg 1", "riktig", 10l, "tips", "beskrivelse");
+        String flagId01 = lagNyttFlagForTest();
 
         service.giveAnswer("finnes", flagId01, "riktig");
 
@@ -64,8 +64,8 @@ public class AnswerServiceTest {
 
     @Test
     public void skal_vise_svar_for_alle_flagg_for_ett_lag() throws Exception {
-        String flagId01 = flagService.addFlag("Flagg 1", "riktig", 10l, "tips", "beskrivelse");
-        String flagId02 = flagService.addFlag("Flagg 2", "riktig", 10l, "tips", "beskrivelse");
+        String flagId01 = lagNyttFlagForTest();
+        String flagId02 = lagNyttFlagForTest();
 
         service.giveAnswer("team", flagId01, "riktig");
         service.giveAnswer("team", flagId02, "riktig");
@@ -77,8 +77,8 @@ public class AnswerServiceTest {
 
     @Test
     public void skal_vise_alle_svar_for_alle_flagg_for_ett_lag() throws Exception {
-        String flagId01 = flagService.addFlag("Flagg 1", "riktig", 10l, "tips", "beskrivelse");
-        String flagId02 = flagService.addFlag("Flagg 2", "riktig", 10l, "tips", "beskrivelse");
+        String flagId01 = lagNyttFlagForTest();
+        String flagId02 = lagNyttFlagForTest();
 
         service.giveAnswer("team", flagId01, "feil1");
         service.giveAnswer("team", flagId01, "feil2");
@@ -95,7 +95,7 @@ public class AnswerServiceTest {
 
     @Test
     public void skal_bare_viser_svar_til_riktig_svar_er_gittfor_ett_lag() throws Exception {
-        String flagId01 = flagService.addFlag("Flagg 1", "riktig", 10l, "tips", "beskrivelse");
+        String flagId01 = lagNyttFlagForTest();
 
         service.giveAnswer("team", flagId01, "feil1");
         service.giveAnswer("team", flagId01, "feil2");
@@ -110,18 +110,26 @@ public class AnswerServiceTest {
 
     @Test
     public void skal_vise_score_for_alle_lag() throws Exception {
-        String flagId01 = flagService.addFlag("Flagg 1", "riktig", 10l, "tips", "beskrivelse");
-        String flagId02 = flagService.addFlag("Flagg 2", "riktig", 10l, "tips", "beskrivelse");
+        String flagId01 = lagNyttFlagForTest();
+        String flagId02 = lagNyttFlagForTest();
 
         service.giveAnswer("teamA", flagId01, "feil1");
         service.giveAnswer("teamA", flagId01, "rikitg");
         service.giveAnswer("teamA", flagId02, "rikitg");
-        service.giveAnswer("teamB", flagId01, "rikitg");
         service.giveAnswer("teamB", flagId02, "feil");
         service.giveAnswer("teamB", flagId02, "rikitg");
 
         Map<String, Map<String, List<Svar>>> answers = service.getAnswersForTeams();
 
         assertThat(answers).isNotEmpty();
+
+        assertThat(answers).containsOnlyKeys("teamA", "teamB");
+
+        assertThat(answers.get("teamA")).containsOnlyKeys(flagId01, flagId02);
+        assertThat(answers.get("teamB")).containsOnlyKeys(flagId02);
+    }
+
+    private String lagNyttFlagForTest() {
+        return flagService.addFlag("Flagg 1", "riktig", Long.valueOf(10), "tips", "beskrivelse");
     }
 }
