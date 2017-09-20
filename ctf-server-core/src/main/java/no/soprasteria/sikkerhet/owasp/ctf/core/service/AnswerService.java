@@ -1,13 +1,17 @@
 package no.soprasteria.sikkerhet.owasp.ctf.core.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class AnswerService {
 
+    private static Logger logger = LoggerFactory.getLogger(AnswerService.class);
+
     private FlagService flagService;
     private Map<String, Set<Svar>> svar = new HashMap<>();
-
 
     public AnswerService(FlagService flagService) {
         this.flagService = flagService;
@@ -36,7 +40,11 @@ public class AnswerService {
             svar.put(teamKey, new HashSet<>());
         }
 
-        return !svar.get(teamKey).contains(flagId);
+        List<Svar> answers = svar.get(teamKey).stream()
+                .filter(s -> s.getFlagId().equals(flagId) && s.correct)
+                .collect(Collectors.toList());
+
+        return answers.isEmpty();
 
     }
 
@@ -52,6 +60,7 @@ public class AnswerService {
             svar.get(teamKey).add(nyttSvar(flagId, answer, isCorrect));
             return isCorrect;
         } else {
+            logger.info("Flag {} already answered correct.", flagId);
             return false;
         }
     }
