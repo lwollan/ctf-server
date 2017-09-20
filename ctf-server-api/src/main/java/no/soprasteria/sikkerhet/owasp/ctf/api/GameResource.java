@@ -86,6 +86,8 @@ public class GameResource {
 
         GameStructure gameToLoad = GameStructure.readJSON(entityStream);
         gameService.setGame(gameToLoad);
+
+        gameService.startGame();
         return Response.ok().build();
     }
 }
