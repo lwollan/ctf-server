@@ -50,6 +50,8 @@ public class FlagResource {
                 if (flagId != null && flag != null) {
                     return handleAnswerAndGetResponse(application, teamKey, flagId, flag);
                 }
+            } else {
+                logger.warn("Game not enabled.");
             }
         }
         logger.info("Bad flag request.");
@@ -110,6 +112,7 @@ public class FlagResource {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
         } else {
+            logger.info("Invalid flagId {}", flagId);
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
