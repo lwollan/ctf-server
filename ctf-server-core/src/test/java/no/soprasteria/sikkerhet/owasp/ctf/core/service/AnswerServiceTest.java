@@ -31,15 +31,15 @@ public class AnswerServiceTest {
         String flagId01 = flagService.addFlag("01 Flag 1", "svar-a", 10l, "tips", "beskrivelse");
         String flagId02 = flagService.addFlag("02 Flag 2", "svar-b", 10l, "tips", "beskrivelse");
 
-        service.answerFlag("finnes", flagId01);
-        service.answerFlag("finnes", flagId02);
+        service.answerFlag("finnes", flagId01, "svar-a");
+        service.answerFlag("finnes", flagId02, "svar-b");
 
         assertThat(service.getTeamScore("finnes")).isEqualTo(20l);
     }
 
     @Test
     public void skal_nullstille_score_hvis_team_finnes() {
-        service.answerFlag("finnes", "01 Flag 1");
+        service.answerFlag("finnes", "01 Flag 1", "svar-a");
 
         assertThat(service.getTeamScore("finnes")).isNotNull();
 

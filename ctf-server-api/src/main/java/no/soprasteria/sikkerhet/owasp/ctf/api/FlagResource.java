@@ -101,13 +101,17 @@ public class FlagResource {
 
     private static Response handleAnswerAndGetResponse(@Context Application application, String teamKey, String flagId, String answer) {
         FlagService flagService = ApplicationContext.get(application, FlagService.class);
-        AnswerService answerService = ApplicationContext.get(application, AnswerService.class);
-        if (answerService.isFlagUnanswered(teamKey, flagId) && flagService.isCorrect(flagId, answer)) {
-            answerService.answerFlag(teamKey, flagId);
-            return Response.accepted().build();
+        if (flagService.isFlag(flagId)) {
+            AnswerService answerService = ApplicationContext.get(application, AnswerService.class);
+            boolean correctAnswer = answerService.answerFlag(teamKey, flagId, answer);
+            if (correctAnswer) {
+                return Response.accepted().build();
+            } else {
+                incorrectAnswer(application, teamKey, flagId, answer);
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
         } else {
-            incorrectAnswer(application, teamKey, flagId, answer);
-            return Response.status(BAD_REQUEST).build();
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
 

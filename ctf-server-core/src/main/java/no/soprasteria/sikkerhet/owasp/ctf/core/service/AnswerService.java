@@ -1,9 +1,11 @@
 package no.soprasteria.sikkerhet.owasp.ctf.core.service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class AnswerService {
 
@@ -13,7 +15,31 @@ public class AnswerService {
         this.flagService = flagService;
     }
 
-    private Map<String, Set<String>> svar = new HashMap<>();
+    private class Svar {
+        LocalDateTime tidspunkt;
+        String flagId;
+        String svar;
+        boolean correct;
+    }
+
+    private Svar riktigSvar(String flagId, String svar) {
+        return nyttSvar(flagId, svar, true);
+    }
+
+    private Svar feilSvar(String flagId, String svar) {
+        return nyttSvar(flagId, svar, false);
+    }
+
+    private Svar nyttSvar(String flagId, String svar, boolean correct) {
+        Svar s = new Svar();
+        s.flagId = flagId;
+        s.tidspunkt = LocalDateTime.now();
+        s.svar = svar;
+        s.correct = correct;
+        return s;
+    }
+
+    private Map<String, Set<Svar>> svar = new HashMap<>();
 
     public boolean isFlagUnanswered(String teamKey, String flagId) {
         if (!svar.containsKey(teamKey)) {
@@ -24,17 +50,28 @@ public class AnswerService {
 
     }
 
-    public void answerFlag(String teamKey, String flagId) {
+    public boolean answerFlag(String teamKey, String flagId, String answer) {
         if (!svar.containsKey(teamKey)) {
             svar.put(teamKey, new HashSet<>());
         }
 
-        svar.get(teamKey).add(flagId);
+        if (svar.get(teamKey).stream()
+                .filter(s -> s.flagId.equals(flagId) && s.correct)
+                .collect(Collectors.toList()).isEmpty()) {
+            boolean isCorrect = flagService.isCorrect(flagId, answer);
+            svar.get(teamKey).add(nyttSvar(flagId, answer, isCorrect));
+            return isCorrect;
+        } else {
+            return false;
+        }
     }
 
     public Long getTeamScore(String teamKey) {
         if (svar.containsKey(teamKey)) {
-            return svar.get(teamKey).stream().map(flagService::getPoints).mapToLong(l -> l).sum();
+            return svar.get(teamKey).stream()
+                    .filter(svar -> svar.correct)
+                    .map(svar -> flagService.getPoints(svar.flagId))
+                    .mapToLong(l -> l).sum();
         } else {
             return 0L;
         }

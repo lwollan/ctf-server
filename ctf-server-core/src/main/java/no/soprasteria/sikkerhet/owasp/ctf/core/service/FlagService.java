@@ -32,6 +32,10 @@ public class FlagService {
         return id;
     }
 
+    public boolean isFlag(String flagId) {
+        return flags.containsKey(flagId);
+    }
+
     public void delFlag(String flagId) {
         flags.remove(flagId);
     }

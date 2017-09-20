@@ -16,19 +16,19 @@ public class FlagServiceTest {
 
     @Test
     public void skal_kunne_legge_til_et_flag() {
-        assertThat(service.addFlag("flag-name", "svar", 10l, "tips", "beskrivelse")).isNotNull();
+        assertThat(service.addFlag("flagId-name", "svar", 10l, "tips", "beskrivelse")).isNotNull();
     }
 
     @Test
     public void skal_finne_poeng_for_et_flag_som_er_lagt_til() {
-        String flagId = service.addFlag("flag-name", "svar", 10l, "tips", "beskrivelse");
+        String flagId = service.addFlag("flagId-name", "svar", 10l, "tips", "beskrivelse");
 
         assertThat(service.getPoints(flagId)).isEqualTo(10l);
     }
 
     @Test
     public void skal_ikke_finne_poeng_for_et_flag_som_ikke_er_lagt_til() {
-        assertThat(service.getPoints("flag-id")).isEqualTo(0l);
+        assertThat(service.getPoints("flagId-id")).isEqualTo(0l);
     }
 
     @Test

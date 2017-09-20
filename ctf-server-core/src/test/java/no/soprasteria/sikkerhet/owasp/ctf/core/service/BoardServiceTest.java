@@ -45,13 +45,13 @@ public class BoardServiceTest {
 
         BoardService boardService = new BoardService(teamRepository, answerService);
 
-        String flag01 = flagService.addFlag("", "", 42L, "", "beskrivelse");
-        String flag02 = flagService.addFlag("", "", 1L, "", "beskrivelse");
-        String flag03 = flagService.addFlag("", "", 33L, "", "beskrivelse");
+        String flag01 = flagService.addFlag("", "a", 42L, "", "beskrivelse");
+        String flag02 = flagService.addFlag("", "b", 1L, "", "beskrivelse");
+        String flag03 = flagService.addFlag("", "c", 33L, "", "beskrivelse");
 
-        answerService.answerFlag(team01.get(), flag01);
-        answerService.answerFlag(team02.get(), flag02);
-        answerService.answerFlag(team03.get(), flag03);
+        answerService.answerFlag(team01.get(), flag01, "a");
+        answerService.answerFlag(team02.get(), flag02, "b");
+        answerService.answerFlag(team03.get(), flag03, "c");
 
         Map<String, String> team1score = lagScore("team 1", "42");
         Map<String, String> team2score = lagScore("team 2", "1");
