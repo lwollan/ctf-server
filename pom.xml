@@ -20,6 +20,7 @@
     </properties>
 
     <modules>
+	<module>ctf-server-games</module>
         <module>ctf-server-core</module>
         <module>ctf-server-api</module>
         <module>ctf-server-jetty</module>
