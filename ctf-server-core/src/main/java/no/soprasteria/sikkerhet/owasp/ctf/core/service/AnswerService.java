@@ -1,25 +1,33 @@
 package no.soprasteria.sikkerhet.owasp.ctf.core.service;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class AnswerService {
 
     private FlagService flagService;
+    private Map<String, Set<Svar>> svar = new HashMap<>();
+
 
     public AnswerService(FlagService flagService) {
         this.flagService = flagService;
     }
 
-    private class Svar {
+    public Map<String, List<Svar>> getAnswersForTeam(String team) {
+         return svar.get(team).stream()
+                .collect(Collectors.groupingBy(Svar::getFlagId, Collectors.toList()));
+    }
+
+    public class Svar {
         LocalDateTime tidspunkt;
         String flagId;
         String svar;
         boolean correct;
+
+        public String getFlagId() {
+            return flagId;
+        }
     }
 
     private Svar riktigSvar(String flagId, String svar) {
@@ -38,8 +46,6 @@ public class AnswerService {
         s.correct = correct;
         return s;
     }
-
-    private Map<String, Set<Svar>> svar = new HashMap<>();
 
     public boolean isFlagUnanswered(String teamKey, String flagId) {
         if (!svar.containsKey(teamKey)) {

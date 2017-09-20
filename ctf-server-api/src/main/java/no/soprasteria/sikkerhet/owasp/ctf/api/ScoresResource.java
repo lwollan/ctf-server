@@ -1,21 +1,37 @@
 package no.soprasteria.sikkerhet.owasp.ctf.api;
 
+import no.soprasteria.sikkerhet.owasp.ctf.core.service.AnswerService;
+import no.soprasteria.sikkerhet.owasp.ctf.core.service.TeamService;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Application;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-@Path("scores")
+import static no.soprasteria.sikkerhet.owasp.ctf.ApplicationContext.get;
+
+@Path("public/scores")
 public class ScoresResource {
 
     @Path("list")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response list() {
-        return Response.ok().build();
+    public Response list(@Context Application application) {
+        AnswerService answerService = get(application, AnswerService.class);
+        TeamService teamService = get(application, TeamService.class);
+
+        List<String> teams = teamService.getTeamList();
+
+        List<Map<String, List<AnswerService.Svar>>> collect = teams.stream()
+                .map(team -> answerService.getAnswersForTeam(team))
+                .collect(Collectors.toList());
+        return Response.ok(collect).build();
     }
-
-
 
 }

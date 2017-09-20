@@ -3,7 +3,6 @@ package no.soprasteria.sikkerhet.owasp.ctf.api;
 import no.soprasteria.sikkerhet.owasp.ctf.core.service.AnswerService;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.Beskyttet;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.TeamKeyFilter;
-import no.soprasteria.sikkerhet.owasp.ctf.core.service.FlagService;
 import no.soprasteria.sikkerhet.owasp.ctf.core.service.TeamService;
 import no.soprasteria.sikkerhet.owasp.ctf.ApplicationContext;
 import org.slf4j.Logger;

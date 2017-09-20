@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import static javax.ws.rs.core.Response.ok;
 import static javax.ws.rs.core.Response.serverError;

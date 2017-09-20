@@ -3,6 +3,9 @@ package no.soprasteria.sikkerhet.owasp.ctf.core.service;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AnswerServiceTest {
@@ -46,6 +49,63 @@ public class AnswerServiceTest {
         service.resetTeamScore("finnes");
 
         assertThat(service.getTeamScore("finnes")).isEqualTo(0l);
+    }
+
+    @Test
+    public void skal_vise_svar_for_ett_lag() throws Exception {
+        String flagId01 = flagService.addFlag("Flagg 1", "riktig", 10l, "tips", "beskrivelse");
+
+        service.answerFlag("finnes", flagId01, "riktig");
+
+        Map<String, List<AnswerService.Svar>> answersForTeam = service.getAnswersForTeam("finnes");
+
+        assertThat(answersForTeam).hasSize(1);
+    }
+
+    @Test
+    public void skal_vise_svar_for_alle_flagg_for_ett_lag() throws Exception {
+        String flagId01 = flagService.addFlag("Flagg 1", "riktig", 10l, "tips", "beskrivelse");
+        String flagId02 = flagService.addFlag("Flagg 2", "riktig", 10l, "tips", "beskrivelse");
+
+        service.answerFlag("team", flagId01, "riktig");
+        service.answerFlag("team", flagId02, "riktig");
+
+        Map<String, List<AnswerService.Svar>> answersForTeam = service.getAnswersForTeam("team");
+
+        assertThat(answersForTeam).hasSize(2);
+    }
+
+    @Test
+    public void skal_vise_alle_svar_for_alle_flagg_for_ett_lag() throws Exception {
+        String flagId01 = flagService.addFlag("Flagg 1", "riktig", 10l, "tips", "beskrivelse");
+        String flagId02 = flagService.addFlag("Flagg 2", "riktig", 10l, "tips", "beskrivelse");
+
+        service.answerFlag("team", flagId01, "feil1");
+        service.answerFlag("team", flagId01, "feil2");
+        service.answerFlag("team", flagId01, "riktig");
+
+        service.answerFlag("team", flagId02, "feil1");
+        service.answerFlag("team", flagId02, "riktig");
+
+        Map<String, List<AnswerService.Svar>> answersForTeam = service.getAnswersForTeam("team");
+
+        assertThat(answersForTeam.get(flagId01)).hasSize(3);
+        assertThat(answersForTeam.get(flagId02)).hasSize(2);
+    }
+
+    @Test
+    public void skal_bare_viser_svar_til_riktig_svar_er_gittfor_ett_lag() throws Exception {
+        String flagId01 = flagService.addFlag("Flagg 1", "riktig", 10l, "tips", "beskrivelse");
+
+        service.answerFlag("team", flagId01, "feil1");
+        service.answerFlag("team", flagId01, "feil2");
+        service.answerFlag("team", flagId01, "riktig");
+        service.answerFlag("team", flagId01, "feil2");
+        service.answerFlag("team", flagId01, "rikitg");
+
+        Map<String, List<AnswerService.Svar>> answersForTeam = service.getAnswersForTeam("team");
+
+        assertThat(answersForTeam.get(flagId01)).hasSize(3);
     }
 
 }

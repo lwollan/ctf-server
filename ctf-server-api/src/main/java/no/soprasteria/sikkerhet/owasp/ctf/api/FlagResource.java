@@ -1,6 +1,5 @@
 package no.soprasteria.sikkerhet.owasp.ctf.api;
 
-
 import no.soprasteria.sikkerhet.owasp.ctf.ApplicationContext;
 import no.soprasteria.sikkerhet.owasp.ctf.core.service.AnswerService;
 import no.soprasteria.sikkerhet.owasp.ctf.core.service.GameService;
