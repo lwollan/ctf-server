@@ -2,6 +2,7 @@ package no.soprasteria.sikkerhet.owasp.ctf.core.service;
 
 import no.soprasteria.sikkerhet.owasp.ctf.core.storage.HashMapRepository;
 import org.junit.Test;
+import org.mockito.stubbing.Answer;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +15,7 @@ public class BoardServiceTest {
 
     @Test
     public void skal_vise_tom_board_ved_oppstart() throws Exception {
-        BoardService boardService = new BoardService(new TeamService(new HashMapRepository()), new FlagService());
+        BoardService boardService = new BoardService(new TeamService(new HashMapRepository()), new AnswerService(new FlagService()));
         assertThat(boardService.getScore()).isEmpty();
     }
 
@@ -25,7 +26,7 @@ public class BoardServiceTest {
         teamRepository.addNewTeam("team 1");
         teamRepository.addNewTeam("team 2");
         teamRepository.addNewTeam("team 3");
-        BoardService boardService = new BoardService(teamRepository, new FlagService());
+        BoardService boardService = new BoardService(teamRepository, new AnswerService(new FlagService()));
 
         assertThat(boardService.getScore().get(0)).containsOnlyKeys("team" , "score");
         assertThat(boardService.getScore().get(1)).containsOnlyKeys("team" , "score");
@@ -36,20 +37,21 @@ public class BoardServiceTest {
     public void skal_vise_poeng_for_lag() throws Exception {
         TeamService teamRepository = new TeamService(new HashMapRepository());
         FlagService flagService = new FlagService();
+        AnswerService answerService = new AnswerService(flagService);
 
         Optional<String> team01 = teamRepository.addNewTeam("team 1");
         Optional<String> team02 = teamRepository.addNewTeam("team 2");
         Optional<String> team03 = teamRepository.addNewTeam("team 3");
 
-        BoardService boardService = new BoardService(teamRepository, flagService);
+        BoardService boardService = new BoardService(teamRepository, answerService);
 
         String flag01 = flagService.addFlag("", "", 42L, "", "beskrivelse");
         String flag02 = flagService.addFlag("", "", 1L, "", "beskrivelse");
         String flag03 = flagService.addFlag("", "", 33L, "", "beskrivelse");
 
-        flagService.answerFlag(team01.get(), flag01);
-        flagService.answerFlag(team02.get(), flag02);
-        flagService.answerFlag(team03.get(), flag03);
+        answerService.answerFlag(team01.get(), flag01);
+        answerService.answerFlag(team02.get(), flag02);
+        answerService.answerFlag(team03.get(), flag03);
 
         Map<String, String> team1score = lagScore("team 1", "42");
         Map<String, String> team2score = lagScore("team 2", "1");

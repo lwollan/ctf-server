@@ -8,11 +8,11 @@ import java.util.stream.Collectors;
 public class BoardService {
 
     private TeamService teamService;
-    private FlagService flagService;
+    private AnswerService answerService;
 
-    public BoardService(TeamService teamRepository, FlagService scoreRepository) {
+    public BoardService(TeamService teamRepository, AnswerService scoreRepository) {
         this.teamService = teamRepository;
-        this.flagService = scoreRepository;
+        this.answerService = scoreRepository;
     }
 
     public List<Map<String, String>> getScore() {
@@ -20,7 +20,7 @@ public class BoardService {
             Map<String, String> map = new HashMap<>();
             map.put("team", teamName);
             String teamKey = teamService.findTeamKeyByTeameName(teamName).orElse("");
-            map.put("score", String.valueOf(flagService.getTeamScore(teamKey)));
+            map.put("score", String.valueOf(answerService.getTeamScore(teamKey)));
             return map;
         } ).collect(Collectors.toList());
     }

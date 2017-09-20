@@ -2,6 +2,7 @@ package no.soprasteria.sikkerhet.owasp.ctf.api;
 
 
 import no.soprasteria.sikkerhet.owasp.ctf.ApplicationContext;
+import no.soprasteria.sikkerhet.owasp.ctf.core.service.AnswerService;
 import no.soprasteria.sikkerhet.owasp.ctf.core.service.GameService;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.TeamKey;
 import no.soprasteria.sikkerhet.owasp.ctf.core.service.FlagService;
@@ -62,10 +63,11 @@ public class FlagResource {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Map<FlagResourceResponseKeys, String>> list(@Context Application application, @HeaderParam("X-TEAM-KEY") String teamKey) {
         FlagService flagService = ApplicationContext.get(application, FlagService.class);
+        AnswerService answerService = ApplicationContext.get(application, AnswerService.class);
         List<Map<String, String>> flags = flagService.listFlag();
 
         return flags.stream()
-                .map(flagMap -> newFlagResponseMap(teamKey, flagMap, flagService))
+                .map(flagMap -> newFlagResponseMap(teamKey, flagMap, answerService))
                 .collect(Collectors.toList());
 
     }
@@ -88,19 +90,20 @@ public class FlagResource {
         }
     }
 
-    private static Map<FlagResourceResponseKeys, String> newFlagResponseMap(String teamKey, Map<String, String> flagMap, FlagService flagService) {
+    private static Map<FlagResourceResponseKeys, String> newFlagResponseMap(String teamKey, Map<String, String> flagMap, AnswerService answerService) {
         Map<FlagResourceResponseKeys, String> response = new HashMap<>();
         response.put(FlagResourceResponseKeys.flagId, flagMap.get(FlagService.Keys.flagId.toString()));
         response.put(FlagResourceResponseKeys.flagName, flagMap.get(FlagService.Keys.flagName.toString()));
         response.put(FlagResourceResponseKeys.flagDescription, flagMap.get(FlagService.Keys.beskrivelse.toString()));
-        response.put(FlagResourceResponseKeys.flagAnswered, String.valueOf(!flagService.isFlagUnanswered(teamKey, flagMap.get(FlagService.Keys.flagId.toString()))));
+        response.put(FlagResourceResponseKeys.flagAnswered, String.valueOf(!answerService.isFlagUnanswered(teamKey, flagMap.get(FlagService.Keys.flagId.toString()))));
         return response;
     }
 
     private static Response handleAnswerAndGetResponse(@Context Application application, String teamKey, String flagId, String answer) {
         FlagService flagService = ApplicationContext.get(application, FlagService.class);
-        if (flagService.isFlagUnanswered(teamKey, flagId) && flagService.isCorrect(flagId, answer)) {
-            flagService.answerFlag(teamKey, flagId);
+        AnswerService answerService = ApplicationContext.get(application, AnswerService.class);
+        if (answerService.isFlagUnanswered(teamKey, flagId) && flagService.isCorrect(flagId, answer)) {
+            answerService.answerFlag(teamKey, flagId);
             return Response.accepted().build();
         } else {
             incorrectAnswer(application, teamKey, flagId, answer);

@@ -63,13 +63,15 @@ public class CtFApplication extends Application {
 
         TeamService teamService = new TeamService(teamRepository);
         FlagService flagService = new FlagService();
-        BoardService boardService = new BoardService(teamService, flagService);
+        AnswerService answerService = new AnswerService(flagService);
+        BoardService boardService = new BoardService(teamService, answerService);
         GameService gameService = new GameService(flagService);
 
         put(application, teamService);
         put(application, boardService);
         put(application, flagService);
         put(application, gameService);
+        put(application, answerService);
     }
 
     public void shutdown() {
