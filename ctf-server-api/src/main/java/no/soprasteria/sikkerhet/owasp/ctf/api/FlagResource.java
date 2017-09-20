@@ -102,7 +102,7 @@ public class FlagResource {
         FlagService flagService = ApplicationContext.get(application, FlagService.class);
         if (flagService.isFlag(flagId)) {
             AnswerService answerService = ApplicationContext.get(application, AnswerService.class);
-            boolean correctAnswer = answerService.answerFlag(teamKey, flagId, answer);
+            boolean correctAnswer = answerService.giveAnswer(teamKey, flagId, answer);
             if (correctAnswer) {
                 return Response.accepted().build();
             } else {

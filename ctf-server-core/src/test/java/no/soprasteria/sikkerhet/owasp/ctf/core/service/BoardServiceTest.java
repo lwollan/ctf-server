@@ -2,7 +2,6 @@ package no.soprasteria.sikkerhet.owasp.ctf.core.service;
 
 import no.soprasteria.sikkerhet.owasp.ctf.core.storage.HashMapRepository;
 import org.junit.Test;
-import org.mockito.stubbing.Answer;
 
 import java.util.HashMap;
 import java.util.List;
@@ -49,9 +48,9 @@ public class BoardServiceTest {
         String flag02 = flagService.addFlag("", "b", 1L, "", "beskrivelse");
         String flag03 = flagService.addFlag("", "c", 33L, "", "beskrivelse");
 
-        answerService.answerFlag(team01.get(), flag01, "a");
-        answerService.answerFlag(team02.get(), flag02, "b");
-        answerService.answerFlag(team03.get(), flag03, "c");
+        answerService.giveAnswer(team01.get(), flag01, "a");
+        answerService.giveAnswer(team02.get(), flag02, "b");
+        answerService.giveAnswer(team03.get(), flag03, "c");
 
         Map<String, String> team1score = lagScore("team 1", "42");
         Map<String, String> team2score = lagScore("team 2", "1");

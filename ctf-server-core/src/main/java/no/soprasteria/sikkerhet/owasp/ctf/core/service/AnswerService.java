@@ -1,6 +1,5 @@
 package no.soprasteria.sikkerhet.owasp.ctf.core.service;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -14,21 +13,6 @@ public class AnswerService {
         this.flagService = flagService;
     }
 
-    public Map<String, List<Svar>> getAnswersForTeam(String team) {
-         return svar.get(team).stream()
-                .collect(Collectors.groupingBy(Svar::getFlagId, Collectors.toList()));
-    }
-
-    public class Svar {
-        LocalDateTime tidspunkt;
-        String flagId;
-        String svar;
-        boolean correct;
-
-        public String getFlagId() {
-            return flagId;
-        }
-    }
 
     private Svar riktigSvar(String flagId, String svar) {
         return nyttSvar(flagId, svar, true);
@@ -41,7 +25,7 @@ public class AnswerService {
     private Svar nyttSvar(String flagId, String svar, boolean correct) {
         Svar s = new Svar();
         s.flagId = flagId;
-        s.tidspunkt = LocalDateTime.now();
+        s.tidspunkt = System.currentTimeMillis();
         s.svar = svar;
         s.correct = correct;
         return s;
@@ -56,7 +40,7 @@ public class AnswerService {
 
     }
 
-    public boolean answerFlag(String teamKey, String flagId, String answer) {
+    public boolean giveAnswer(String teamKey, String flagId, String answer) {
         if (!svar.containsKey(teamKey)) {
             svar.put(teamKey, new HashSet<>());
         }
@@ -91,4 +75,17 @@ public class AnswerService {
         svar.remove(teamKey);
     }
 
+    public  Map<String, List<Svar>> getAnswersForTeam(String teamKey) {
+        Map<String, List<Svar>> collect = svar.get(teamKey).stream()
+                .collect(Collectors.groupingBy(Svar::getFlagId));
+        return collect;
+    }
+
+    public Map<String, Map<String, List<Svar>>> getAnswersForTeams() {
+        Map<String, Map<String, List<Svar>>> collect = svar.keySet().stream().map(teamKey -> {
+            Map<String, List<Svar>> e = getAnswersForTeam(teamKey);
+            return new AbstractMap.SimpleEntry<>(teamKey, e);
+        }).collect(Collectors.toMap(key -> key.getKey(), value -> value.getValue()));
+        return collect;
+    }
 }

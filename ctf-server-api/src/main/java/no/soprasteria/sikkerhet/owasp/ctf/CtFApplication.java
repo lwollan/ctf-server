@@ -1,9 +1,6 @@
 package no.soprasteria.sikkerhet.owasp.ctf;
 
-import no.soprasteria.sikkerhet.owasp.ctf.api.BoardResource;
-import no.soprasteria.sikkerhet.owasp.ctf.api.FlagResource;
-import no.soprasteria.sikkerhet.owasp.ctf.api.GameResource;
-import no.soprasteria.sikkerhet.owasp.ctf.api.TeamResource;
+import no.soprasteria.sikkerhet.owasp.ctf.api.*;
 import no.soprasteria.sikkerhet.owasp.ctf.core.games.structure.GameStructure;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.BeskyttetFilter;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.CORSFilter;
@@ -93,6 +90,7 @@ public class CtFApplication extends Application {
         resources.add(BoardResource.class);
         resources.add(FlagResource.class);
         resources.add(GameResource.class);
+        resources.add(ScoresResource.class);
 
         resources.add(BeskyttetFilter.class);
         resources.add(TeamKeyFilter.class);
