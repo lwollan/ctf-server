@@ -95,6 +95,7 @@ public class FlagResource {
         Map<FlagResourceResponseKeys, String> response = new HashMap<>();
         response.put(FlagResourceResponseKeys.flagId, flagMap.get(FlagService.Keys.flagId.toString()));
         response.put(FlagResourceResponseKeys.flagName, flagMap.get(FlagService.Keys.flagName.toString()));
+        response.put(FlagResourceResponseKeys.tips, flagMap.get(FlagService.Keys.tips.toString()));
         response.put(FlagResourceResponseKeys.flagDescription, flagMap.get(FlagService.Keys.beskrivelse.toString()));
         response.put(FlagResourceResponseKeys.flagAnswered, String.valueOf(!answerService.isFlagUnanswered(teamKey, flagMap.get(FlagService.Keys.flagId.toString()))));
         return response;
