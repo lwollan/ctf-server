@@ -30,7 +30,7 @@ public class AnswerService {
         Svar s = new Svar();
         s.flagId = flagId;
         s.tidspunkt = System.currentTimeMillis();
-        s.svar = svar;
+        s.svar = "N/A";
         s.correct = correct;
         return s;
     }

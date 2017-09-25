@@ -2,6 +2,7 @@ package no.soprasteria.sikkerhet.owasp.ctf.api;
 
 import no.soprasteria.sikkerhet.owasp.ctf.ApplicationContext;
 import no.soprasteria.sikkerhet.owasp.ctf.CtFApplication;
+import no.soprasteria.sikkerhet.owasp.ctf.api.requestparameters.TeamKeyParameter;
 import no.soprasteria.sikkerhet.owasp.ctf.core.service.GameService;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.TeamKeyFilter;
 import no.soprasteria.sikkerhet.owasp.ctf.core.service.FlagService;
@@ -63,7 +64,7 @@ public class FlagResourceTest {
 
     @Test
     public void skal_returnere_alle_registrerte_flagg() {
-        List<Map<FlagResource.FlagResourceResponseKeys, String>> list = resource.list(application, newTeamKey);
+        List<Map<FlagResource.FlagResourceResponseKeys, String>> list = resource.list(application, TeamKeyHeaderParameter.from(newTeamKey));
         assertThat(list).isNotEmpty();
     }
 
@@ -99,7 +100,7 @@ public class FlagResourceTest {
     @Test
     public void skal_si_om_et_flag_er_besvart_eller_ikke() {
         resource.answer(application, request, svarMedRiktigFlag);
-        List<Map<FlagResource.FlagResourceResponseKeys, String>> list = resource.list(application, newTeamKey);
+        List<Map<FlagResource.FlagResourceResponseKeys, String>> list = resource.list(application, TeamKeyHeaderParameter.from(newTeamKey));
 
         assertThat(list.stream().filter(m -> m.get(FlagResource.FlagResourceResponseKeys.flagId).equals(svarMedRiktigFlag.get("flagId")))).isNotEmpty();
     }

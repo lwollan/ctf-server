@@ -1,5 +1,6 @@
 package no.soprasteria.sikkerhet.owasp.ctf.api;
 
+import no.soprasteria.sikkerhet.owasp.ctf.api.requestparameters.TeamNameParameter;
 import no.soprasteria.sikkerhet.owasp.ctf.core.service.AnswerService;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.Beskyttet;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.TeamKeyFilter;
@@ -37,9 +38,9 @@ public class TeamResource {
     @Path("add/{teamname}")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response add(@Context Application application, @PathParam("teamname") String teamname) {
+    public Response add(@Context Application application, @PathParam("teamname") TeamNameParameter teamname) {
         TeamService teamService = ApplicationContext.get(application, TeamService.class);
-        Optional<String> teamKey = teamService.addNewTeam(teamname);
+        Optional<String> teamKey = teamService.addNewTeam(teamname.value);
 
         if (teamKey.isPresent()) {
             Map<String, String> response = new HashMap<>();
@@ -54,11 +55,11 @@ public class TeamResource {
     @Path("{teamname}")
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response del(@Context Application application, @PathParam("teamname") String teamname) {
+    public Response del(@Context Application application, @PathParam("teamname") TeamNameParameter teamname) {
         TeamService teamService = ApplicationContext.get(application, TeamService.class);
         AnswerService answerService = ApplicationContext.get(application, AnswerService.class);
 
-        Optional<String> teamKeyByTameName = teamService.findTeamKeyByTeameName(teamname);
+        Optional<String> teamKeyByTameName = teamService.findTeamKeyByTeameName(teamname.value);
         if (teamKeyByTameName.isPresent()) {
             boolean deletedTeam = teamService.deleteTeam(teamKeyByTameName.get());
             answerService.deleteTeamScore(teamKeyByTameName.get());

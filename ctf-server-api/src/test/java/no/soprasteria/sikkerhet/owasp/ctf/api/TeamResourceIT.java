@@ -69,7 +69,7 @@ public class TeamResourceIT extends JerseyTest {
 
     @Test
     public void det_skal_vaere_mulig_aa_slette_et_team() {
-        String teamName = UUID.randomUUID().toString();
+        String teamName = "teama";
 
         Response addResponse = addTeam(teamName);
         assertThat(addResponse.getStatus()).isEqualTo(200);

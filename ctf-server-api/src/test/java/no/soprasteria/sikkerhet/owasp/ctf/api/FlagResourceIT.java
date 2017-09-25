@@ -41,7 +41,7 @@ public class FlagResourceIT extends JerseyTest {
             TeamService teamService = ApplicationContext.get(application, TeamService.class);
             FlagService flagService = ApplicationContext.get(application, FlagService.class);
 
-            validTeamKey = teamService.addNewTeam("integration-test").orElse("");
+            validTeamKey = teamService.addNewTeam("integrationtest").orElse("");
             Map<String, String> firstFlag = flagService.listFlag().get(0);
             flag = firstFlag.get("flag");
             flagId = firstFlag.get("flagId");

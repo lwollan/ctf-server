@@ -1,6 +1,8 @@
 package no.soprasteria.sikkerhet.owasp.ctf.api;
 
 import no.soprasteria.sikkerhet.owasp.ctf.ApplicationContext;
+import no.soprasteria.sikkerhet.owasp.ctf.api.requestparameters.FlagIdParameter;
+import no.soprasteria.sikkerhet.owasp.ctf.api.requestparameters.TeamKeyParameter;
 import no.soprasteria.sikkerhet.owasp.ctf.core.service.AnswerService;
 import no.soprasteria.sikkerhet.owasp.ctf.core.service.GameService;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.TeamKey;
@@ -62,13 +64,13 @@ public class FlagResource {
     @GET
     @Path("list")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Map<FlagResourceResponseKeys, String>> list(@Context Application application, @HeaderParam("X-TEAM-KEY") String teamKey) {
+    public List<Map<FlagResourceResponseKeys, String>> list(@Context Application application, @HeaderParam("X-TEAM-KEY") TeamKeyHeaderParameter teamKey) {
         FlagService flagService = ApplicationContext.get(application, FlagService.class);
         AnswerService answerService = ApplicationContext.get(application, AnswerService.class);
         List<Map<String, String>> flags = flagService.listFlag();
 
         return flags.stream()
-                .map(flagMap -> newFlagResponseMap(teamKey, flagMap, answerService))
+                .map(flagMap -> newFlagResponseMap(teamKey.value, flagMap, answerService))
                 .collect(Collectors.toList());
 
     }
@@ -77,10 +79,10 @@ public class FlagResource {
     @GET
     @Path("tip/{flagId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Map<String, String> tip(@Context Application application, @PathParam("flagId") String flagId) {
+    public Map<String, String> tip(@Context Application application, @PathParam("flagId") FlagIdParameter flagId) {
         FlagService flagService = ApplicationContext.get(application, FlagService.class);
 
-        String tip = flagService.getTip(flagId);
+        String tip = flagService.getTip(flagId.value);
 
         if (tip != null) {
             Map<String, String> reponse = new HashMap<>();

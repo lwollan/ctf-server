@@ -13,13 +13,11 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static javax.ws.rs.core.Response.ok;
-import static javax.ws.rs.core.Response.serverError;
 
 @Path("public/board")
 public class BoardResource {
@@ -36,22 +34,23 @@ public class BoardResource {
         GameService gameService = ApplicationContext.get(application, GameService.class);
         BoardService boardService = ApplicationContext.get(application, BoardService.class);
 
+        Map<BoardResponseKeys, Object> response = new HashMap<>();
         if (gameService.isGameAvailable()) {
             List<Map<String, String>> score = boardService.getScore();
-            Map<BoardResponseKeys, Object> response = new HashMap<>();
             response.put(BoardResponseKeys.score, score);
+
             response.put(BoardResponseKeys.title, gameService.getName());
-            response.put(BoardResponseKeys.gameOn, gameService.isGameOn());
-            response.put(BoardResponseKeys.start, LocalDateTime.now().toString());
-            response.put(BoardResponseKeys.end, LocalDateTime.now().plusHours(2).toString());
             response.put(BoardResponseKeys.beskrivelse, gameService.getGameDescription());
-
-
-            return ok(response).build();
+            response.put(BoardResponseKeys.start, gameService.getStartTime());
+            response.put(BoardResponseKeys.end, gameService.getEndTime());
         } else {
-            logger.info("Ingen spill satt opp.");
-            return serverError().build();
+            response.put(BoardResponseKeys.title, "No Game Configured");
+            response.put(BoardResponseKeys.beskrivelse, "Upload game via admin page.");
+
         }
+        response.put(BoardResponseKeys.gameOn, gameService.isGameOn());
+
+        return ok(response).build();
     }
 
 }
