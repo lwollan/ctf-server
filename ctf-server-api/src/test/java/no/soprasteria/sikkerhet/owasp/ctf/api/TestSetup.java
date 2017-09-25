@@ -18,8 +18,12 @@ public class TestSetup {
 
     static void setupTestGame(Application application) throws IOException {
         GameService gameService = ApplicationContext.get(application, GameService.class);
-        GameStructure mrrobotGame = GameStructure.readJSON(BoardResourceTest.class.getResourceAsStream("/games/mrrobot.json"));
-        gameService.setGame(mrrobotGame);
+        Optional<GameStructure> mrrobotGame = GameStructure.readJSON(BoardResourceTest.class.getResourceAsStream("/games/mrrobot.json"));
+        if (mrrobotGame.isPresent()) {
+            gameService.setGame(mrrobotGame.get());
+        } else {
+            throw new RuntimeException();
+        }
     }
 
     public static String setupTestTeamWithAnswers(Application application, String teamName) {

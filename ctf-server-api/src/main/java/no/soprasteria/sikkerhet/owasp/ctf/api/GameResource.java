@@ -11,11 +11,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -28,30 +31,6 @@ public class GameResource {
     enum GameResourceResponseKeys {
         game, flags, gameOn, score
     }
-
-    /**
-    @Beskyttet
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<Map<GameResourceResponseKeys, Object>> list(@Context Application application) {
-        GameService gameService = ApplicationContext.get(application, GameService.class);
-        FlagService flagService = ApplicationContext.get(application, FlagService.class);
-        BoardService boardService = ApplicationContext.get(application, BoardService.class);
-
-        if (gameService.isGameAvailable()) {
-            Map<GameResourceResponseKeys, Object> singleGame = new HashMap<>();
-            singleGame.put(GameResourceResponseKeys.game, gameService.getName());
-            singleGame.put(GameResourceResponseKeys.flags, flagService.listFlag());
-            singleGame.put(GameResourceResponseKeys.gameOn, gameService.isGameOn());
-            singleGame.put(GameResourceResponseKeys.score, boardService.getScore());
-
-            return Arrays.asList(singleGame);
-        } else {
-            logger.info("Ingen spill aktiv.");
-            return Collections.emptyList();
-        }
-    }
-     */
 
     @Beskyttet
     @POST
@@ -83,13 +62,29 @@ public class GameResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response load(@Context Application application, @Context ContainerRequestContext requestContext) throws IOException {
 
-        InputStream entityStream = requestContext.getEntityStream();
         GameService gameService = ApplicationContext.get(application, GameService.class);
 
-        GameStructure gameToLoad = GameStructure.readJSON(entityStream);
-        gameService.setGame(gameToLoad);
+        InputStream entityStream = null;
 
-        gameService.startGame();
-        return Response.ok().build();
+        try {
+            entityStream = requestContext.getEntityStream();
+            BufferedInputStream bufferedInputStream = new BufferedInputStream(entityStream);
+            Optional<GameStructure> gameToLoad = GameStructure.readJSON(bufferedInputStream);
+            if (gameToLoad.isPresent()) {
+                gameService.setGame(gameToLoad.get());
+                gameService.startGame();
+                return Response.accepted("Game loaded").build();
+            } else {
+                gameService.pauseGame();
+                return Response.serverError().status(Response.Status.BAD_REQUEST).build();
+            }
+        } catch (IOException e) {
+            gameService.pauseGame();
+            return Response.serverError().status(Response.Status.BAD_REQUEST).build();
+        } finally {
+            if (entityStream != null) {
+                entityStream.close();
+            }
+        }
     }
 }
