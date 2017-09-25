@@ -85,4 +85,8 @@ public class FlagService {
         return flag;
     }
 
+    public void clear() {
+        flags.clear();
+    }
+
 }

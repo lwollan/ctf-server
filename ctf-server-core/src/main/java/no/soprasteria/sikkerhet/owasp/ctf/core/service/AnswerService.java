@@ -97,4 +97,8 @@ public class AnswerService {
         }).collect(Collectors.toMap(key -> key.getKey(), value -> value.getValue()));
         return collect;
     }
+
+    public void clear() {
+        svar.clear();
+    }
 }

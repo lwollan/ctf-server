@@ -2,6 +2,7 @@ package no.soprasteria.sikkerhet.owasp.ctf.api;
 
 import no.soprasteria.sikkerhet.owasp.ctf.ApplicationContext;
 import no.soprasteria.sikkerhet.owasp.ctf.core.games.structure.GameStructure;
+import no.soprasteria.sikkerhet.owasp.ctf.core.service.AnswerService;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.Beskyttet;
 import no.soprasteria.sikkerhet.owasp.ctf.core.service.GameService;
 import no.soprasteria.sikkerhet.owasp.ctf.core.service.TeamService;
@@ -59,7 +60,7 @@ public class GameResource {
             Optional<GameStructure> gameToLoad = GameStructure.readJSON(bufferedInputStream);
 
             if (gameToLoad.isPresent()) {
-                setAndStartGame(gameService, gameToLoad.get());
+                setAndStartGame(application, gameToLoad.get());
                 return accepted("Game loaded").build();
             } else {
                 return serverError().status(Response.Status.BAD_REQUEST).build();
@@ -69,8 +70,13 @@ public class GameResource {
         }
     }
 
-    private static void setAndStartGame(GameService gameService, GameStructure gameStructure) {
+    private static void setAndStartGame(Application application, GameStructure gameStructure) {
+        GameService gameService = ApplicationContext.get(application, GameService.class);
+        AnswerService answerService = ApplicationContext.get(application, AnswerService.class);
+
         gameService.setGame(gameStructure);
+        answerService.clear();
+
         gameService.startGame();
     }
 }

@@ -21,6 +21,9 @@ public class GameService {
         game.description = gameStructure.beskrivelse;
 
         List<FlagStructure> flags = gameStructure.flags;
+
+        flagService.clear();
+
         flags.forEach(f -> flagService.addFlag(f.flagName, f.flag, 1L, f.tips, f.beskrivelse));
 
     }
@@ -42,7 +45,9 @@ public class GameService {
     }
 
     public void pauseGame() {
-        game.gameOn = false;
+        if (isGameOn()) {
+            game.gameOn = false;
+        }
     }
 
     public Object getGameDescription() {
