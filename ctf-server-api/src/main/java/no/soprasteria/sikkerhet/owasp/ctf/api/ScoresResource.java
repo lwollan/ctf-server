@@ -21,11 +21,10 @@ public class ScoresResource {
     @Path("list")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response list(@Context Application application) {
+    public Map<String, Map<String, List<Svar>>> list(@Context Application application) {
         AnswerService answerService = get(application, AnswerService.class);
 
-        Map<String, Map<String, List<Svar>>> answers = answerService.getAnswersForTeams();
-        return Response.ok(answers).build();
+        return answerService.getAnswersForTeams();
     }
 
 }

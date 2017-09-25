@@ -18,6 +18,7 @@ import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -59,7 +60,7 @@ public class FlagResourceIT extends JerseyTest {
 
     @Test
     public void skal_kreve_teamkey_paa_flag_tip() {
-        TestUtil.assertThatResourceRequireTeamKey("something_weird", validTeamKey, target("flag/tip/someflag"));
+        TestUtil.assertThatResourceRequireTeamKey("something_weird", validTeamKey, target("flag/tip/" + UUID.randomUUID().toString()));
     }
 
     @Test
@@ -132,7 +133,7 @@ public class FlagResourceIT extends JerseyTest {
 
     @Test
     public void ukjent_flagid_skal_gi_tomt_svar() {
-        Response response = target("flag/tip/something")
+        Response response = target("flag/tip/" + UUID.randomUUID().toString())
                 .request()
                 .header("X-TEAM-KEY", validTeamKey)
                 .get();
