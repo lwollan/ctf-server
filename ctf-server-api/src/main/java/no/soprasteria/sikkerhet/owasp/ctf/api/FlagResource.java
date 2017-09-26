@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
-import static no.soprasteria.sikkerhet.owasp.ctf.filter.TeamKeyFilter.X_TEAM_KEY;
 
 @Path("flag")
 public class FlagResource {
@@ -41,16 +40,15 @@ public class FlagResource {
     @TeamKey
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response answer(@Context Application application, @Context ContainerRequestContext request, Map<String, String> body) {
-        if (body != null && request.getHeaderString(X_TEAM_KEY) != null) {
+    public Response answer(@Context Application application, Map<String, String> body, @HeaderParam("X-TEAM-KEY") TeamKeyHeaderParameter teamKeyParam) {
+        if (body != null && teamKeyParam != null) {
             if (ApplicationContext.get(application, GameService.class).isGameOn()) {
-                String teamKey = request.getHeaderString(X_TEAM_KEY);
 
                 String flagId = body.getOrDefault(FlagResourceRequestKeys.flagId.toString(), null);
                 String flag = body.getOrDefault(FlagResourceRequestKeys.flag.toString(), null);
 
                 if (flagId != null && flag != null) {
-                    return handleAnswerAndGetResponse(application, teamKey, flagId, flag);
+                    return handleAnswerAndGetResponse(application, teamKeyParam.value, flagId, flag);
                 }
             } else {
                 logger.warn("Game not enabled.");
@@ -64,7 +62,7 @@ public class FlagResource {
     @GET
     @Path("list")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Map<FlagResourceResponseKeys, String>> list(@Context Application application, @HeaderParam("X-TEAM-KEY") TeamKeyHeaderParameter teamKey) {
+    public List<Map<FlagResourceResponseKeys, String>> list(@Context ContainerRequestContext request, @Context Application application, @HeaderParam("X-TEAM-KEY") TeamKeyHeaderParameter teamKey) {
         FlagService flagService = ApplicationContext.get(application, FlagService.class);
         AnswerService answerService = ApplicationContext.get(application, AnswerService.class);
         List<Map<String, String>> flags = flagService.listFlag();
@@ -122,7 +120,7 @@ public class FlagResource {
 
     private static void incorrectAnswer(Application application, String teamKey, String flagId, String answer) {
         String teamName = ApplicationContext.get(application, TeamService.class).getTeamName(teamKey).get();
-        logger.info("Incorrect answer '{}' for flag '{}' from team '{}'.", answer, flagId, teamName);
+        logger.info("Incorrect answer '{}' for flag '{}' valueOf team '{}'.", answer, flagId, teamName);
     }
 
 }

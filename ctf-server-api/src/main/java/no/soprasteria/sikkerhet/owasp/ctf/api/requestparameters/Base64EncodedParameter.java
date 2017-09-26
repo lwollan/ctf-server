@@ -9,6 +9,7 @@ public abstract class Base64EncodedParameter implements ValidatedInputParameter 
     public Base64EncodedParameter(String value) {
         try {
             Base64.getDecoder().decode(value);
+            this.value = value;
         } catch (Exception e) {
             throw new InvalidParameterException(getParameterName());
         }

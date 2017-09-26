@@ -8,7 +8,7 @@ public class TeamKeyHeaderParameter extends Base64EncodedParameter {
         super(value);
     }
 
-    public static TeamKeyHeaderParameter from(String value) {
+    public static TeamKeyHeaderParameter valueOf(String value) {
         return new TeamKeyHeaderParameter(value);
     }
 

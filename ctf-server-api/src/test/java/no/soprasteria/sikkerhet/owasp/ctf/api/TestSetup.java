@@ -21,6 +21,7 @@ public class TestSetup {
         Optional<GameStructure> mrrobotGame = GameStructure.readJSON(BoardResourceTest.class.getResourceAsStream("/games/mrrobot.json"));
         if (mrrobotGame.isPresent()) {
             gameService.setGame(mrrobotGame.get());
+            gameService.startGame();
         } else {
             throw new RuntimeException();
         }
