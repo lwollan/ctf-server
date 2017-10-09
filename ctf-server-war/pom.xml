@@ -5,7 +5,7 @@
     <parent>
         <groupId>no.steria.websikkerhet</groupId>
         <artifactId>ctf-server</artifactId>
-        <version>1.1.0</version>
+        <version>1.1.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>ctf-server-war</artifactId>
@@ -17,20 +17,28 @@
             <groupId>no.steria.websikkerhet</groupId>
             <artifactId>ctf-server-api</artifactId>
             <version>${project.version}</version>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-servlet</artifactId>
             <version>${jersey.version}</version>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jackson</artifactId>
             <version>${jersey.version}</version>
+            <scope>runtime</scope>
         </dependency>
 
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -38,6 +46,7 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
+                <!--
                 <dependencies>
                     <dependency>
                         <groupId>ch.qos.logback</groupId>
@@ -45,6 +54,7 @@
                         <version>1.1.10</version>
                     </dependency>
                 </dependencies>
+                -->
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -78,7 +88,7 @@
             <plugin>
                 <groupId>com.heroku.sdk</groupId>
                 <artifactId>heroku-maven-plugin</artifactId>
-                <version>1.1.3</version>
+                <version>1.2.0</version>
                 <configuration>
                     <appName>ss-ctf-server</appName>
                 </configuration>

@@ -1,7 +1,7 @@
 package no.soprasteria.sikkerhet.owasp.ctf.filter;
 
 import no.soprasteria.sikkerhet.owasp.ctf.ApplicationContext;
-import no.soprasteria.sikkerhet.owasp.ctf.service.TeamService;
+import no.soprasteria.sikkerhet.owasp.ctf.core.service.TeamService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

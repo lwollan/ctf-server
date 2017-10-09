@@ -15,6 +15,8 @@ export default class Flag extends Component {
             return;
         }
 
+        this.setState({ incorrect: false });
+
         Datas.postFlag(flag.get('flagId'), value)
             .catch(() => this.setState({ incorrect: true }));
     };
@@ -40,7 +42,12 @@ export default class Flag extends Component {
         return (
             <form className={ `flag ${this.getStatusClass()}` } onSubmit={ this.postFlag }>
                 <header>{ flag.get('flagName') }</header>
-                { flag.get('flagDescription')}
+                <i>{ flag.get('flagDescription')}</i>
+
+                { this.state.incorrect &&
+                    <h5>tips: { flag.get('tips') }</h5>
+                }
+
                 { !answered && <div className="flag-content">
                     <input type="text" className="input-text" disabled={ answered } ref={ node => this.inputNode = node }/>
                     <div className="actions">

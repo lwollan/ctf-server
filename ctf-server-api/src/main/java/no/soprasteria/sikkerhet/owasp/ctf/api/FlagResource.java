@@ -1,10 +1,13 @@
 package no.soprasteria.sikkerhet.owasp.ctf.api;
 
-
 import no.soprasteria.sikkerhet.owasp.ctf.ApplicationContext;
+import no.soprasteria.sikkerhet.owasp.ctf.api.requestparameters.FlagIdParameter;
+import no.soprasteria.sikkerhet.owasp.ctf.api.requestparameters.TeamKeyParameter;
+import no.soprasteria.sikkerhet.owasp.ctf.core.service.AnswerService;
+import no.soprasteria.sikkerhet.owasp.ctf.core.service.GameService;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.TeamKey;
-import no.soprasteria.sikkerhet.owasp.ctf.service.FlagService;
-import no.soprasteria.sikkerhet.owasp.ctf.service.TeamService;
+import no.soprasteria.sikkerhet.owasp.ctf.core.service.FlagService;
+import no.soprasteria.sikkerhet.owasp.ctf.core.service.TeamService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,32 +23,37 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
-import static no.soprasteria.sikkerhet.owasp.ctf.filter.TeamKeyFilter.X_TEAM_KEY;
 
 @Path("flag")
 public class FlagResource {
 
     private static Logger logger = LoggerFactory.getLogger(FlagResource.class);
 
-    enum Keys {
-        flagId, flag, flagDescription, flagAnswered, flagName
+    enum FlagResourceResponseKeys {
+        flagId, flag, flagDescription, flagAnswered, flagName, tips
+    }
+
+    enum FlagResourceRequestKeys {
+        flagId, flag
     }
 
     @TeamKey
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response answer(@Context Application application, @Context ContainerRequestContext request, Map<String, String> body) {
-        if (body != null && request.getHeaderString(X_TEAM_KEY) != null) {
-            String teamKey = request.getHeaderString(X_TEAM_KEY);
+    public Response answer(@Context Application application, Map<String, String> body, @HeaderParam("X-TEAM-KEY") TeamKeyHeaderParameter teamKeyParam) {
+        if (body != null && teamKeyParam != null) {
+            if (ApplicationContext.get(application, GameService.class).isGameOn()) {
 
-            String flagId = body.getOrDefault(Keys.flagId.toString(), null);
-            String flag = body.getOrDefault(Keys.flag.toString(), null);
+                String flagId = body.getOrDefault(FlagResourceRequestKeys.flagId.toString(), null);
+                String flag = body.getOrDefault(FlagResourceRequestKeys.flag.toString(), null);
 
-            if (flagId != null && flag != null) {
-                return handleAnswerAndGetResponse(application, teamKey, flagId, flag);
+                if (flagId != null && flag != null) {
+                    return handleAnswerAndGetResponse(application, teamKeyParam.value, flagId, flag);
+                }
+            } else {
+                logger.warn("Game not enabled.");
             }
         }
-
         logger.info("Bad flag request.");
         return Response.status(BAD_REQUEST).build();
     }
@@ -54,12 +62,13 @@ public class FlagResource {
     @GET
     @Path("list")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Map<Keys, String>> list(@Context Application application, @HeaderParam("X-TEAM-KEY") String teamKey) {
+    public List<Map<FlagResourceResponseKeys, String>> list(@Context ContainerRequestContext request, @Context Application application, @HeaderParam("X-TEAM-KEY") TeamKeyHeaderParameter teamKey) {
         FlagService flagService = ApplicationContext.get(application, FlagService.class);
+        AnswerService answerService = ApplicationContext.get(application, AnswerService.class);
         List<Map<String, String>> flags = flagService.listFlag();
 
         return flags.stream()
-                .map(flagMap -> newFlagResponseMap(teamKey, flagMap, flagService))
+                .map(flagMap -> newFlagResponseMap(teamKey.value, flagMap, answerService))
                 .collect(Collectors.toList());
 
     }
@@ -68,43 +77,50 @@ public class FlagResource {
     @GET
     @Path("tip/{flagId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Map<String, String> tip(@Context Application application, @PathParam("flagId") String flagId) {
+    public Map<String, String> tip(@Context Application application, @PathParam("flagId") FlagIdParameter flagId) {
         FlagService flagService = ApplicationContext.get(application, FlagService.class);
 
-        String tip = flagService.getTip(flagId);
+        String tip = flagService.getTip(flagId.value);
 
         if (tip != null) {
             Map<String, String> reponse = new HashMap<>();
-            reponse.put(FlagService.Keys.tips.toString(), tip);
+            reponse.put(FlagResourceResponseKeys.tips.toString(), tip);
             return reponse;
         } else {
             return new HashMap<>();
         }
     }
 
-    private static Map<Keys, String> newFlagResponseMap(String teamKey, Map<String, String> flagMap, FlagService flagService) {
-        Map<Keys, String> map = new HashMap<>();
-        map.put(Keys.flagId, flagMap.get(FlagService.Keys.flagId.toString()));
-        map.put(Keys.flagName, flagMap.get(FlagService.Keys.flagName.toString()));
-        map.put(Keys.flagDescription, flagMap.get(FlagService.Keys.beskrivelse.toString()));
-        map.put(Keys.flagAnswered, String.valueOf(!flagService.isFlagUnanswered(teamKey, flagMap.get(FlagService.Keys.flagId.toString()))));
-        return map;
+    private static Map<FlagResourceResponseKeys, String> newFlagResponseMap(String teamKey, Map<String, String> flagMap, AnswerService answerService) {
+        Map<FlagResourceResponseKeys, String> response = new HashMap<>();
+        response.put(FlagResourceResponseKeys.flagId, flagMap.get(FlagService.Keys.flagId.toString()));
+        response.put(FlagResourceResponseKeys.flagName, flagMap.get(FlagService.Keys.flagName.toString()));
+        response.put(FlagResourceResponseKeys.tips, flagMap.get(FlagService.Keys.tips.toString()));
+        response.put(FlagResourceResponseKeys.flagDescription, flagMap.get(FlagService.Keys.beskrivelse.toString()));
+        response.put(FlagResourceResponseKeys.flagAnswered, String.valueOf(!answerService.isFlagUnanswered(teamKey, flagMap.get(FlagService.Keys.flagId.toString()))));
+        return response;
     }
 
     private static Response handleAnswerAndGetResponse(@Context Application application, String teamKey, String flagId, String answer) {
         FlagService flagService = ApplicationContext.get(application, FlagService.class);
-        if (flagService.isFlagUnanswered(teamKey, flagId) && flagService.isCorrect(flagId, answer)) {
-            flagService.answerFlag(teamKey, flagId);
-            return Response.accepted().build();
+        if (flagService.isFlag(flagId)) {
+            AnswerService answerService = ApplicationContext.get(application, AnswerService.class);
+            boolean correctAnswer = answerService.giveAnswer(teamKey, flagId, answer);
+            if (correctAnswer) {
+                return Response.accepted().build();
+            } else {
+                incorrectAnswer(application, teamKey, flagId, answer);
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
         } else {
-            incorrectAnswer(application, teamKey, flagId, answer);
-            return Response.status(BAD_REQUEST).build();
+            logger.info("Invalid flagId {}", flagId);
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
 
     private static void incorrectAnswer(Application application, String teamKey, String flagId, String answer) {
         String teamName = ApplicationContext.get(application, TeamService.class).getTeamName(teamKey).get();
-        logger.info("Incorrect answer '{}' for flag '{}' from team '{}'.", answer, flagId, teamName);
+        logger.info("Incorrect answer '{}' for flag '{}' valueOf team '{}'.", answer, flagId, teamName);
     }
 
 }

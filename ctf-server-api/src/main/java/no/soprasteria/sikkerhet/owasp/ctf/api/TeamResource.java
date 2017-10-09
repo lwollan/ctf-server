@@ -1,9 +1,10 @@
 package no.soprasteria.sikkerhet.owasp.ctf.api;
 
+import no.soprasteria.sikkerhet.owasp.ctf.api.requestparameters.TeamNameParameter;
+import no.soprasteria.sikkerhet.owasp.ctf.core.service.AnswerService;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.Beskyttet;
 import no.soprasteria.sikkerhet.owasp.ctf.filter.TeamKeyFilter;
-import no.soprasteria.sikkerhet.owasp.ctf.service.FlagService;
-import no.soprasteria.sikkerhet.owasp.ctf.service.TeamService;
+import no.soprasteria.sikkerhet.owasp.ctf.core.service.TeamService;
 import no.soprasteria.sikkerhet.owasp.ctf.ApplicationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,16 +31,16 @@ public class TeamResource {
 
     private static Logger logger = LoggerFactory.getLogger(TeamResource.class);
 
-    enum Keys {
+    enum TeamResourceResponseKeys {
         teamName, teamKey, score
     }
 
     @Path("add/{teamname}")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response add(@Context Application application, @PathParam("teamname") String teamname) {
+    public Response add(@Context Application application, @PathParam("teamname") TeamNameParameter teamname) {
         TeamService teamService = ApplicationContext.get(application, TeamService.class);
-        Optional<String> teamKey = teamService.addNewTeam(teamname);
+        Optional<String> teamKey = teamService.addNewTeam(teamname.value);
 
         if (teamKey.isPresent()) {
             Map<String, String> response = new HashMap<>();
@@ -54,14 +55,14 @@ public class TeamResource {
     @Path("{teamname}")
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response del(@Context Application application, @PathParam("teamname") String teamname) {
+    public Response del(@Context Application application, @PathParam("teamname") TeamNameParameter teamname) {
         TeamService teamService = ApplicationContext.get(application, TeamService.class);
-        FlagService scoreService = ApplicationContext.get(application, FlagService.class);
+        AnswerService answerService = ApplicationContext.get(application, AnswerService.class);
 
-        Optional<String> teamKeyByTameName = teamService.findTeamKeyByTeameName(teamname);
+        Optional<String> teamKeyByTameName = teamService.findTeamKeyByTeameName(teamname.value);
         if (teamKeyByTameName.isPresent()) {
             boolean deletedTeam = teamService.deleteTeam(teamKeyByTameName.get());
-            scoreService.deleteTeamScore(teamKeyByTameName.get());
+            answerService.deleteTeamScore(teamKeyByTameName.get());
 
             if (deletedTeam) {
                 logger.info("Team key {} with score deleted.", teamname);
@@ -79,14 +80,14 @@ public class TeamResource {
     @Beskyttet
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Map<Keys, String>> list(@Context Application application) {
+    public List<Map<TeamResourceResponseKeys, String>> list(@Context Application application) {
         TeamService teamService = ApplicationContext.get(application, TeamService.class);
         List<String> teamList = teamService.getTeamList();
         return teamList.stream().map(teamName -> {
-            Map<Keys, String> map = new HashMap<>();
-            map.put(Keys.teamName, teamName);
-            map.put(Keys.teamKey, teamService.findTeamKeyByTeameName(teamName).orElse("FEIL"));
-            return map;
+            Map<TeamResourceResponseKeys, String> response = new HashMap<>();
+            response.put(TeamResourceResponseKeys.teamName, teamName);
+            response.put(TeamResourceResponseKeys.teamKey, teamService.findTeamKeyByTeameName(teamName).orElse("FEIL"));
+            return response;
         }).collect(Collectors.toList());
     }
 
@@ -94,20 +95,19 @@ public class TeamResource {
     @Path("/{teamName}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Map<Keys, String> get(@Context Application application, @PathParam("teamName") String teamName) {
+    public Map<TeamResourceResponseKeys, String> get(@Context Application application, @PathParam("teamName") String teamName) {
         TeamService teamService = ApplicationContext.get(application, TeamService.class);
+        AnswerService answerService = ApplicationContext.get(application, AnswerService.class);
         Optional<String> teamKey = teamService.findTeamKeyByTeameName(teamName);
 
         if (teamKey.isPresent()) {
-            FlagService scoreService = ApplicationContext.get(application, FlagService.class);
+            Long teamScore = answerService.getTeamScore(teamKey.get());
 
-            Long teamScore = scoreService.getTeamScore(teamKey.get());
+            Map<TeamResourceResponseKeys, String> response = new HashMap<>();
 
-            Map<Keys, String> response = new HashMap<>();
-
-            response.put(Keys.teamName, teamName);
-            response.put(Keys.teamKey, teamKey.get());
-            response.put(Keys.score, String.valueOf(teamScore));
+            response.put(TeamResourceResponseKeys.teamName, teamName);
+            response.put(TeamResourceResponseKeys.teamKey, teamKey.get());
+            response.put(TeamResourceResponseKeys.score, String.valueOf(teamScore));
 
             return response;
         } else {

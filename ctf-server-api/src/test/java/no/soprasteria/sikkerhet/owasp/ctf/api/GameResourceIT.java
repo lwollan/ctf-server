@@ -3,6 +3,7 @@ package no.soprasteria.sikkerhet.owasp.ctf.api;
 import no.soprasteria.sikkerhet.owasp.ctf.CtFApplication;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
@@ -28,12 +29,14 @@ public class GameResourceIT extends JerseyTest {
     protected Application configure() {
         try {
             CtFApplication application = new CtFApplication();
+            TestSetup.setupTestGame(application);
             return application;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
+    @Ignore
     @Test
     public void skal_returnere_en_liste_med_spill() {
         List<Map<String, Object>> entity = target("game").request().header("Authorization", encode("passord")).get().readEntity(new GenericType<List<Map<String, Object>>>() {

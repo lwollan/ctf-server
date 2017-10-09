@@ -1,9 +1,10 @@
 package no.soprasteria.sikkerhet.owasp.ctf.api;
 
 import no.soprasteria.sikkerhet.owasp.ctf.ApplicationContext;
-import no.soprasteria.sikkerhet.owasp.ctf.games.GameConfig;
-import no.soprasteria.sikkerhet.owasp.ctf.service.BoardService;
-import no.soprasteria.sikkerhet.owasp.ctf.service.GameService;
+import no.soprasteria.sikkerhet.owasp.ctf.core.service.BoardService;
+import no.soprasteria.sikkerhet.owasp.ctf.core.service.GameService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -11,34 +12,45 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import java.time.LocalDateTime;
+import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static javax.ws.rs.core.Response.ok;
+
 @Path("public/board")
 public class BoardResource {
 
-    enum Keys {
-        score, title, gameOn, start, end
+    private static Logger logger = LoggerFactory.getLogger(BoardResource.class);
+
+    public enum BoardResponseKeys {
+        score, title, gameOn, start, end, beskrivelse
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Map<Keys, Object> getBoard(@Context Application application) {
+    public Response getBoard(@Context Application application) {
         GameService gameService = ApplicationContext.get(application, GameService.class);
         BoardService boardService = ApplicationContext.get(application, BoardService.class);
 
-        List<Map<String, String>> score = boardService.getScore();
+        Map<BoardResponseKeys, Object> response = new HashMap<>();
+        if (gameService.isGameAvailable()) {
+            List<Map<String, String>> score = boardService.getScore();
+            response.put(BoardResponseKeys.score, score);
 
-        Map<Keys, Object> response = new HashMap<>();
-        response.put(Keys.score, score);
-        response.put(Keys.title, gameService.getName());
-        response.put(Keys.gameOn, gameService.isGameOn());
-        response.put(Keys.start, LocalDateTime.now().toString());
-        response.put(Keys.end, LocalDateTime.now().plusHours(2).toString());
+            response.put(BoardResponseKeys.title, gameService.getName());
+            response.put(BoardResponseKeys.beskrivelse, gameService.getGameDescription());
+            response.put(BoardResponseKeys.start, gameService.getStartTime());
+            response.put(BoardResponseKeys.end, gameService.getEndTime());
+        } else {
+            response.put(BoardResponseKeys.title, "No Game Configured");
+            response.put(BoardResponseKeys.beskrivelse, "Upload game via admin page.");
 
-        return response;
+        }
+        response.put(BoardResponseKeys.gameOn, gameService.isGameOn());
+
+        return ok(response).build();
     }
 
 }

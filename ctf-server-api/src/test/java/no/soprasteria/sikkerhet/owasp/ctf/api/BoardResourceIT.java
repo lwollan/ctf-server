@@ -27,7 +27,9 @@ public class BoardResourceIT extends JerseyTest {
     @Override
     protected Application configure() {
         try {
-            return new CtFApplication();
+            CtFApplication application = new CtFApplication();
+            TestSetup.setupTestGame(application);
+            return application;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

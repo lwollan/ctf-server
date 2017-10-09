@@ -2,8 +2,8 @@ package no.soprasteria.sikkerhet.owasp.ctf.api;
 
 import no.soprasteria.sikkerhet.owasp.ctf.ApplicationContext;
 import no.soprasteria.sikkerhet.owasp.ctf.CtFApplication;
-import no.soprasteria.sikkerhet.owasp.ctf.service.FlagService;
-import no.soprasteria.sikkerhet.owasp.ctf.service.TeamService;
+import no.soprasteria.sikkerhet.owasp.ctf.core.service.FlagService;
+import no.soprasteria.sikkerhet.owasp.ctf.core.service.TeamService;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -18,6 +18,7 @@ import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,8 +38,12 @@ public class FlagResourceIT extends JerseyTest {
     protected Application configure() {
         try {
             CtFApplication application = new CtFApplication();
-            validTeamKey = ApplicationContext.get(application, TeamService.class).addNewTeam("integration-test").orElse("");
-            Map<String, String> firstFlag = ApplicationContext.get(application, FlagService.class).listFlag().get(0);
+            TestSetup.setupTestGame(application);
+            TeamService teamService = ApplicationContext.get(application, TeamService.class);
+            FlagService flagService = ApplicationContext.get(application, FlagService.class);
+
+            validTeamKey = teamService.addNewTeam("integrationtest").orElse("");
+            Map<String, String> firstFlag = flagService.listFlag().get(0);
             flag = firstFlag.get("flag");
             flagId = firstFlag.get("flagId");
 
@@ -55,7 +60,7 @@ public class FlagResourceIT extends JerseyTest {
 
     @Test
     public void skal_kreve_teamkey_paa_flag_tip() {
-        TestUtil.assertThatResourceRequireTeamKey("something_weird", validTeamKey, target("flag/tip/someflag"));
+        TestUtil.assertThatResourceRequireTeamKey("something_weird", validTeamKey, target("flag/tip/" + UUID.randomUUID().toString()));
     }
 
     @Test
@@ -88,15 +93,16 @@ public class FlagResourceIT extends JerseyTest {
 
     @Test
     public void riktig_svar_skal_gi_accepted_respons_og_tom_body() {
-        Map<String, String> body = new HashMap<>();
-        body.put("flagId", flagId);
-        body.put("flagName", flag);
+        Map<String, String> svarMedRiktigFlagg = new HashMap<>();
+        svarMedRiktigFlagg.put("flagId", flagId);
+        svarMedRiktigFlagg.put("flag", flag);
 
         Response response = target("flag")
                 .request()
                 .header("X-TEAM-KEY", validTeamKey)
-                .post(Entity.entity(body, MediaType.APPLICATION_JSON_TYPE));
+                .post(Entity.entity(svarMedRiktigFlagg, MediaType.APPLICATION_JSON_TYPE));
 
+        assertThat(response.getStatus()).isEqualTo(202);
 
         assertThat(response.readEntity(String.class)).isEmpty();
     }
@@ -120,15 +126,14 @@ public class FlagResourceIT extends JerseyTest {
                 .header("X-TEAM-KEY", validTeamKey)
                 .get();
 
-        Map<String, String> responseMap = response.readEntity(new GenericType<Map<String, String>>() {
-        });
+        Map<String, String> responseMap = response.readEntity(new GenericType<Map<String, String>>() {});
 
         assertThat(responseMap).containsKey("tips");
     }
 
     @Test
     public void ukjent_flagid_skal_gi_tomt_svar() {
-        Response response = target("flag/tip/something")
+        Response response = target("flag/tip/" + UUID.randomUUID().toString())
                 .request()
                 .header("X-TEAM-KEY", validTeamKey)
                 .get();
@@ -137,5 +142,34 @@ public class FlagResourceIT extends JerseyTest {
         });
 
         assertThat(responseMap).isEmpty();
+    }
+
+    @Test
+    public void etter_at_riktig_svar_er_avgitt_skal_dette_vises() {
+        Map<String, String> body = new HashMap<>();
+        body.put("flagId", flagId);
+        body.put("flag", flag);
+
+        Response svarPaaFlaggResponse = target("flag")
+                .request()
+                .header("X-TEAM-KEY", validTeamKey)
+                .post(Entity.entity(body, MediaType.APPLICATION_JSON_TYPE));
+
+        assertThat(svarPaaFlaggResponse.getStatus()).isEqualTo(202);
+
+        Response listResponse = target("flag/list/")
+                .request()
+                .header("X-TEAM-KEY", validTeamKey)
+                .get();
+
+        List<Map<String, ?>> responseObject = listResponse.readEntity(new GenericType<List<Map<String, ?>>>() { });
+
+        long riktigSvarPaaFlagId = responseObject.stream()
+                .filter(m -> m.get("flagId").equals(flagId))
+                .filter(m -> m.get("flagAnswered").equals("true"))
+                .count();
+
+        assertThat(riktigSvarPaaFlagId).isEqualTo(1);
+
     }
 }

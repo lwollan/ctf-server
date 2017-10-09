@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>no.steria.websikkerhet</groupId>
     <artifactId>ctf-server</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <scm>
@@ -20,6 +20,8 @@
     </properties>
 
     <modules>
+	<module>ctf-server-games</module>
+        <module>ctf-server-core</module>
         <module>ctf-server-api</module>
         <module>ctf-server-jetty</module>
         <module>ctf-server-frontend</module>
@@ -127,6 +129,19 @@
                 <artifactId>logback-classic</artifactId>
                 <version>1.1.10</version>
             </dependency>
+
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>2.9.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>2.8.7</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

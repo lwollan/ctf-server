@@ -6,23 +6,26 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import javax.ws.rs.core.Response;
 import java.util.Map;
 
+import static no.soprasteria.sikkerhet.owasp.ctf.api.TestSetup.setupTestGame;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class BoardResourceTest {
 
     private BoardResource resource;
-    private static CtFApplication application;
+    private static CtFApplication testApplication;
 
     @BeforeClass
     public static void foerst() throws Exception {
-        application = new CtFApplication();
+        testApplication = new CtFApplication();
+        setupTestGame(testApplication);
     }
 
     @AfterClass
     public static void sist() throws Exception {
-        application.shutdown();
+        testApplication.shutdown();
     }
 
     @Before
@@ -32,31 +35,41 @@ public class BoardResourceTest {
 
     @Test
     public void score_board_skal_inneholde_resultater() throws Exception {
-        Map<BoardResource.Keys, Object> respons = resource.getBoard(application);
-        assertThat(respons).containsKey(BoardResource.Keys.score);
+        Response response = resource.getBoard(testApplication);
+        @SuppressWarnings("unchecked")
+        Map<BoardResource.BoardResponseKeys, Object> map = (Map<BoardResource.BoardResponseKeys, Object>) response.getEntity();
+        assertThat(map).containsKey(BoardResource.BoardResponseKeys.score);
     }
 
     @Test
     public void score_board_skal_inneholde_spillnavn() throws Exception {
-        Map<BoardResource.Keys, Object> respons = resource.getBoard(application);
-        assertThat(respons).containsKey(BoardResource.Keys.title);
+        Response response = resource.getBoard(testApplication);
+        @SuppressWarnings("unchecked")
+        Map<BoardResource.BoardResponseKeys, Object> map = (Map<BoardResource.BoardResponseKeys, Object>) response.getEntity();
+        assertThat(map).containsKey(BoardResource.BoardResponseKeys.title);
     }
 
     @Test
     public void score_board_skal_inneholde_spillstatus() throws Exception {
-        Map<BoardResource.Keys, Object> respons = resource.getBoard(application);
-        assertThat(respons).containsKey(BoardResource.Keys.gameOn);
+        Response response = resource.getBoard(testApplication);
+        @SuppressWarnings("unchecked")
+        Map<BoardResource.BoardResponseKeys, Object> map = (Map<BoardResource.BoardResponseKeys, Object>) response.getEntity();
+        assertThat(map).containsKey(BoardResource.BoardResponseKeys.gameOn);
     }
 
     @Test
     public void score_board_skal_inneholde_start_tid() throws Exception {
-        Map<BoardResource.Keys, Object> respons = resource.getBoard(application);
-        assertThat(respons).containsKey(BoardResource.Keys.start);
+        Response response = resource.getBoard(testApplication);
+        @SuppressWarnings("unchecked")
+        Map<BoardResource.BoardResponseKeys, Object> map = (Map<BoardResource.BoardResponseKeys, Object>) response.getEntity();
+        assertThat(map).containsKey(BoardResource.BoardResponseKeys.start);
     }
 
     @Test
     public void score_board_skal_inneholde_slutt_tid() throws Exception {
-        Map<BoardResource.Keys, Object> respons = resource.getBoard(application);
-        assertThat(respons).containsKey(BoardResource.Keys.end);
+        Response response = resource.getBoard(testApplication);
+        @SuppressWarnings("unchecked")
+        Map<BoardResource.BoardResponseKeys, Object> map = (Map<BoardResource.BoardResponseKeys, Object>) response.getEntity();
+        assertThat(map).containsKey(BoardResource.BoardResponseKeys.end);
     }
 }

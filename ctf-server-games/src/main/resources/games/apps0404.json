@@ -1,0 +1,84 @@
+{
+  "version": "1.0",
+  "name": "CtF for apps 04.04.2017",
+  "beskrivelse": "Fagdag",
+  "flags": [
+    {
+      "flagName": "Oppgave 1: Finn opprett brukersiden",
+      "beskrivelse": "Første flagg fås ved å finne siden for å opprette brukere. Når du finner siden, skal flagget være der.",
+      "tips": "Use the source login.html",
+      "poeng": "1",
+      "flag": "app0404{Tm8gc25ha2tlciB2aQ==}"
+    },
+    {
+      "flagName": "Oppgave 3: Her har utvikler glemt debug parameter.",
+      "beskrivelse": "Hvis man finner ut hva hvilket url parameter utviklerne brukte for å vise debug informasjon, kan man finnet et flag i en header.",
+      "tips": "Hvis man ber om en side som ikke finnes, husk content-type er application/json.",
+      "poeng": "1",
+      "flag": "app0404{U3ByaW5nIGlzIGNvbWluZy4=}"
+    },
+    {
+      "flagName": "Oppgave 4: Det hadde vært fint å vært admin.",
+      "beskrivelse": "Man skal ikke skue URL’en på HREF’ene",
+      "tips": "Det finnes en side for å opprette brukere på  https://owasp-forum.herokuapp.com/registrer.html Skal ikke se bort ifra at admin_ er forran.",
+      "poeng": "1",
+      "flag": "app0404{V2lubmVycyBkb250IHVzZSBkcnVncy4=}"
+    },
+    {
+      "flagName": "Oppgave 5: En skulle hatt en admin bruker men feltet var skjult.",
+      "beskrivelse": "Hvis man får opprettet en adminbruker får man et flagg.",
+      "tips": "Kan være at noen skjema kan manipuleres.",
+      "poeng": "1",
+      "flag": "app0404{MTAgUFJJTlQgIkdPVE8gMTAi}"
+    },
+    {
+      "flagName": "Oppgave 6: Hvis Little Bobby Tables hadde hatt bruker på forumet, hadde han vært ’audun-automat'",
+      "beskrivelse": "Audun har en bruker på forumet. Hvis du finner passordet eller kommer deg inn på kontoen hans, finner du et flagg.",
+      "tips": "Applikasjonen er lett å lure med SQL-injection. Brukernavnet er audun-automat.",
+      "poeng": "1",
+      "flag": "app0404{UGVsbGUgUGFyYWZpbnMgYsO4bGplYmFuZCBvZyBhdXRvbWF0c3DDuGtlbHNlbmU=}"
+    },
+    {
+      "flagName": "Oppgave 7: Torbjorn har bruker.",
+      "beskrivelse": "På ’torbjorn’s profilside finnes det en md5hash.",
+      "tips": "Husk at formatet er apps0404{flag}.",
+      "poeng": "1",
+      "flag": "app0404{monkey123}"
+    },
+    {
+      "flagName": "Oppgave 8: Regnskaps Randis IP adresse må finnes.",
+      "beskrivelse": "Randi på regnskap har lastet ned den siste plata til Markus og Martinus på internets. Advokatfirmaet S. Vindel og B. Drag har bedt deg finne IP adressen hennes.",
+      "tips": "All your base64 are belong to us, the text is #FFFFFF",
+      "poeng": "1",
+      "flag": "app0404{84.37.125.233}"
+    },
+    {
+      "flagName": "Oppgave 9: Et avatarbilde sier mer enn 2048 bytes",
+      "beskrivelse": "Men en directory listing gir mer.",
+      "tips": "Hvis man endrer url’en som viser avatarbildet – er man nært.",
+      "poeng": "1",
+      "flag": "app0404{WW914oCZcmUgb25lIGRhcmsgbW90aGVyZnVja2VyLCBKYXJlZC4=}"
+    },
+    {
+      "flagName": "Oppgave 11: Laban har bursdag og trenger ny avatar",
+      "beskrivelse": "For å feire at Laban har bursdag vil HR at du endrer avataren hans. Siden du kan data, sier du at det er null problem. Du får ikke passordet til ’laban’. Flagget vises etter at passordet er byttet.",
+      "tips": "Det er ikke sikkert at du trenger å logge deg på som ’laban’ for å bytte avatar. Det det finnes informasjon i skjulte felter.",
+      "poeng": "1",
+      "flag": "app0404{TGFiYW4gU3RyZWtrZXIgU2VnIExpdHQgTGVuZ3Jl}"
+    },
+    {
+      "flagName": "Oppgave 12: Passord på avveie.",
+      "beskrivelse": "Du skal nullstille passordet til en bruker, ’moradi’. Flagget fås etter at passordet er satt.",
+      "tips": "Finn lenken for å endre ditt eget passord. Se om du finner brukerid til ’moradi’ på forumet.",
+      "poeng": "1",
+      "flag": "app0404{VGhlIHVuaXZlcnNlIGlzIGJpZy4gSXTigJlzIHZhc3QgYW5kIGNvbXBsaWNhdGVkIGFuZCByaWRpY3Vsb3Vz}"
+    },
+    {
+      "flagName": "Oppgave 13: Slett post for en bruker",
+      "beskrivelse": "Rabiate Roger (med bruker id ’rr’) vil at du skal slette hans Donald Trump vennlige post. Selv har han mistet passordet sitt, og trenger hjelp av deg. Postingen heter Trump er Trumf hos Kiwi. Flagg vises når posten er bekreftet slettet.",
+      "tips": "Kan du slette dine egne postinger, så skal det ikke så mye til å slette andres.",
+      "poeng": "1",
+      "flag": "app0404{V2UncmUgYWxsIGxpdmluZyBpbiBlYWNoIG90aGVyJ3MgcGFyYW5vaWEu}"
+    }
+  ]
+}
