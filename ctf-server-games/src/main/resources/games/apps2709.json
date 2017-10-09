@@ -12,8 +12,8 @@
     },
     {
       "flagName": "Oppgave 2: Her har utvikler glemt debug parameter.",
-      "beskrivelse": "Hvis man finner ut hva hvilket url parameter utviklerne brukte for å vise debug informasjon, kan man finnet et flag i en header.",
-      "tips": "Hvis man ber om en side som ikke finnes, husk content-type er application/json.",
+      "beskrivelse": "Hvis man finner ut hva hvilket url-parameter utviklerne brukte for å vise debug informasjon, kan man finnet et flag i en header.",
+      "tips": "Svaret finnes i headeren av responsen.",
       "poeng": "1",
       "flag": "{V2lubmVycyBkb250IHVzZSBkcnVncy4=}"
     },
